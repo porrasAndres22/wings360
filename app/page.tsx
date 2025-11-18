@@ -90,7 +90,7 @@ export default function AppPrototype() {
               <div className="w-2.5 h-2.5 bg-[#00A4EF]"></div>
               <div className="w-2.5 h-2.5 bg-[#FFB900]"></div>
             </div>
-            <span className="font-semibold text-xl text-[#5E5E5E]">360 Evaluation</span>
+            <span className="font-semibold text-xl text-[#5E5E5E]">Proyecto 360</span>
           </div>
 
           <h1 className="text-2xl font-bold text-[#1b1b1b] mb-2">Iniciar sesión</h1>
