@@ -90,11 +90,24 @@ const FluentCard = ({ title, icon: Icon, subtitle, status, children, className }
 const SidebarItem = ({ icon: Icon, label, active, onClick }: any) => (
   <button 
     onClick={onClick}
-    className={`w-full flex items-center gap-3 px-3 py-2 rounded-[4px] text-sm transition-colors 
+    className={`w-full flex items-center justify-center lg:justify-start gap-3 px-3 py-2 rounded-[4px] text-sm transition-colors 
     ${active ? 'bg-[#EFF6FC] text-[#0078D4] font-semibold relative after:content-[""] after:absolute after:left-0 after:top-2 after:bottom-2 after:w-[3px] after:bg-[#0078D4] after:rounded-r' : 'text-[#201F1E] hover:bg-[#F3F2F1]'}`}
+    title={label} // Tooltip nativo para cuando está minimizado
   >
     <Icon size={20} />
     <span className="hidden lg:block">{label}</span>
+  </button>
+);
+
+// Item de Navegación Inferior (Mobile)
+const BottomNavItem = ({ icon: Icon, label, active, onClick }: any) => (
+  <button 
+    onClick={onClick}
+    className={`flex flex-col items-center justify-center gap-1 p-2 rounded-[4px] transition-colors 
+    ${active ? 'text-[#0078D4]' : 'text-[#605E5C] hover:bg-[#F3F2F1]'}`}
+  >
+    <Icon size={24} strokeWidth={active ? 2.5 : 2} />
+    <span className="text-[10px] font-medium">{label}</span>
   </button>
 );
 
@@ -137,6 +150,9 @@ export default function AppPrototype() {
   const [selectedEvaluation, setSelectedEvaluation] = useState<any>(null);
   const [formResponses, setFormResponses] = useState<any>({});
   const [isReadOnly, setIsReadOnly] = useState(false); // Nuevo estado para modo lectura
+
+  // Estado para menú móvil
+  const [showMobileMenu, setShowMobileMenu] = useState(false);
 
   // --- ESTADO DE COMPETENCIAS (DINÁMICO) ---
   const [competencies, setCompetencies] = useState([
@@ -447,15 +463,18 @@ export default function AppPrototype() {
   // --- LAYOUT PRINCIPAL ---
   return (
     <div className="min-h-screen bg-[#FAF9F8] flex font-sans text-[#201F1E]">
-      {/* Sidebar */}
-      <aside className="w-16 lg:w-64 bg-[#FFFFFF] border-r border-[#E1DFDD] flex flex-col transition-all duration-300 shadow-[1px_0_3px_rgba(0,0,0,0.05)] z-10">
-        <div className="p-4 flex items-center gap-3 mb-6">
+      
+      {/* SIDEBAR (VISIBLE EN DESKTOP Y TABLET/HORIZONTAL) */}
+      {/* Cambiado: 'hidden lg:flex' -> 'hidden md:flex' y ancho variable w-16 a w-64 */}
+      <aside className="hidden md:flex w-16 lg:w-64 bg-[#FFFFFF] border-r border-[#E1DFDD] flex-col transition-all duration-300 shadow-[1px_0_3px_rgba(0,0,0,0.05)] z-10">
+        <div className="p-4 flex items-center justify-center lg:justify-start gap-3 mb-6">
            <div className="grid grid-cols-2 gap-0.5 shrink-0">
               <div className="w-2 h-2 bg-[#F25022]"></div>
               <div className="w-2 h-2 bg-[#7FBA00]"></div>
               <div className="w-2 h-2 bg-[#00A4EF]"></div>
               <div className="w-2 h-2 bg-[#FFB900]"></div>
             </div>
+            {/* El título solo se muestra en pantallas grandes */}
             <span className="font-bold text-lg hidden lg:block">Evaluación</span>
         </div>
 
@@ -493,7 +512,7 @@ export default function AppPrototype() {
         </nav>
 
         <div className="p-2 border-t border-[#E1DFDD]">
-          <button onClick={() => setCurrentView('login')} className="flex items-center gap-3 w-full p-2 text-[#201F1E] hover:bg-[#F3F2F1] rounded-[4px]">
+          <button onClick={() => setCurrentView('login')} className="flex items-center justify-center lg:justify-start gap-3 w-full p-2 text-[#201F1E] hover:bg-[#F3F2F1] rounded-[4px]">
             <LogOut size={20} />
             <span className="text-sm font-medium hidden lg:block">Cerrar sesión</span>
           </button>
@@ -502,8 +521,10 @@ export default function AppPrototype() {
 
       {/* Contenido Principal */}
       <main className="flex-1 flex flex-col h-screen overflow-hidden relative">
-        {/* Header */}
-        <header className="h-14 bg-white border-b border-[#E1DFDD] flex items-center justify-between px-6 shadow-sm shrink-0">
+        
+        {/* HEADER (DESKTOP & TABLET) */}
+        {/* Cambiado: 'hidden lg:flex' -> 'hidden md:flex' */}
+        <header className="hidden md:flex h-14 bg-white border-b border-[#E1DFDD] items-center justify-between px-6 shadow-sm shrink-0">
           <div className="flex items-center bg-[#F3F2F1] px-3 py-1.5 rounded-[4px] w-full max-w-md">
             <Search size={16} className="text-[#605E5C]" />
             <input type="text" placeholder="Buscar..." className="bg-transparent border-none outline-none text-sm ml-2 w-full placeholder-[#605E5C]" />
@@ -517,21 +538,70 @@ export default function AppPrototype() {
           </div>
         </header>
 
+        {/* HEADER (SOLO MOBILE PORTRAIT) */}
+        {/* Cambiado: 'lg:hidden' -> 'md:hidden' */}
+        <header className="md:hidden h-14 bg-white border-b border-[#E1DFDD] flex items-center justify-between px-4 shrink-0 relative z-20">
+            <div className="flex items-center gap-3">
+                 <div className="w-8 h-8 rounded-full bg-[#0078D4] text-white flex items-center justify-center text-xs font-bold shadow-sm cursor-default">
+                    {userRole === 'admin' ? 'AD' : 'US'}
+                </div>
+                <span className="font-semibold text-[#242424]">Evaluación 360</span>
+            </div>
+            
+            <div className="flex items-center gap-3">
+                <button className="p-2 text-[#605E5C] hover:bg-[#F3F2F1] rounded-[4px]">
+                    <Search size={22} />
+                </button>
+                <div className="relative">
+                    <button 
+                        onClick={() => setShowMobileMenu(!showMobileMenu)}
+                        className="p-2 text-[#605E5C] hover:bg-[#F3F2F1] rounded-[4px]"
+                    >
+                        <MoreHorizontal size={22} />
+                    </button>
+                    
+                    {/* Dropdown Menu Móvil */}
+                    {showMobileMenu && (
+                        <>
+                            <div 
+                                className="fixed inset-0 z-40" 
+                                onClick={() => setShowMobileMenu(false)}
+                            ></div>
+                            <div className="absolute right-0 top-full mt-2 w-48 bg-white rounded-[8px] shadow-xl border border-[#E1DFDD] z-50 animate-in fade-in slide-in-from-top-2">
+                                <div className="py-1">
+                                    <button 
+                                        onClick={() => {
+                                            setCurrentView('login');
+                                            setShowMobileMenu(false);
+                                        }}
+                                        className="w-full text-left px-4 py-3 text-sm text-[#A80000] hover:bg-[#F3F2F1] flex items-center gap-2"
+                                    >
+                                        <LogOut size={16} /> Cerrar Sesión
+                                    </button>
+                                </div>
+                            </div>
+                        </>
+                    )}
+                </div>
+            </div>
+        </header>
+
         {/* Área de Contenido Dinámica */}
-        <div className="flex-1 overflow-auto p-8">
+        {/* Ajuste padding: pb-20 solo en mobile (md:pb-8) */}
+        <div className="flex-1 overflow-auto p-4 pb-20 md:pb-8 lg:p-8">
           <div className="max-w-6xl mx-auto">
             
             {/* ================= DASHBOARD VIEW ================= */}
             {activeTab === 'dashboard' && (
               <>
-                <div className="mb-8">
-                  <h1 className="text-2xl font-semibold mb-1">
-                    {userRole === 'admin' ? 'Panel de Administración' : 'Mi Espacio de Trabajo'}
+                <div className="mb-6 lg:mb-8">
+                  <h1 className="text-xl lg:text-2xl font-semibold mb-1">
+                    {userRole === 'admin' ? 'Dashboard' : 'Mi Espacio'}
                   </h1>
-                  <p className="text-[#605E5C]">
+                  <p className="text-[#605E5C] text-sm">
                     {userRole === 'admin' 
-                      ? 'Gestione las evaluaciones activas y el personal.' 
-                      : 'Bienvenido de nuevo, aquí están tus tareas pendientes.'}
+                      ? 'Gestione las evaluaciones activas.' 
+                      : 'Bienvenido de nuevo.'}
                   </p>
                 </div>
 
@@ -543,8 +613,8 @@ export default function AppPrototype() {
                       <div className="text-3xl font-bold mb-1">78%</div>
                       <p className="text-xs opacity-80">Completado por la organización</p>
                     </div>
-                    <FluentCard title="Usuarios Activos" icon={Users} subtitle="Total empleados registrados" status="124 Total" />
-                    <FluentCard title="Pendientes" icon={CheckCircle2} subtitle="Evaluaciones sin finalizar" status="23 Alertas" />
+                    <FluentCard title="Usuarios Activos" icon={Users} subtitle="Total empleados" status="124 Total" />
+                    <FluentCard title="Pendientes" icon={CheckCircle2} subtitle="Sin finalizar" status="23 Alertas" />
                   </div>
                 ) : (
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
@@ -554,7 +624,7 @@ export default function AppPrototype() {
                     <div className="cursor-pointer" onClick={() => setActiveTab('evaluations')}>
                         <FluentCard title="Evaluación de Pares" icon={Users} subtitle="Evaluar a: Juan Pérez" status="Active" />
                     </div>
-                    <FluentCard title="Resultados Históricos" icon={CheckCircle2} subtitle="Ver feedback anterior" />
+                    <FluentCard title="Histórico" icon={CheckCircle2} subtitle="Ver feedback anterior" />
                   </div>
                 )}
               </>
@@ -563,37 +633,38 @@ export default function AppPrototype() {
             {/* ================= EMPLEADOS VIEW (ADMIN) ================= */}
             {activeTab === 'employees' && userRole === 'admin' && (
                 <div className="animate-in fade-in duration-300">
-                    {/* ... existing employee code ... */}
-                    <div className="mb-6 flex justify-between items-end">
+                    <div className="mb-6 flex flex-col sm:flex-row justify-between items-start sm:items-end gap-4">
                         <div>
-                            <h1 className="text-2xl font-semibold mb-1 text-[#242424]">Gestión de Empleados</h1>
-                            <p className="text-[#605E5C] text-sm">Administre el acceso y la información de los usuarios del sistema.</p>
+                            <h1 className="text-xl lg:text-2xl font-semibold mb-1 text-[#242424]">Empleados</h1>
+                            <p className="text-[#605E5C] text-sm">Administre usuarios.</p>
                         </div>
-                        <div className="flex gap-3">
-                             <button className="flex items-center gap-2 text-[#605E5C] border border-[#8A8886] bg-white hover:bg-[#F3F2F1] px-4 py-2 rounded-[4px] text-sm font-medium transition-colors">
+                        <div className="flex gap-3 w-full sm:w-auto">
+                             <button className="flex-1 sm:flex-none flex items-center justify-center gap-2 text-[#605E5C] border border-[#8A8886] bg-white hover:bg-[#F3F2F1] px-4 py-2 rounded-[4px] text-sm font-medium transition-colors">
                                 <Filter size={16} />
                                 Filtrar
                             </button>
-                            <FluentButton primary onClick={openAddModal}>
-                                <UserPlus size={18} /> Agregar Empleado
+                            <FluentButton className="flex-1 sm:flex-none" primary onClick={openAddModal}>
+                                <UserPlus size={18} /> Agregar
                             </FluentButton>
                         </div>
                     </div>
 
                     <div className="bg-white rounded-[8px] shadow-[0_1.6px_3.6px_0_rgba(0,0,0,0.13),0_0.3px_0.9px_0_rgba(0,0,0,0.11)] border border-[#E1DFDD] overflow-hidden">
-                        {/* Header de Tabla */}
-                        <div className="grid grid-cols-12 gap-4 p-4 border-b border-[#E1DFDD] bg-[#FAFAFA] text-xs font-semibold text-[#605E5C] uppercase tracking-wider">
+                        {/* Header de Tabla (Oculto en móvil pequeño si se desea, o con scroll horizontal) */}
+                        <div className="hidden md:grid grid-cols-12 gap-4 p-4 border-b border-[#E1DFDD] bg-[#FAFAFA] text-xs font-semibold text-[#605E5C] uppercase tracking-wider">
                             <div className="col-span-4">Nombre / Email</div>
                             <div className="col-span-3">Departamento / Cargo</div>
                             <div className="col-span-3">Estado</div>
                             <div className="col-span-2 text-center">Acciones</div>
                         </div>
                         
-                        {/* Cuerpo de Tabla */}
+                        {/* Cuerpo de Tabla Responsive */}
                         <div className="divide-y divide-[#E1DFDD]">
                             {employees.map((emp) => (
-                                <div key={emp.id} className={`grid grid-cols-12 gap-4 p-4 items-center transition-colors group ${emp.status === 'Inactive' ? 'bg-gray-50 opacity-75' : 'hover:bg-[#F3F2F1]'}`}>
-                                    <div className="col-span-4 flex items-center gap-3">
+                                <div key={emp.id} className={`grid grid-cols-1 md:grid-cols-12 gap-4 p-4 items-center transition-colors group ${emp.status === 'Inactive' ? 'bg-gray-50 opacity-75' : 'hover:bg-[#F3F2F1]'}`}>
+                                    
+                                    {/* Mobile View Container */}
+                                    <div className="md:col-span-4 flex items-center gap-3">
                                         <div className={`w-9 h-9 rounded-full flex items-center justify-center text-xs font-bold text-white ${emp.status === 'Inactive' ? 'bg-gray-400' : 'bg-[#0078D4]'}`}>
                                             {emp.name.charAt(0)}
                                         </div>
@@ -602,11 +673,17 @@ export default function AppPrototype() {
                                             <p className="text-xs text-[#605E5C]">{emp.email}</p>
                                         </div>
                                     </div>
-                                    <div className="col-span-3">
-                                        <p className="text-sm text-[#242424]">{emp.department}</p>
-                                        <p className="text-xs text-[#605E5C]">{emp.role}</p>
+                                    
+                                    <div className="md:col-span-3 flex justify-between md:block">
+                                        <span className="md:hidden text-xs font-bold text-[#605E5C]">Cargo:</span>
+                                        <div className="text-right md:text-left">
+                                            <p className="text-sm text-[#242424]">{emp.department}</p>
+                                            <p className="text-xs text-[#605E5C]">{emp.role}</p>
+                                        </div>
                                     </div>
-                                    <div className="col-span-3">
+                                    
+                                    <div className="md:col-span-3 flex justify-between md:block">
+                                        <span className="md:hidden text-xs font-bold text-[#605E5C]">Estado:</span>
                                         <span className={`px-2.5 py-1 rounded-full text-xs font-semibold inline-flex items-center gap-1.5
                                             ${emp.status === 'Active' 
                                                 ? 'bg-[#DFF6DD] text-[#107C10]' 
@@ -616,18 +693,19 @@ export default function AppPrototype() {
                                             {emp.status === 'Active' ? 'Activo' : 'Inhabilitado'}
                                         </span>
                                     </div>
-                                    <div className="col-span-2 flex justify-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                                    
+                                    <div className="md:col-span-2 flex justify-end md:justify-center gap-2 transition-opacity">
                                         <button 
                                             onClick={() => openEditModal(emp)}
-                                            title="Editar Información"
                                             className="p-2 text-[#605E5C] hover:bg-[#EFF6FC] hover:text-[#0078D4] rounded-[4px]"
+                                            title="Editar"
                                         >
                                             <Pencil size={18} />
                                         </button>
                                         <button 
                                             onClick={() => toggleEmployeeStatus(emp.id)}
-                                            title={emp.status === 'Active' ? "Inhabilitar Usuario" : "Habilitar Usuario"}
                                             className={`p-2 rounded-[4px] transition-colors ${emp.status === 'Active' ? 'hover:bg-[#FDE7E9] text-[#A80000]' : 'hover:bg-[#DFF6DD] text-[#107C10]'}`}
+                                            title={emp.status === 'Active' ? "Desactivar" : "Activar"}
                                         >
                                             {emp.status === 'Active' ? <UserX size={18} /> : <UserCheck size={18} />}
                                         </button>
@@ -644,22 +722,20 @@ export default function AppPrototype() {
                 <div className="animate-in fade-in duration-300">
                     <div className="mb-6 flex justify-between items-end">
                         <div>
-                            <h1 className="text-2xl font-semibold mb-1 text-[#242424]">Configuración</h1>
-                            <p className="text-[#605E5C] text-sm">Gestione los periodos y modelos de evaluación.</p>
+                            <h1 className="text-xl lg:text-2xl font-semibold mb-1 text-[#242424]">Configuración</h1>
                         </div>
                     </div>
                     
-                    {/* TABS DE CONFIGURACIÓN */}
-                    <div className="flex items-center gap-6 mb-6 border-b border-[#E1DFDD]">
+                    <div className="flex items-center gap-6 mb-6 border-b border-[#E1DFDD] overflow-x-auto">
                         <button 
                             onClick={() => setSettingsTab('periods')}
-                            className={`pb-2 text-sm font-medium transition-all relative ${settingsTab === 'periods' ? 'text-[#0078D4] after:content-[""] after:absolute after:bottom-0 after:left-0 after:w-full after:h-[3px] after:bg-[#0078D4] after:rounded-t' : 'text-[#605E5C] hover:text-[#242424]'}`}
+                            className={`pb-2 text-sm font-medium whitespace-nowrap transition-all relative ${settingsTab === 'periods' ? 'text-[#0078D4] after:content-[""] after:absolute after:bottom-0 after:left-0 after:w-full after:h-[3px] after:bg-[#0078D4] after:rounded-t' : 'text-[#605E5C] hover:text-[#242424]'}`}
                         >
                             Periodos
                         </button>
                         <button 
                             onClick={() => setSettingsTab('competencies')}
-                            className={`pb-2 text-sm font-medium transition-all relative ${settingsTab === 'competencies' ? 'text-[#0078D4] after:content-[""] after:absolute after:bottom-0 after:left-0 after:w-full after:h-[3px] after:bg-[#0078D4] after:rounded-t' : 'text-[#605E5C] hover:text-[#242424]'}`}
+                            className={`pb-2 text-sm font-medium whitespace-nowrap transition-all relative ${settingsTab === 'competencies' ? 'text-[#0078D4] after:content-[""] after:absolute after:bottom-0 after:left-0 after:w-full after:h-[3px] after:bg-[#0078D4] after:rounded-t' : 'text-[#605E5C] hover:text-[#242424]'}`}
                         >
                             Competencias
                         </button>
@@ -670,47 +746,36 @@ export default function AppPrototype() {
                     <div className="animate-in fade-in">
                         <div className="flex justify-end mb-4">
                              <FluentButton primary onClick={openAddPeriodModal}>
-                                <CalendarRange size={18} /> Nuevo Periodo
+                                <CalendarRange size={18} /> Nuevo
                             </FluentButton>
                         </div>
-                        <div className="bg-white rounded-[8px] shadow-[0_1.6px_3.6px_0_rgba(0,0,0,0.13),0_0.3px_0.9px_0_rgba(0,0,0,0.11)] border border-[#E1DFDD] overflow-hidden">
-                            <div className="grid grid-cols-12 gap-4 p-4 border-b border-[#E1DFDD] bg-[#FAFAFA] text-xs font-semibold text-[#605E5C] uppercase tracking-wider">
-                                <div className="col-span-4">Nombre del Periodo</div>
-                                <div className="col-span-2">Inicio</div>
-                                <div className="col-span-2">Fin</div>
-                                <div className="col-span-2">Estado</div>
-                                <div className="col-span-2 text-center">Acciones</div>
-                            </div>
-                            
-                            <div className="divide-y divide-[#E1DFDD]">
+                        <div className="bg-white rounded-[8px] shadow-sm border border-[#E1DFDD] overflow-hidden">
+                             {/* Listado Simple para Mobile */}
+                             <div className="divide-y divide-[#E1DFDD]">
                                 {periods.map((period) => (
-                                    <div key={period.id} className="grid grid-cols-12 gap-4 p-4 items-center hover:bg-[#F3F2F1] transition-colors group">
-                                        <div className="col-span-4 flex items-center gap-3">
-                                            <div className="p-2 bg-[#EFF6FC] rounded text-[#0078D4]">
-                                                <CalendarDays size={20} />
+                                    <div key={period.id} className="p-4 hover:bg-[#F3F2F1] transition-colors">
+                                        <div className="flex justify-between items-start mb-2">
+                                            <div className="flex items-center gap-3">
+                                                <div className="p-2 bg-[#EFF6FC] rounded text-[#0078D4]">
+                                                    <CalendarDays size={20} />
+                                                </div>
+                                                <div>
+                                                    <span className="block text-sm font-semibold text-[#242424]">{period.name}</span>
+                                                    <span className={`text-xs font-medium ${period.status === 'Active' ? 'text-[#107C10]' : 'text-[#605E5C]'}`}>
+                                                        {period.status === 'Active' ? 'Activo' : 'Cerrado'}
+                                                    </span>
+                                                </div>
                                             </div>
-                                            <span className="text-sm font-semibold text-[#242424]">{period.name}</span>
-                                        </div>
-                                        <div className="col-span-2 text-sm text-[#605E5C]">{period.startDate}</div>
-                                        <div className="col-span-2 text-sm text-[#605E5C]">{period.endDate}</div>
-                                        <div className="col-span-2">
-                                            <span className={`px-2.5 py-1 rounded-full text-xs font-semibold inline-flex items-center gap-1.5
-                                                ${period.status === 'Active' 
-                                                    ? 'bg-[#DFF6DD] text-[#107C10]' 
-                                                    : 'bg-[#F3F2F1] text-[#605E5C]'
-                                                }`}>
-                                                <span className={`w-1.5 h-1.5 rounded-full ${period.status === 'Active' ? 'bg-[#107C10]' : 'bg-[#605E5C]'}`}></span>
-                                                {period.status === 'Active' ? 'Activo' : 'Cerrado'}
-                                            </span>
-                                        </div>
-                                        <div className="col-span-2 flex justify-center gap-2">
                                             <button 
                                                 onClick={() => openEditPeriodModal(period)}
                                                 className="p-2 text-[#605E5C] hover:bg-[#EFF6FC] hover:text-[#0078D4] rounded-[4px]"
-                                                title="Editar Periodo"
                                             >
                                                 <Pencil size={18} />
                                             </button>
+                                        </div>
+                                        <div className="flex justify-between text-xs text-[#605E5C] pl-12">
+                                            <span>Inicio: {period.startDate}</span>
+                                            <span>Fin: {period.endDate}</span>
                                         </div>
                                     </div>
                                 ))}
@@ -724,7 +789,7 @@ export default function AppPrototype() {
                         <div className="animate-in fade-in">
                             <div className="flex justify-end mb-4">
                                 <FluentButton primary onClick={openAddCompetencyModal}>
-                                    <ListChecks size={18} /> Nueva Competencia
+                                    <ListChecks size={18} /> Nueva
                                 </FluentButton>
                             </div>
 
@@ -733,12 +798,12 @@ export default function AppPrototype() {
                                     <div key={comp.id} className="bg-white p-4 rounded-[8px] shadow-sm border border-[#E1DFDD] hover:border-[#0078D4] transition-colors group">
                                         <div className="flex justify-between items-start mb-3">
                                             <div className="flex items-center gap-3">
-                                                <div className="w-8 h-8 bg-[#EFF6FC] text-[#0078D4] rounded-full flex items-center justify-center font-bold text-sm">
+                                                <div className="w-8 h-8 bg-[#EFF6FC] text-[#0078D4] rounded-full flex items-center justify-center font-bold text-sm shrink-0">
                                                     {comp.id}
                                                 </div>
-                                                <h3 className="font-semibold text-[#242424] text-lg">{comp.competencia}</h3>
+                                                <h3 className="font-semibold text-[#242424] text-lg leading-tight">{comp.competencia}</h3>
                                             </div>
-                                            <div className="flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                                            <div className="flex gap-1">
                                                  <button 
                                                     onClick={() => openEditCompetencyModal(comp)}
                                                     className="p-2 text-[#605E5C] hover:bg-[#EFF6FC] hover:text-[#0078D4] rounded-[4px]"
@@ -755,7 +820,7 @@ export default function AppPrototype() {
                                         </div>
                                         
                                         <div className="pl-11">
-                                            <p className="text-xs font-semibold text-[#605E5C] uppercase mb-2">Preguntas (Aspectos)</p>
+                                            <p className="text-xs font-semibold text-[#605E5C] uppercase mb-2">Preguntas</p>
                                             <ul className="list-disc list-inside text-sm text-[#242424] space-y-1">
                                                 {comp.aspectos.map((asp: any) => (
                                                     <li key={asp.id} className="text-[#605E5C]">{asp.question}</li>
@@ -775,52 +840,49 @@ export default function AppPrototype() {
               <>
                 <div className="mb-6 flex justify-between items-end">
                     <div>
-                        <h1 className="text-2xl font-semibold mb-1 text-[#242424]">Mis Evaluaciones</h1>
-                        <p className="text-[#605E5C] text-sm">Gestione sus evaluaciones pendientes y revise su historial.</p>
+                        <h1 className="text-xl lg:text-2xl font-semibold mb-1 text-[#242424]">Mis Evaluaciones</h1>
+                        <p className="text-[#605E5C] text-sm">Gestione sus evaluaciones.</p>
                     </div>
                     <button className="flex items-center gap-2 text-[#0078D4] font-medium hover:bg-[#F3F2F1] px-3 py-2 rounded transition-colors">
                         <Filter size={16} />
-                        <span className="text-sm">Filtrar</span>
+                        <span className="text-sm hidden sm:inline">Filtrar</span>
                     </button>
                 </div>
 
-                <div className="bg-white rounded-[8px] shadow-[0_1.6px_3.6px_0_rgba(0,0,0,0.13),0_0.3px_0.9px_0_rgba(0,0,0,0.11)] border border-[#E1DFDD] overflow-hidden">
-                    <div className="grid grid-cols-12 gap-4 p-4 border-b border-[#E1DFDD] bg-[#FAFAFA] text-xs font-semibold text-[#605E5C] uppercase tracking-wider">
-                        <div className="col-span-4">Colaborador a Evaluar</div>
-                        <div className="col-span-3">Tipo de Relación</div>
-                        <div className="col-span-3">Estado</div>
-                        <div className="col-span-2 text-center">Acción</div>
-                    </div>
-
+                <div className="bg-white rounded-[8px] shadow-sm border border-[#E1DFDD] overflow-hidden">
                     <div className="divide-y divide-[#E1DFDD]">
                         {myEvaluations.map((item) => (
-                            <div key={item.id} className="grid grid-cols-12 gap-4 p-4 items-center hover:bg-[#F3F2F1] transition-colors text-sm group">
-                                <div className="col-span-4 font-medium text-[#242424] flex items-center gap-3">
-                                    <div className="w-8 h-8 rounded-full bg-[#E1DFDD] flex items-center justify-center text-xs font-bold text-[#605E5C]">
-                                        {item.collaborator.charAt(0)}
+                            <div key={item.id} className="p-4 hover:bg-[#F3F2F1] transition-colors text-sm group">
+                                <div className="flex justify-between items-start mb-2">
+                                    <div className="flex items-center gap-3">
+                                        <div className="w-10 h-10 rounded-full bg-[#E1DFDD] flex items-center justify-center text-xs font-bold text-[#605E5C]">
+                                            {item.collaborator.charAt(0)}
+                                        </div>
+                                        <div>
+                                            <div className="font-medium text-[#242424]">{item.collaborator}</div>
+                                            <div className="text-[#605E5C] text-xs">{item.relation}</div>
+                                        </div>
                                     </div>
-                                    {item.collaborator}
+                                    <div className="flex flex-col items-end gap-2">
+                                        <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-semibold inline-flex items-center gap-1
+                                            ${item.status === 'Finalizado' ? 'bg-[#DFF6DD] text-[#107C10]' : 'bg-[#FFF4CE] text-[#795E00]'}`}>
+                                            <span className={`w-1.5 h-1.5 rounded-full ${item.status === 'Finalizado' ? 'bg-[#107C10]' : 'bg-[#795E00]'}`}></span>
+                                            {item.status}
+                                        </span>
+                                    </div>
                                 </div>
-                                <div className="col-span-3 text-[#605E5C]">{item.relation}</div>
-                                <div className="col-span-3">
-                                    <span className={`px-3 py-1 rounded-full text-xs font-semibold inline-flex items-center gap-1.5
-                                        ${item.status === 'Finalizado' ? 'bg-[#DFF6DD] text-[#107C10]' : 'bg-[#FFF4CE] text-[#795E00]'}`}>
-                                        <span className={`w-1.5 h-1.5 rounded-full ${item.status === 'Finalizado' ? 'bg-[#107C10]' : 'bg-[#795E00]'}`}></span>
-                                        {item.status}
-                                    </span>
-                                </div>
-                                <div className="col-span-2 flex justify-center">
+                                <div className="flex justify-end mt-3">
                                     {item.action === 'Evaluar' ? (
                                         <button 
                                           onClick={() => startEvaluation(item)}
-                                          className="bg-[#0078D4] hover:bg-[#106EBE] text-white text-xs font-semibold px-4 py-1.5 rounded shadow-sm transition-all active:scale-95 w-24"
+                                          className="bg-[#0078D4] hover:bg-[#106EBE] text-white text-xs font-semibold px-4 py-1.5 rounded shadow-sm w-full sm:w-auto"
                                         >
                                             Evaluar
                                         </button>
                                     ) : (
                                         <button 
                                           onClick={() => viewEvaluation(item)}
-                                          className="bg-[#F3F2F1] hover:bg-[#E1DFDD] border border-[#E1DFDD] text-[#242424] text-xs font-semibold px-4 py-1.5 rounded shadow-sm transition-all active:scale-95 w-24"
+                                          className="bg-[#F3F2F1] hover:bg-[#E1DFDD] border border-[#E1DFDD] text-[#242424] text-xs font-semibold px-4 py-1.5 rounded shadow-sm w-full sm:w-auto"
                                         >
                                             Ver
                                         </button>
@@ -829,54 +891,42 @@ export default function AppPrototype() {
                             </div>
                         ))}
                     </div>
-                    <div className="p-2 bg-[#FAFAFA] border-t border-[#E1DFDD] flex justify-end">
-                         <div className="text-xs text-[#605E5C] px-4 py-2">Mostrando 1-4 de 4</div>
-                    </div>
                 </div>
               </>
             )}
 
-            {/* ================= FORMULARIO DE EVALUACIÓN (USANDO COMPETENCIAS DINÁMICAS) ================= */}
+            {/* ================= FORMULARIO DE EVALUACIÓN ================= */}
             {activeTab === 'perform_evaluation' && selectedEvaluation && (
               <div className="animate-in fade-in slide-in-from-bottom-4 duration-300">
-                <div className="mb-6 flex items-center justify-between">
+                <div className="mb-4 flex items-center justify-between">
                     <button 
                         onClick={() => setActiveTab('evaluations')}
                         className="flex items-center gap-2 text-[#605E5C] hover:text-[#242424] transition-colors"
                     >
                         <ArrowLeft size={18} />
-                        <span className="text-sm font-medium">Volver a la lista</span>
+                        <span className="text-sm font-medium">Volver</span>
                     </button>
                     
                     {!isReadOnly && (
                         <div className="flex gap-2">
-                            <FluentButton className="text-[#242424]" onClick={() => {}}>
-                                <Save size={16} /> Guardar borrador
-                            </FluentButton>
+                            <button className="text-[#242424] p-2 rounded hover:bg-[#F3F2F1]" title="Guardar Borrador">
+                                <Save size={20} /> 
+                            </button>
                         </div>
                     )}
                 </div>
 
-                <div className={`bg-white p-6 rounded-[8px] shadow-sm border border-[#E1DFDD] mb-6 border-l-[6px] ${isReadOnly ? 'border-l-[#107C10]' : 'border-l-[#0078D4]'}`}>
-                    <div className="flex justify-between items-start">
-                        <div>
-                            <h1 className="text-2xl font-bold text-[#242424] mb-1">
-                                {isReadOnly ? 'Detalle de Evaluación Completada' : 'Evaluación de Competencias'}
-                            </h1>
-                            <p className="text-[#605E5C] mb-4">
-                                {isReadOnly 
-                                    ? 'Esta evaluación ya ha sido enviada y no se puede modificar.' 
-                                    : 'Complete el siguiente formulario evaluando objetivamente el desempeño.'}
-                            </p>
-                        </div>
-                        {isReadOnly && (
-                            <span className="bg-[#DFF6DD] text-[#107C10] px-3 py-1 rounded-full text-xs font-bold border border-[#107C10]/20 flex items-center gap-2">
-                                <CheckCircle2 size={14} /> Finalizada
-                            </span>
-                        )}
+                <div className={`bg-white p-4 lg:p-6 rounded-[8px] shadow-sm border border-[#E1DFDD] mb-6 border-l-[6px] ${isReadOnly ? 'border-l-[#107C10]' : 'border-l-[#0078D4]'}`}>
+                    <div>
+                        <h1 className="text-xl lg:text-2xl font-bold text-[#242424] mb-1">
+                            {isReadOnly ? 'Evaluación Completada' : 'Evaluación'}
+                        </h1>
+                        <p className="text-[#605E5C] text-sm mb-4">
+                            {isReadOnly ? 'Solo lectura' : 'Complete el formulario.'}
+                        </p>
                     </div>
                     
-                    <div className="flex items-center gap-8 pt-4 border-t border-[#E1DFDD]">
+                    <div className="flex flex-col sm:flex-row gap-4 sm:gap-8 pt-4 border-t border-[#E1DFDD]">
                         <div>
                             <p className="text-xs font-bold text-[#605E5C] uppercase tracking-wider mb-1">Colaborador</p>
                             <div className="flex items-center gap-2">
@@ -893,8 +943,7 @@ export default function AppPrototype() {
                     </div>
                 </div>
 
-                {/* Loop de Competencias (DINÁMICO) */}
-                <div className="space-y-6 pb-20">
+                <div className="space-y-6 pb-24">
                     {competencies.map((comp) => (
                         <div key={comp.id} className="bg-white rounded-[8px] shadow-sm border border-[#E1DFDD] overflow-hidden">
                             <div className="bg-[#FAFAFA] px-6 py-4 border-b border-[#E1DFDD]">
@@ -903,10 +952,9 @@ export default function AppPrototype() {
                             
                             <div className="divide-y divide-[#E1DFDD]">
                                 {comp.aspectos.map((aspect) => (
-                                    <div key={aspect.id} className="p-6 hover:bg-[#FEFEFE] transition-colors">
+                                    <div key={aspect.id} className="p-4 lg:p-6 hover:bg-[#FEFEFE] transition-colors">
                                         <p className="text-[#242424] font-medium mb-3">{aspect.question}</p>
-                                        
-                                        <div className="w-full max-w-3xl">
+                                        <div className="w-full">
                                             <p className="text-xs text-[#605E5C] mb-2 uppercase font-semibold">Frecuencia</p>
                                             <RatingScale 
                                                 value={formResponses[aspect.id]} 
@@ -921,12 +969,11 @@ export default function AppPrototype() {
                     ))}
 
                     <FluentCard className="bg-white">
-                        <h3 className="font-semibold text-[#242424] mb-2">Feedback General Adicional</h3>
-                        <p className="text-xs text-[#605E5C] mb-3">Si desea agregar comentarios generales sobre el desempeño.</p>
+                        <h3 className="font-semibold text-[#242424] mb-2">Feedback Adicional</h3>
                         <textarea 
                             disabled={isReadOnly}
                             className={`w-full p-3 text-sm border border-[#8A8886] bg-[#F3F2F1] rounded-[4px] focus:border-b-2 focus:border-b-[#0078D4] focus:bg-white outline-none min-h-[100px] ${isReadOnly ? 'opacity-70 cursor-not-allowed' : ''}`}
-                            placeholder={isReadOnly ? 'Sin comentarios adicionales.' : "Escriba aquí sus comentarios finales..."}
+                            placeholder={isReadOnly ? 'Sin comentarios.' : "Comentarios finales..."}
                         ></textarea>
                     </FluentCard>
 
@@ -935,8 +982,8 @@ export default function AppPrototype() {
                             <FluentButton primary onClick={() => {
                                 alert("Evaluación enviada con éxito");
                                 setActiveTab('evaluations');
-                            }} className="w-48 py-3">
-                                <Send size={18} /> Finalizar Evaluación
+                            }} className="w-full sm:w-48 py-3">
+                                <Send size={18} /> Finalizar
                             </FluentButton>
                         </div>
                     )}
@@ -947,10 +994,10 @@ export default function AppPrototype() {
           </div>
         </div>
 
-        {/* ================= MODAL AGREGAR/EDITAR EMPLEADO ================= */}
+        {/* ================= MODAL AGREGAR/EDITAR EMPLEADO (RESPONSIVE) ================= */}
         {showEmployeeModal && (
-            <div className="absolute inset-0 bg-black/20 backdrop-blur-[1px] flex items-center justify-end z-50 animate-in fade-in duration-200">
-                <div className="w-full max-w-md h-full bg-white shadow-2xl border-l border-[#E1DFDD] flex flex-col animate-in slide-in-from-right duration-300">
+            <div className="absolute inset-0 bg-black/30 backdrop-blur-sm flex items-end lg:items-center justify-center lg:justify-end z-50 animate-in fade-in duration-200">
+                <div className="w-full lg:max-w-md h-[90%] lg:h-full bg-white shadow-2xl rounded-t-xl lg:rounded-none lg:border-l border-[#E1DFDD] flex flex-col animate-in slide-in-from-bottom lg:slide-in-from-right duration-300">
                     <div className="p-6 border-b border-[#E1DFDD] flex justify-between items-center">
                         <h2 className="text-xl font-semibold text-[#242424]">
                             {isEditing ? 'Editar Empleado' : 'Nuevo Empleado'}
@@ -960,12 +1007,6 @@ export default function AppPrototype() {
                         </button>
                     </div>
                     <div className="p-6 flex-1 overflow-auto">
-                        <p className="text-sm text-[#605E5C] mb-6">
-                            {isEditing 
-                                ? 'Modifique la información del colaborador.' 
-                                : 'Ingrese la información básica del nuevo colaborador para darle acceso a la plataforma.'}
-                        </p>
-                        
                         <FluentInput 
                             label="Nombre Completo" 
                             placeholder="Ej. Maria Gonzales" 
@@ -992,10 +1033,10 @@ export default function AppPrototype() {
                             onChange={(e:any) => setEmployeeForm({...employeeForm, role: e.target.value})}
                         />
                     </div>
-                    <div className="p-6 border-t border-[#E1DFDD] bg-[#FAFAFA] flex justify-end gap-3">
+                    <div className="p-6 border-t border-[#E1DFDD] bg-[#FAFAFA] flex justify-end gap-3 pb-safe">
                         <FluentButton onClick={() => setShowEmployeeModal(false)}>Cancelar</FluentButton>
                         <FluentButton primary onClick={handleSaveEmployee}>
-                            {isEditing ? 'Guardar Cambios' : 'Guardar y Enviar Invitación'}
+                            Guardar
                         </FluentButton>
                     </div>
                 </div>
@@ -1004,8 +1045,8 @@ export default function AppPrototype() {
 
         {/* ================= MODAL AGREGAR/EDITAR PERIODO ================= */}
         {showPeriodModal && (
-            <div className="absolute inset-0 bg-black/20 backdrop-blur-[1px] flex items-center justify-end z-50 animate-in fade-in duration-200">
-                <div className="w-full max-w-md h-full bg-white shadow-2xl border-l border-[#E1DFDD] flex flex-col animate-in slide-in-from-right duration-300">
+            <div className="absolute inset-0 bg-black/30 backdrop-blur-sm flex items-end lg:items-center justify-center lg:justify-end z-50 animate-in fade-in duration-200">
+                <div className="w-full lg:max-w-md h-[90%] lg:h-full bg-white shadow-2xl rounded-t-xl lg:rounded-none lg:border-l border-[#E1DFDD] flex flex-col animate-in slide-in-from-bottom lg:slide-in-from-right duration-300">
                     <div className="p-6 border-b border-[#E1DFDD] flex justify-between items-center">
                         <h2 className="text-xl font-semibold text-[#242424]">
                             {isEditingPeriod ? 'Editar Periodo' : 'Nuevo Periodo'}
@@ -1055,7 +1096,7 @@ export default function AppPrototype() {
                         </div>
 
                     </div>
-                    <div className="p-6 border-t border-[#E1DFDD] bg-[#FAFAFA] flex justify-end gap-3">
+                    <div className="p-6 border-t border-[#E1DFDD] bg-[#FAFAFA] flex justify-end gap-3 pb-safe">
                         <FluentButton onClick={() => setShowPeriodModal(false)}>Cancelar</FluentButton>
                         <FluentButton primary onClick={handleSavePeriod}>
                             Guardar Periodo
@@ -1067,8 +1108,8 @@ export default function AppPrototype() {
 
         {/* ================= MODAL AGREGAR/EDITAR COMPETENCIA ================= */}
         {showCompetencyModal && (
-            <div className="absolute inset-0 bg-black/20 backdrop-blur-[1px] flex items-center justify-end z-50 animate-in fade-in duration-200">
-                <div className="w-full max-w-xl h-full bg-white shadow-2xl border-l border-[#E1DFDD] flex flex-col animate-in slide-in-from-right duration-300">
+            <div className="absolute inset-0 bg-black/30 backdrop-blur-sm flex items-end lg:items-center justify-center lg:justify-end z-50 animate-in fade-in duration-200">
+                <div className="w-full lg:max-w-xl h-[95%] lg:h-full bg-white shadow-2xl rounded-t-xl lg:rounded-none lg:border-l border-[#E1DFDD] flex flex-col animate-in slide-in-from-bottom lg:slide-in-from-right duration-300">
                     <div className="p-6 border-b border-[#E1DFDD] flex justify-between items-center">
                         <h2 className="text-xl font-semibold text-[#242424]">
                             {isEditingCompetency ? 'Editar Competencia' : 'Nueva Competencia'}
@@ -1130,7 +1171,7 @@ export default function AppPrototype() {
                         </div>
 
                     </div>
-                    <div className="p-6 border-t border-[#E1DFDD] bg-[#FAFAFA] flex justify-end gap-3">
+                    <div className="p-6 border-t border-[#E1DFDD] bg-[#FAFAFA] flex justify-end gap-3 pb-safe">
                         <FluentButton onClick={() => setShowCompetencyModal(false)}>Cancelar</FluentButton>
                         <FluentButton primary onClick={handleSaveCompetency}>
                             Guardar Competencia
@@ -1139,6 +1180,41 @@ export default function AppPrototype() {
                 </div>
             </div>
         )}
+
+         {/* ================= BOTTOM NAVIGATION BAR (MOBILE ONLY) ================= */}
+         {/* Cambiado: 'lg:hidden' -> 'md:hidden' para que desaparezca en tablet/landscape */}
+         <nav className="md:hidden fixed bottom-0 w-full bg-white border-t border-[#E1DFDD] flex justify-around items-center px-2 py-2 z-30 pb-safe shadow-[0_-2px_10px_rgba(0,0,0,0.05)]">
+            <BottomNavItem 
+                icon={LayoutGrid} 
+                label="Inicio" 
+                active={activeTab === 'dashboard'} 
+                onClick={() => setActiveTab('dashboard')} 
+            />
+            
+            {userRole === 'admin' && (
+                <>
+                    <BottomNavItem 
+                        icon={Users} 
+                        label="Equipo" 
+                        active={activeTab === 'employees'} 
+                        onClick={() => setActiveTab('employees')} 
+                    />
+                     <BottomNavItem 
+                        icon={Settings} 
+                        label="Ajustes" 
+                        active={activeTab === 'settings'} 
+                        onClick={() => setActiveTab('settings')} 
+                    />
+                </>
+            )}
+
+            <BottomNavItem 
+                icon={ClipboardList} 
+                label="Evaluar" 
+                active={activeTab === 'evaluations' || activeTab === 'perform_evaluation'} 
+                onClick={() => setActiveTab('evaluations')} 
+            />
+         </nav>
 
       </main>
     </div>
