@@ -219,6 +219,8 @@ export default function AppPrototype() {
   const [settingsTab, setSettingsTab] = useState('periods'); 
   const [email, setEmail] = useState('');
   const [teamPeriodFilter, setTeamPeriodFilter] = useState('');
+  
+  // Estados con tipo ANY[] para evitar errores de TypeScript en el prototipo
   const [selectedEvaluation, setSelectedEvaluation] = useState<any>(null);
   const [formResponses, setFormResponses] = useState<any>({});
   const [isReadOnly, setIsReadOnly] = useState(false); 
@@ -226,13 +228,13 @@ export default function AppPrototype() {
   const [showMobileMenu, setShowMobileMenu] = useState(false);
   const [isActionPlanReadOnly, setIsActionPlanReadOnly] = useState(false);
 
-  const [competencies, setCompetencies] = useState([
+  const [competencies, setCompetencies] = useState<any[]>([
     { id: 1, competencia: "Liderazgo y Gestión", aspectos: [{ id: "c1_a1", question: "Demuestra capacidad para motivar e inspirar al equipo." }, { id: "c1_a2", question: "Toma decisiones efectivas bajo presión." }] },
     { id: 2, competencia: "Trabajo en Equipo", aspectos: [{ id: "c2_a1", question: "Colabora activamente compartiendo conocimientos." }, { id: "c2_a2", question: "Mantiene una actitud positiva ante conflictos." }] },
     { id: 3, competencia: "Comunicación Efectiva", aspectos: [{ id: "c3_a1", question: "Escucha atentamente y respeta las opiniones de otros." }, { id: "c3_a2", question: "Transmite ideas de manera clara y concisa." }] }
   ]);
 
-  const [teamEvaluations, setTeamEvaluations] = useState([
+  const [teamEvaluations, setTeamEvaluations] = useState<any[]>([
     { 
         id: 101, name: 'Carlos López', role: 'Desarrollador', period: 'Evaluación Q1 2025', status: 'Completed', averageScore: 4.2, percentage: 84, responses: { "c1_a1": 4.5, "c1_a2": 4.0, "c2_a1": 3.8, "c2_a2": 4.5, "c3_a1": 4.2, "c3_a2": 4.0 },
         breakdown: { self: [ { label: "Liderazgo", score: 4.2 }, { label: "Trabajo Eq.", score: 4.5 }, { label: "Comunicación", score: 4.0 } ], boss: [ { label: "Liderazgo", score: 4.0 }, { label: "Trabajo Eq.", score: 4.2 }, { label: "Comunicación", score: 4.4 } ], subs: [ { label: "Liderazgo", score: 4.4 }, { label: "Trabajo Eq.", score: 4.0 }, { label: "Comunicación", score: 4.2 } ], peers: [ { label: "Liderazgo", score: 4.1 }, { label: "Trabajo Eq.", score: 4.6 }, { label: "Comunicación", score: 4.3 } ] },
@@ -242,17 +244,18 @@ export default function AppPrototype() {
      { id: 103, name: 'Pedro Sanchez', role: 'Analista Jr.', period: 'Evaluación Anual 2024', status: 'Pending', averageScore: 0, percentage: 0, responses: {}, breakdown: null, actionPlan: null }
   ]);
 
-  const [employees, setEmployees] = useState([
+  const [employees, setEmployees] = useState<any[]>([
     { id: 1, name: 'Juan Pérez', email: 'juan.perez@empresa.com', department: 'Ventas', role: 'Gerente', status: 'Active' },
     { id: 2, name: 'Ana García', email: 'ana.garcia@empresa.com', department: 'Marketing', role: 'Analista', status: 'Active' },
     { id: 3, name: 'Carlos López', email: 'carlos.lopez@empresa.com', department: 'TI', role: 'Desarrollador', status: 'Inactive' },
     { id: 4, name: 'Maria Rodriguez', email: 'maria.rodriguez@empresa.com', department: 'RRHH', role: 'Coordinadora', status: 'Active' },
   ]);
-  const [periods, setPeriods] = useState([{ id: 1, name: 'Evaluación Anual 2024', startDate: '2024-01-01', endDate: '2024-12-31', status: 'Closed' }, { id: 2, name: 'Evaluación Q1 2025', startDate: '2025-01-01', endDate: '2025-03-31', status: 'Active' }]);
-  const [assignments, setAssignments] = useState([{ id: 1, evaluatorId: 1, evaluateeId: 3, relation: 'Jefe Inmediato', periodId: 2 }, { id: 2, evaluatorId: 2, evaluateeId: 4, relation: 'Pares', periodId: 2 }]);
+  const [periods, setPeriods] = useState<any[]>([{ id: 1, name: 'Evaluación Anual 2024', startDate: '2024-01-01', endDate: '2024-12-31', status: 'Closed' }, { id: 2, name: 'Evaluación Q1 2025', startDate: '2025-01-01', endDate: '2025-03-31', status: 'Active' }]);
+  const [assignments, setAssignments] = useState<any[]>([{ id: 1, evaluatorId: 1, evaluateeId: 3, relation: 'Jefe Inmediato', periodId: 2 }, { id: 2, evaluatorId: 2, evaluateeId: 4, relation: 'Pares', periodId: 2 }]);
   const [showAssignmentModal, setShowAssignmentModal] = useState(false);
   const [assignmentForm, setAssignmentForm] = useState({ evaluatorId: '', evaluateeId: '', relation: 'Pares', periodId: '' });
 
+  // Estados Modales
   const [showEmployeeModal, setShowEmployeeModal] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [currentEmployeeId, setCurrentEmployeeId] = useState<number | null>(null);
@@ -268,7 +271,6 @@ export default function AppPrototype() {
   const [showActionPlanModal, setShowActionPlanModal] = useState(false);
   const [actionPlanForm, setActionPlanForm] = useState<{strengths: string; weaknesses: string; competencyPlans: any[];}>({ strengths: '', weaknesses: '', competencyPlans: [] });
 
-  // Datos Evaluaciones "Mis Evaluaciones" con porcentaje agregado
   const myEvaluations = [
     { 
       id: 1, 
@@ -276,7 +278,7 @@ export default function AppPrototype() {
       relation: 'Autoevaluación', 
       status: 'Finalizado', 
       action: 'Ver', 
-      percentage: 92, // Porcentaje agregado
+      percentage: 92, 
       responses: { "c1_a1": 5, "c1_a2": 4, "c2_a1": 5, "c2_a2": 5, "c3_a1": 4, "c3_a2": 5 } 
     },
     { 
@@ -285,7 +287,7 @@ export default function AppPrototype() {
       relation: 'Subalterno', 
       status: 'Finalizado', 
       action: 'Ver', 
-      percentage: 75, // Porcentaje agregado
+      percentage: 75, 
       responses: { "c1_a1": 3, "c1_a2": 4, "c2_a1": 2, "c2_a2": 3, "c3_a1": 4, "c3_a2": 3 } 
     },
     { id: 3, collaborator: 'Prueba2', relation: 'Par', status: 'Pendiente', action: 'Evaluar', responses: {} },
@@ -295,7 +297,6 @@ export default function AppPrototype() {
   const handleLogin = () => { if (email.includes('admin')) { setUserRole('admin'); } else { setUserRole('user'); } setCurrentView('app'); setActiveTab('dashboard'); };
   const startEvaluation = (evaluation: any) => { setSelectedEvaluation(evaluation); setFormResponses({}); setIsReadOnly(false); setIsReportMode(false); setActiveTab('perform_evaluation'); };
   
-  // Modificado para manejar el porcentaje si existe
   const viewEvaluation = (evaluation: any) => { 
     setSelectedEvaluation(evaluation); 
     setFormResponses(evaluation.responses || {}); 
@@ -326,23 +327,63 @@ export default function AppPrototype() {
 
   const handleResponseChange = (questionId: string, value: any) => { if (isReadOnly) return; setFormResponses((prev: any) => ({ ...prev, [questionId]: value })); };
   
-  // CRUD functions
-  const toggleEmployeeStatus = (id: number) => setEmployees(employees.map(e => e.id===id ? {...e, status: e.status==='Active'?'Inactive':'Active'} : e));
+  // CRUD functions expanded
+  const toggleEmployeeStatus = (id: number) => {
+      setEmployees(employees.map(e => e.id===id ? {...e, status: e.status==='Active'?'Inactive':'Active'} : e));
+  };
   const openAddModal = () => { setEmployeeForm({name:'',email:'',department:'',role:''}); setIsEditing(false); setCurrentEmployeeId(null); setShowEmployeeModal(true); };
   const openEditModal = (emp:any) => { setEmployeeForm({name:emp.name,email:emp.email,department:emp.department,role:emp.role}); setIsEditing(true); setCurrentEmployeeId(emp.id); setShowEmployeeModal(true); };
-  const handleSaveEmployee = () => { if(!employeeForm.name || !employeeForm.email)return; if(isEditing&&currentEmployeeId){setEmployees(employees.map(e=>e.id===currentEmployeeId?{...e,...employeeForm}:e));}else{const newId=employees.length>0?Math.max(...employees.map(e=>e.id))+1:1;setEmployees([...employees,{...employeeForm,id:newId,status:'Active'}]);} setShowEmployeeModal(false); };
+  const handleSaveEmployee = () => { 
+      if(!employeeForm.name || !employeeForm.email) return; 
+      if(isEditing&&currentEmployeeId){
+          setEmployees(employees.map(e=>e.id===currentEmployeeId?{...e,...employeeForm}:e));
+      } else {
+          const newId=employees.length>0?Math.max(...employees.map(e=>e.id))+1:1;
+          setEmployees([...employees,{...employeeForm,id:newId,status:'Active'}]);
+      } 
+      setShowEmployeeModal(false); 
+  };
+
   const openAddPeriodModal = () => { setPeriodForm({name:'',startDate:'',endDate:'',status:'Active'}); setIsEditingPeriod(false); setCurrentPeriodId(null); setShowPeriodModal(true); };
   const openEditPeriodModal = (p:any) => { setPeriodForm({...p}); setIsEditingPeriod(true); setCurrentPeriodId(p.id); setShowPeriodModal(true); };
-  const handleSavePeriod = () => { if(!periodForm.name||!periodForm.startDate)return; if(isEditingPeriod&&currentPeriodId){setPeriods(periods.map(p=>p.id===currentPeriodId?{...p,...periodForm}:p));}else{const newId=periods.length>0?Math.max(...periods.map(p=>p.id))+1:1;setPeriods([...periods,{...periodForm,id:newId} as any]);} setShowPeriodModal(false); };
+  const handleSavePeriod = () => { 
+      if(!periodForm.name||!periodForm.startDate)return; 
+      if(isEditingPeriod&&currentPeriodId){
+          setPeriods(periods.map(p=>p.id===currentPeriodId?{...p,...periodForm}:p));
+      } else {
+          const newId=periods.length>0?Math.max(...periods.map(p=>p.id))+1:1;
+          setPeriods([...periods,{...periodForm,id:newId} as any]);
+      } 
+      setShowPeriodModal(false); 
+  };
+
   const openAddCompetencyModal = () => { setCompetencyForm({competencia:'',aspectos:[{id:`new_${Date.now()}`,question:''}]}); setIsEditingCompetency(false); setCurrentCompetencyId(null); setShowCompetencyModal(true); };
   const openEditCompetencyModal = (c:any) => { setCompetencyForm({competencia:c.competencia,aspectos:c.aspectos.map((a:any)=>({...a}))}); setIsEditingCompetency(true); setCurrentCompetencyId(c.id); setShowCompetencyModal(true); };
   const handleAddAspectToForm = () => setCompetencyForm({...competencyForm,aspectos:[...competencyForm.aspectos,{id:`temp_${Date.now()}`,question:''}]});
   const handleRemoveAspectFromForm = (i:number) => { const na=[...competencyForm.aspectos]; na.splice(i,1); setCompetencyForm({...competencyForm,aspectos:na}); };
   const handleChangeAspectQuestion = (i:number,v:string) => { const na=[...competencyForm.aspectos]; na[i].question=v; setCompetencyForm({...competencyForm,aspectos:na}); };
-  const handleSaveCompetency = () => { if(!competencyForm.competencia)return; const va=competencyForm.aspectos.filter(a=>a.question.trim()!==''); if(va.length===0)return; const fd={competencia:competencyForm.competencia,aspectos:va.map(a=>({...a,id:a.id.startsWith('temp_')?`c${currentCompetencyId||'new'}_a${Math.random()}`:a.id}))}; if(isEditingCompetency&&currentCompetencyId){setCompetencies(competencies.map(c=>c.id===currentCompetencyId?{...c,...fd}:c));}else{const newId=competencies.length>0?Math.max(...competencies.map(c=>c.id))+1:1;setCompetencies([...competencies,{id:newId,...fd}]);} setShowCompetencyModal(false); };
+  const handleSaveCompetency = () => { 
+      if(!competencyForm.competencia)return; 
+      const va=competencyForm.aspectos.filter(a=>a.question.trim()!==''); 
+      if(va.length===0)return; 
+      const fd={competencia:competencyForm.competencia,aspectos:va.map(a=>({...a,id:a.id.startsWith('temp_')?`c${currentCompetencyId||'new'}_a${Math.random()}`:a.id}))}; 
+      if(isEditingCompetency&&currentCompetencyId){
+          setCompetencies(competencies.map(c=>c.id===currentCompetencyId?{...c,...fd}:c));
+      } else {
+          const newId=competencies.length>0?Math.max(...competencies.map(c=>c.id))+1:1;
+          setCompetencies([...competencies,{id:newId,...fd}]);
+      } 
+      setShowCompetencyModal(false); 
+  };
   const handleDeleteCompetency = (id:number) => { if(confirm('¿Eliminar?')) setCompetencies(competencies.filter(c=>c.id!==id)); };
+  
   const openAssignmentModal = () => { setAssignmentForm({evaluatorId:'',evaluateeId:'',relation:'Pares',periodId:''}); setShowAssignmentModal(true); };
-  const handleSaveAssignment = () => { if(!assignmentForm.evaluatorId||!assignmentForm.evaluateeId||!assignmentForm.periodId)return; const newId=assignments.length>0?Math.max(...assignments.map(a=>a.id))+1:1; setAssignments([...assignments,{id:newId,evaluatorId:parseInt(assignmentForm.evaluatorId),evaluateeId:parseInt(assignmentForm.evaluateeId),relation:assignmentForm.relation,periodId:parseInt(assignmentForm.periodId)}]); setShowAssignmentModal(false); };
+  const handleSaveAssignment = () => { 
+      if(!assignmentForm.evaluatorId||!assignmentForm.evaluateeId||!assignmentForm.periodId)return; 
+      const newId=assignments.length>0?Math.max(...assignments.map(a=>a.id))+1:1; 
+      setAssignments([...assignments,{id:newId,evaluatorId:parseInt(assignmentForm.evaluatorId),evaluateeId:parseInt(assignmentForm.evaluateeId),relation:assignmentForm.relation,periodId:parseInt(assignmentForm.periodId)}]); 
+      setShowAssignmentModal(false); 
+  };
   const handleDeleteAssignment = (id:number) => { if(confirm("¿Borrar?")) setAssignments(assignments.filter(a=>a.id!==id)); };
 
   const openActionPlanModal = () => {
@@ -363,8 +404,15 @@ export default function AppPrototype() {
   const handleRemoveActionFromPlan = (planIndex: number, actionIndex: number) => { const newPlans = [...actionPlanForm.competencyPlans]; newPlans[planIndex].actions.splice(actionIndex, 1); setActionPlanForm({ ...actionPlanForm, competencyPlans: newPlans }); };
   const handleChangeActionInPlan = (planIndex: number, actionIndex: number, field: string, value: string) => { const newPlans = [...actionPlanForm.competencyPlans]; (newPlans[planIndex].actions[actionIndex] as any)[field] = value; setActionPlanForm({ ...actionPlanForm, competencyPlans: newPlans }); };
   const handleSaveActionPlan = () => {
-      const updatedTeam = teamEvaluations.map(member => { if (member.id === selectedEvaluation.id) { return { ...member, actionPlan: actionPlanForm }; } return member; });
-      setTeamEvaluations(updatedTeam); setSelectedEvaluation({ ...selectedEvaluation, actionPlan: actionPlanForm }); setShowActionPlanModal(false);
+      const updatedTeam = teamEvaluations.map(member => { 
+          if (member.id === selectedEvaluation.id) { 
+              return { ...member, actionPlan: actionPlanForm }; 
+          } 
+          return member; 
+      });
+      setTeamEvaluations(updatedTeam); 
+      setSelectedEvaluation({ ...selectedEvaluation, actionPlan: actionPlanForm }); 
+      setShowActionPlanModal(false);
   };
 
   if (currentView === 'login') {
