@@ -1,6 +1,5 @@
 import 'animate.css';
 import {
-  GoogleOneTap,
   SignInButton,
   SignUpButton,
   SignedIn,
