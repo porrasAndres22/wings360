@@ -19,6 +19,20 @@
   }
 }
 
+.clerkAdmin {
+  display: flex;
+  flex-wrap: wrap;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  align-items: center;
+  justify-content: center;
+  background: #E6E9FF;
+  background: linear-gradient(95deg, rgba(230, 233, 255, 1) 23%, rgba(236, 244, 255, 1) 52%, rgba(216, 240, 255, 1) 82%);
+}
+
 .fluentContent {
   display: flex;
   position: absolute;
