@@ -1,6 +1,5 @@
 
 import {
-  GoogleOneTap,
   SignInButton,
   SignUpButton,
   SignedIn,
@@ -14,7 +13,7 @@ export default function Home() {
       <div className="formLogin form animate__animated animate__fadeIn">
         <header className="flex justify-end items-center p-4 gap-4 h-16">
           <SignedOut>
-            <GoogleOneTap />
+            <SignInButton />
           </SignedOut>
           <SignedIn>
             <UserButton />
