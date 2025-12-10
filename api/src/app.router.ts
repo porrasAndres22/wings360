@@ -8,7 +8,8 @@ import { ConnectionUserSchema } from "./model/model.connection";
 const router = Router()
 
 router.get('/', (req, res) => {
-    res.sendFile(configFrontFolder(__dirname, '/static/index.html'))
+    // res.sendFile(configFrontFolder(__dirname, '/static/index.html'))
+    res.json({"hola": "server"})
 })
 
 router.get('/proccess', (req, res) => {
