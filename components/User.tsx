@@ -2,6 +2,18 @@
 
 import { useUser } from '@clerk/nextjs';
 
+import {
+    SignInButton,
+    SignedIn,
+    SignedOut,
+    UserButton,
+} from '@clerk/nextjs'
+
+
+import { loadEnvConfig } from '@next/env'
+ 
+const projectDir = process.cwd()
+
 
 export const Data = () => {
 
@@ -11,13 +23,12 @@ export const Data = () => {
         return <></>
     }
 
-
+    
     (async () => {
         try {
-
             const appUser = localStorage.getItem("appUser")
             if ((appUser == null) && (appUser != user.emailAddresses[0].emailAddress)) {
-                const { fetchUser }: {fetchUser: string} = await (await fetch(`/server/user`, {
+                const { fetchUser }: { fetchUser: string } = await (await fetch(`/server/user`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
@@ -27,11 +38,10 @@ export const Data = () => {
                         data: user.emailAddresses[0].emailAddress
                     })
                 })).json()
-                
+
                 if (fetchUser == user.emailAddresses[0].emailAddress) {
                     localStorage.setItem("appUser", fetchUser)
                 }
-                alert("fetch Execute")
             }
         } catch (error) {
             return error
@@ -42,7 +52,13 @@ export const Data = () => {
 
     return (
         <>
-            {/* <div>{user.emailAddresses[0].emailAddress}</div> */}
+            <SignedOut>
+                <SignInButton />
+            </SignedOut>
+            <SignedIn>
+                <UserButton />
+            </SignedIn>
+            <div>{user.emailAddresses[0].emailAddress}</div>
         </>
     )
 }

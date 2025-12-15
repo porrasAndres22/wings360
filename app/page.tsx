@@ -1,13 +1,11 @@
 import {
   SignInButton,
-  SignedIn,
   SignedOut,
-  UserButton,
 } from '@clerk/nextjs'
 
-import User from '../components/User'
+import User from '@/components/User'
 
-export const Home = () => {
+export default () => {
 
   return (
     <div className="fluentContent">
@@ -15,13 +13,8 @@ export const Home = () => {
         <SignedOut>
           <SignInButton />
         </SignedOut>
-        <SignedIn>
-          <UserButton />
-        </SignedIn>
         <User></User>
       </header>
     </div>
   );
 }
-
-export default Home
