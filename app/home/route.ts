@@ -89,8 +89,8 @@ export const GET = () => {
                             <div class="nav-link-button"><a class="link-wrap w-inline-block"
                                     data-w-id="135d4f07-ad5a-d865-3fc1-85751f84d3a1" href="/sign-in">
                                     <div class="link-content white">
-                                        <div class="link-text-1">Contact Us</div>
-                                        <div class="link-text-2">Contact Us</div>
+                                        <div class="link-text-1">Iniciar Sesión</div>
+                                        <div class="link-text-2">Iniciar Sesión</div>
                                     </div>
                                 </a></div>
                         </div>
@@ -99,8 +99,8 @@ export const GET = () => {
                         <div class="nav-menu-link"><a class="link-wrap w-inline-block"
                                 data-w-id="4c158a35-e8f6-67f0-24e3-940a6ef8d88a" href="/sign-in">
                                 <div class="link-content white">
-                                    <div class="link-text-1">Contact Us</div>
-                                    <div class="link-text-2">Contact Us</div>
+                                    <div class="link-text-1">Iniciar Sesión</div>
+                                    <div class="link-text-2">Iniciar Sesión</div>
                                 </div>
                             </a></div>
                         <div class="menu-button-wrap w-nav-button">
