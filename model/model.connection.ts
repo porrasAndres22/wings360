@@ -1,5 +1,5 @@
 import { Schema, model } from 'mongoose'
-import { ConnectionUser } from '../global.interfaces'
+import { ConnectionUser } from '@/config/global.interfaces'
 
 export const ConnectionUserSchema = model('connection', new Schema<ConnectionUser>({
     nameUser: {

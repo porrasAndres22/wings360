@@ -1,5 +1,5 @@
 import { Schema, model } from 'mongoose'
-import { ProccesSchema } from '../global.interfaces'
+import { ProccesSchema } from '@/config/global.interfaces'
 
 export const ProccesModelSchema = model('proccess', new Schema<ProccesSchema>({
     nameProccess: {
