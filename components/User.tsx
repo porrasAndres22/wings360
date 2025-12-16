@@ -1,6 +1,6 @@
 'use client'
 
-import { useUser } from '@clerk/nextjs';
+import { useAuth, useUser } from '@clerk/nextjs';
 
 import {
     SignInButton,
@@ -10,20 +10,19 @@ import {
 } from '@clerk/nextjs'
 
 
-import { loadEnvConfig } from '@next/env'
- 
-const projectDir = process.cwd()
 
 
-export const Data = () => {
+export default () => {
+
 
     const { isLoaded, isSignedIn, user } = useUser();
 
-    if (!isSignedIn) {
-        return <></>
-    }
+    const { has }: any = useAuth()
 
-    
+    if (!isLoaded) return <>Loading...</>
+
+    if (!isSignedIn) return <></>
+
     (async () => {
         try {
             const appUser = localStorage.getItem("appUser")
@@ -49,6 +48,9 @@ export const Data = () => {
 
     })()
 
+    const canManage: boolean = has({ permission: 'org:testpermission:soyadmin' })
+
+    if (!canManage) return <h1>You do not have the permissions to manage team settings.</h1>
 
     return (
         <>
@@ -56,11 +58,8 @@ export const Data = () => {
                 <SignInButton />
             </SignedOut>
             <SignedIn>
-                <UserButton />
+                <UserButton showName />
             </SignedIn>
-            <div>{user.emailAddresses[0].emailAddress}</div>
         </>
     )
 }
-
-export default Data

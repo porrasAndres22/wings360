@@ -16,5 +16,5 @@ export default () => {
         <User></User>
       </header>
     </div>
-  );
+  )
 }
