@@ -23,6 +23,7 @@ export default () => {
 
     if (!isSignedIn) return <></>
 
+
     (async () => {
         try {
             const appUser = localStorage.getItem("appUser")
@@ -58,7 +59,7 @@ export default () => {
                 <SignInButton />
             </SignedOut>
             <SignedIn>
-                <UserButton showName />
+                <UserButton />
             </SignedIn>
         </>
     )
