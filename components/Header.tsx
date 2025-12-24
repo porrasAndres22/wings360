@@ -1,11 +1,17 @@
-import UserClerk from '@/components/UserClerk'
-
+import {
+    SignInButton,
+    SignedIn,
+    SignedOut,
+    UserButton,
+} from '@clerk/nextjs'
+import { AlertTriangle, Settings, Gift, UserPlus, Plus, X, List, LayoutGrid } from 'lucide-react';
 import { Bell } from 'lucide-react';
 
 
 export default () => {
+
     return (
-        <header className="px-5 lg:px-6">
+        <header className="px-5 lg:px-6 animate__animated animate__fadeIn">
             <div className="flex items-center justify-between max-w-1400px mx-auto">
                 {/* Logo */}
                 <div className="flex items-center gap-4">
@@ -22,11 +28,14 @@ export default () => {
                         <span className="absolute top-1 right-1 w-2 h-2 bg-purple-500 rounded-full"></span>
                     </button>
                     <button className="p-2">
-                        {/* <UserClerk /> */}
+                        <SignedIn>
+                            <UserButton />
+                        </SignedIn>
                     </button>
                 </div>
             </div>
         </header>
+
     )
 }
 

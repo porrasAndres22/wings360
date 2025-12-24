@@ -54,6 +54,10 @@
   overflow: auto;
 }
 
+.fluentContent::-webkit-scrollbar {
+  width: 0;
+}
+
 .fluenColorBlue {
   background: var(--background-blue);
 }

@@ -1,7 +1,6 @@
 'use client';
 
 import { useState } from 'react';
-import { ChevronRight, Github, Database, Layers, Box, Zap, FileText } from 'lucide-react';
 
 export default function DeploymentForm() {
 
@@ -28,8 +27,7 @@ export default function DeploymentForm() {
 
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-gray-900 via-slate-900 to-gray-800 flex flex-col">
-
+        <div className="min-h-screen from-gray-900 via-slate-900 to-gray-800 flex flex-col animate__animated animate__backInDown">
             {/* Main Content */}
             <div className="flex-1 flex flex-col items-center justify-center px-4 py-8 md:py-12">
                 {/* Icon */}
