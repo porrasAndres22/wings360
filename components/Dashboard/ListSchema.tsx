@@ -41,7 +41,7 @@ export default () => {
                 {projects.map((project, index) => (
                     <div
                         key={index}
-                        className="bg-white shadow-xl hover:bg-[#1a1b2e] hover:border-gray-700 rounded-lg p-6 transition-all cursor-pointer group animate__animated animate__fadeIn"
+                        className="bg-white transition-all duration-500 ease-in-out hover:shadow-xl rounded-lg p-6 cursor-pointer group animate__animated animate__fadeIn"
                     >
                         <div className="flex flex-col h-full">
                             <h3 className="text-lg font-medium mb-auto">{project.name}</h3>

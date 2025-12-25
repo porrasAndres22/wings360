@@ -25,3 +25,9 @@ export const userClerkHandler = async (user: any) => {
     }
 
 }
+
+export const useServiceWorker = (route: string) => {
+    if (navigator.serviceWorker) {
+      navigator.serviceWorker.register(route)
+    }
+}

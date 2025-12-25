@@ -24,25 +24,25 @@ export default ({ user }: { user?: any }) => {
                         <h1 className="text-2xl font-semibold">
                             {!user ? "porrasandres22's Projects" : user.firstName}
                         </h1>
-                        <span className="mt-2 px-2 py-0.5 bg-theme-text-10 text-theme-text-1 text-xs font-bold rounded border border-theme-text-1">
-                            HOBBY
+                        <span className="mt-2 px-3 py-0.5 bg-theme-text-10 text-theme-text-1 text-xs font-bold rounded border border-theme-text-1">
+                            SUPERADMIN
                         </span>
                     </div>
                 </div>
 
                 <div className="flex items-center gap-2 overflow-auto">
-                    <button className="p-2">
+                    <button className="cursor-pointer p-2" onClick={() => { handler("#2e73936b82174696f261a4bbb4ee8be5f1b41672"); (() => { location.hash = "2e73936b82174696f261a4bbb4ee8be5f1b41672" })() }}>
                         <Settings className="w-5 h-5 text-theme-text-0" />
                     </button>
-                    <button className="flex items-center gap-2 px-4 py-2 bg-theme-text-10 hover:bg-theme-text-30 rounded text-sm font-medium">
+                    <button className="flex items-center gap-2 px-4 py-2 bg-theme-text-10 hover:bg-theme-text-30 rounded text-sm font-medium" onClick={() => { handler("#e4af5e2fef8ecc5e62164f586c33cda921f7eb28"); (() => { location.hash = "e4af5e2fef8ecc5e62164f586c33cda921f7eb28" })() }}>
                         <Gift className="w-4 h-4" />
                         Conecciones
                     </button>
-                    <button className="flex items-center gap-2 px-4 py-2 bg-theme-text-30 hover:bg-theme-text-20 rounded text-sm font-medium" onClick={() => { handler("#ListUser"); (() => { location.hash = "ListUser" })() }}>
+                    <button className="flex items-center gap-2 px-4 py-2 bg-theme-text-30 hover:bg-theme-text-20 rounded text-sm font-medium" onClick={() => { handler("#b6aa6ab9f34e8f9cfbd19358d156cd4884f07a75"); (() => { location.hash = "b6aa6ab9f34e8f9cfbd19358d156cd4884f07a75" })() }}>
                         <UserPlus className="w-4 h-4" />
                         Usuarios
                     </button>
-                    <button className="cursor-pointer flex items-center gap-2 px-4 py-2 bg-theme-text-20 hover:bg-theme-text-10 rounded text-sm font-medium" onClick={() => { handler("#CreateSchema"); (() => { location.hash = "CreateSchema" })() }} >
+                    <button className="cursor-pointer flex items-center gap-2 px-4 py-2 bg-theme-text-20 hover:bg-theme-text-10 rounded text-sm font-medium" onClick={() => { handler("#7cc7714c6789e85385afa3773e584a38a4b6ce77"); (() => { location.hash = "7cc7714c6789e85385afa3773e584a38a4b6ce77" })() }} >
                         <Plus className="w-4 h-4" />
                         Esquema
                     </button>
