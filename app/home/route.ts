@@ -58,10 +58,11 @@ export const GET = () => {
             <div class="navbar w-nav" data-animation="default" data-collapse="medium" data-duration="400"
                 data-easing="ease" data-easing2="ease" role="banner">
                 <div class="nav-container">
-                    <div class="nav-logo-wrapper"><a aria-current="page" class="w-nav-brand w--current" href="/"><img
-                                style="height: 4rem"
-                                alt="A Rapide Logo" loading="lazy"
-                                src="/wings360.png" /></a>
+                    <div class="nav-logo-wrapper"><a aria-current="page" class="w-nav-brand w--current" href="/">
+                    <svg style="height: 4rem">
+                        <use href="./sprite.svg#wings360"></use>
+                    </svg>
+                    </a>
                     </div>
                     <nav class="nav-link-wrap w-nav-menu" role="navigation">
                         <div class="nav-link-content"><a aria-current="page"
