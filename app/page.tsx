@@ -1,7 +1,7 @@
 "use client"
 import { useEffect } from 'react'
-import Dashboard from '@/components/Dashboard'
-import Header from '@/components/Header'
+// import Dashboard from '@/components/Dashboard'
+// import Header from '@/components/Header'
 import { useAuth, useUser } from '@clerk/nextjs';
 import { userClerkHandler, useServiceWorker } from '@/lib';
 
@@ -22,8 +22,8 @@ export default () => {
 
   return (
     <div className="min-h-screen pb-8 text-black">
-      <Header />
-      <Dashboard user={user}></Dashboard>
+      {/* <Header />
+      <Dashboard user={user}></Dashboard> */}
     </div>
   )
 }
