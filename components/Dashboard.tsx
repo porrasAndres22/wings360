@@ -32,6 +32,7 @@ export default ({ user }: { user: any }) => {
                 : data == "#7cc7714c6789e85385afa3773e584a38a4b6ce77" ?
                     <>
                         <HeaderOptions user={user}></HeaderOptions>
+                        <ReferInfo></ReferInfo>
                         <ListSchema></ListSchema>
                     </>
 

@@ -1,172 +1,304 @@
-import React, { useState } from 'react';
-import { Search, ChevronLeft, ChevronRight } from 'lucide-react';
+'use client';
 
-export default function UserTable() {
+import { useState } from 'react';
+import { Search, SlidersHorizontal, Trash2, ArrowLeft, UserPlus } from 'lucide-react';
+
+interface Order {
+  id: string;
+  customer: {
+    name: string;
+    email: string;
+    initials: string;
+    color: string;
+  };
+  product: string;
+  dealValue: string;
+  closeDate: string;
+  status: 'Complete' | 'Pending';
+}
+
+const mockOrders: Order[] = [
+  {
+    id: 'DE124321',
+    customer: {
+      name: 'John Doe',
+      email: 'johndeo@gmail.com',
+      initials: 'JD',
+      color: 'bg-blue-100 text-blue-600'
+    },
+    product: 'Software License',
+    dealValue: '$18,50.34',
+    closeDate: '2024-06-15',
+    status: 'Complete'
+  },
+  {
+    id: 'DE124321',
+    customer: {
+      name: 'Kierra Franci',
+      email: 'kierra@gmail.com',
+      initials: 'KF',
+      color: 'bg-pink-100 text-pink-600'
+    },
+    product: 'Software License',
+    dealValue: '$18,50.34',
+    closeDate: '2024-06-15',
+    status: 'Complete'
+  },
+  {
+    id: 'DE124321',
+    customer: {
+      name: 'Emerson Workman',
+      email: 'emerson@gmail.com',
+      initials: 'EW',
+      color: 'bg-cyan-100 text-cyan-600'
+    },
+    product: 'Software License',
+    dealValue: '$18,50.34',
+    closeDate: '2024-06-15',
+    status: 'Pending'
+  },
+  {
+    id: 'DE124321',
+    customer: {
+      name: 'Chance Philips',
+      email: 'chance@gmail.com',
+      initials: 'CP',
+      color: 'bg-orange-100 text-orange-600'
+    },
+    product: 'Software License',
+    dealValue: '$18,50.34',
+    closeDate: '2024-06-15',
+    status: 'Complete'
+  },
+  {
+    id: 'DE124321',
+    customer: {
+      name: 'Terry Geidt',
+      email: 'terry@gmail.com',
+      initials: 'TG',
+      color: 'bg-green-100 text-green-600'
+    },
+    product: 'Software License',
+    dealValue: '$18,50.34',
+    closeDate: '2024-06-15',
+    status: 'Complete'
+  }
+];
+
+export default function RecentOrders() {
   const [searchTerm, setSearchTerm] = useState('');
-  const [entriesPerPage, setEntriesPerPage] = useState(10);
-  const [currentPage, setCurrentPage] = useState(1);
+  const [selectedOrders, setSelectedOrders] = useState<string[]>([]);
 
-  const users = [
-    { id: 1, name: 'Abram Schleifer', position: 'Sales Assistant', office: 'Edinburgh', age: 57, startDate: '25 Apr, 2027', salary: '$89,500', avatar: '👨' },
-    { id: 2, name: 'Abram Schleifer', position: 'Sales Assistant', office: 'Edinburgh', age: 57, startDate: '25 Apr, 2027', salary: '$89,500', avatar: '👨' },
-    { id: 3, name: 'Abram Schleifer', position: 'Sales Assistant', office: 'Edinburgh', age: 57, startDate: '25 Apr, 2027', salary: '$89,500', avatar: '👨' },
-    { id: 4, name: 'Carla George', position: 'Sales Assistant', office: 'London', age: 45, startDate: '11 May, 2027', salary: '$15,500', avatar: '👩' },
-    { id: 5, name: 'Carla George', position: 'Sales Assistant', office: 'London', age: 45, startDate: '11 May, 2027', salary: '$15,500', avatar: '👩' },
-    { id: 6, name: 'Carla George', position: 'Sales Assistant', office: 'London', age: 45, startDate: '11 May, 2027', salary: '$15,500', avatar: '👩' },
-    { id: 7, name: 'Ekstrom Bothman', position: 'Sales Assistant', office: 'San Francisco', age: 53, startDate: '15 Nov, 2027', salary: '$19,200', avatar: '👩' },
-    { id: 8, name: 'Ekstrom Bothman', position: 'Sales Assistant', office: 'San Francisco', age: 53, startDate: '15 Nov, 2027', salary: '$19,200', avatar: '👩' },
-    { id: 9, name: 'Ekstrom Bothman', position: 'Sales Assistant', office: 'San Francisco', age: 53, startDate: '15 Nov, 2027', salary: '$19,200', avatar: '👩' },
-    { id: 10, name: 'Emery Culhane', position: 'Sales Assistant', office: 'New York', age: 45, startDate: '29 Jun, 2027', salary: '$23,500', avatar: '👨' },
-  ];
+  const handleSelectAll = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.checked) {
+      setSelectedOrders(mockOrders.map(order => order.id));
+    } else {
+      setSelectedOrders([]);
+    }
+  };
 
-  const filteredUsers = users.filter(user =>
-    user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    user.position.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    user.office.toLowerCase().includes(searchTerm.toLowerCase())
-  );
-
-  const totalPages = Math.ceil(filteredUsers.length / entriesPerPage);
-  const startIndex = (currentPage - 1) * entriesPerPage;
-  const endIndex = startIndex + entriesPerPage;
-  const currentUsers = filteredUsers.slice(startIndex, endIndex);
+  const handleSelectOrder = (orderId: string) => {
+    if (selectedOrders.includes(orderId)) {
+      setSelectedOrders(selectedOrders.filter(id => id !== orderId));
+    } else {
+      setSelectedOrders([...selectedOrders, orderId]);
+    }
+  };
 
   return (
-    <div className="w-full max-w-7xl mx-auto p-4 bg-white rounded-lg shadow-sm animate__animated animate__backInDown">
-      {/* Header */}
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
+    <div className="w-full rounded-lg animate__animated animate__fadeIn">
+      <div className="border-b border-gray-200">
         <div className="flex items-center gap-2">
-          <span className="text-sm text-gray-600">Show</span>
-          <select
-            value={entriesPerPage}
-            onChange={(e) => setEntriesPerPage(Number(e.target.value))}
-            className="px-3 py-1.5 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+          {/* Back to Button */}
+          <button
+            onClick={() => window.history.back()}
+            className="cursor-pointer flex items-center justify-center gap-2 px-4 py-2.5 bg-white hover:bg-gray-50 text-gray-700 rounded-lg shadow-sm hover:shadow-md transition-all duration-200 font-medium text-sm border border-gray-200"
           >
-            <option value={10}>10</option>
-            <option value={25}>25</option>
-            <option value={50}>50</option>
-          </select>
-          <span className="text-sm text-gray-600">entries</span>
-        </div>
+            <svg
+              className="w-5 h-5"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+            </svg>
+            <span>Regresar</span>
+          </button>
 
-        <div className="relative w-full sm:w-64">
-          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
-          <input
-            type="text"
-            placeholder="Search..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-          />
+          {/* Create Project Button */}
+          <button
+            onClick={() => window.history.back()}
+            className="cursor-pointer flex items-center justify-center gap-2 px-5 py-2.5 bg-purple-600 hover:bg-purple-700 text-white rounded-lg shadow-sm hover:shadow-md transition-all duration-200 font-medium text-sm group"
+          >
+            <svg
+              className="w-5 h-5 group-hover:rotate-90 transition-transform duration-200"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+            </svg>
+            <span>Nuevo Esquema</span>
+          </button>
         </div>
       </div>
+      {/* Back Button and Add User */}
 
-      {/* Table - Desktop */}
-      <div className="hidden md:block overflow-x-auto">
+      {/* Table - Desktop View */}
+      <div className="bg-white hidden mt-4 lg:block overflow-x-auto rounded-lg">
+        <div className="flex flex-col pl-5 sm:flex-row sm:items-center sm:justify-between gap-4">
+          <h2 className="text-xl sm:text-2xl font-semibold text-gray-900">Recent Orders</h2>
+
+          <div className="flex flex-col sm:flex-row gap-3 w-full sm:w-auto pt-3">
+
+            {/* Filter Button */}
+            <button className="flex items-center justify-center gap-2 px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors mr-4">
+              <SlidersHorizontal className="w-5 h-5 text-gray-600" />
+              <span className="text-gray-700 font-medium">Filter</span>
+            </button>
+          </div>
+        </div>
         <table className="w-full">
-          <thead>
-            <tr className="border-b border-gray-200">
-              <th className="text-left py-3 px-4 text-sm font-medium text-gray-700">User</th>
-              <th className="text-left py-3 px-4 text-sm font-medium text-gray-700">Position</th>
-              <th className="text-left py-3 px-4 text-sm font-medium text-gray-700">Office</th>
-              <th className="text-left py-3 px-4 text-sm font-medium text-gray-700">Age</th>
-              <th className="text-left py-3 px-4 text-sm font-medium text-gray-700">Start date</th>
-              <th className="text-left py-3 px-4 text-sm font-medium text-gray-700">Salary</th>
+          <thead className="bg-gray-50 border-b border-gray-200">
+            <tr>
+              <th className="w-12 px-6 py-3">
+                <input
+                  type="checkbox"
+                  checked={selectedOrders.length === mockOrders.length}
+                  onChange={handleSelectAll}
+                  className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                />
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Deal ID
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Customer
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Product/Service
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Deal Value
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Close Date
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Status
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Action
+              </th>
             </tr>
           </thead>
-          <tbody>
-            {currentUsers.map((user) => (
-              <tr key={user.id} className="border-b border-gray-100 hover:bg-gray-50 transition-colors">
-                <td className="py-3 px-4">
+          <tbody className="bg-white divide-y divide-gray-200">
+            {mockOrders.map((order, index) => (
+              <tr key={`${order.id}-${index}`} className="hover:bg-gray-50 transition-colors">
+                <td className="px-6 py-4">
+                  <input
+                    type="checkbox"
+                    checked={selectedOrders.includes(order.id)}
+                    onChange={() => handleSelectOrder(order.id)}
+                    className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                  />
+                </td>
+                <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                  {order.id}
+                </td>
+                <td className="px-6 py-4 whitespace-nowrap">
                   <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-full bg-gradient-to-br from-purple-400 to-pink-400 flex items-center justify-center text-white text-lg">
-                      {user.avatar}
+                    <div className={`w-10 h-10 rounded-full ${order.customer.color} flex items-center justify-center font-medium text-sm`}>
+                      {order.customer.initials}
                     </div>
-                    <span className="text-sm font-medium text-gray-900">{user.name}</span>
+                    <div>
+                      <div className="text-sm font-medium text-gray-900">{order.customer.name}</div>
+                      <div className="text-sm text-gray-500">{order.customer.email}</div>
+                    </div>
                   </div>
                 </td>
-                <td className="py-3 px-4 text-sm text-gray-600">{user.position}</td>
-                <td className="py-3 px-4 text-sm text-gray-600">{user.office}</td>
-                <td className="py-3 px-4 text-sm text-gray-600">{user.age}</td>
-                <td className="py-3 px-4 text-sm text-gray-600">{user.startDate}</td>
-                <td className="py-3 px-4 text-sm font-medium text-gray-900">{user.salary}</td>
+                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                  {order.product}
+                </td>
+                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                  {order.dealValue}
+                </td>
+                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                  {order.closeDate}
+                </td>
+                <td className="px-6 py-4 whitespace-nowrap">
+                  <span className={`inline-flex px-3 py-1 text-xs font-semibold rounded-full ${order.status === 'Complete'
+                    ? 'bg-green-100 text-green-700'
+                    : 'bg-yellow-100 text-yellow-700'
+                    }`}>
+                    {order.status}
+                  </span>
+                </td>
+                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                  <button className="text-gray-400 hover:text-red-600 transition-colors">
+                    <Trash2 className="w-5 h-5" />
+                  </button>
+                </td>
               </tr>
             ))}
           </tbody>
         </table>
       </div>
 
-      {/* Cards - Mobile */}
-      <div className="md:hidden space-y-4">
-        {currentUsers.map((user) => (
-          <div key={user.id} className="border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow">
-            <div className="flex items-center gap-3 mb-3">
-              <div className="w-12 h-12 rounded-full bg-gradient-to-br from-purple-400 to-pink-400 flex items-center justify-center text-white text-xl">
-                {user.avatar}
+      {/* Cards - Mobile/Tablet View */}
+      <div className="lg:hidden divide-y divide-gray-200">
+        {mockOrders.map((order, index) => (
+          <div key={`${order.id}-${index}`} className="p-4 hover:bg-gray-50 transition-colors">
+            <div className="flex items-start justify-between mb-3">
+              <div className="flex items-center gap-3 flex-1">
+                <input
+                  type="checkbox"
+                  checked={selectedOrders.includes(order.id)}
+                  onChange={() => handleSelectOrder(order.id)}
+                  className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500 mt-1"
+                />
+                <div className={`w-10 h-10 rounded-full ${order.customer.color} flex items-center justify-center font-medium text-sm flex-shrink-0`}>
+                  {order.customer.initials}
+                </div>
+                <div className="flex-1 min-w-0">
+                  <div className="text-sm font-medium text-gray-900">{order.customer.name}</div>
+                  <div className="text-sm text-gray-500 truncate">{order.customer.email}</div>
+                </div>
               </div>
-              <div>
-                <h3 className="font-medium text-gray-900">{user.name}</h3>
-                <p className="text-sm text-gray-600">{user.position}</p>
-              </div>
+              <button className="text-gray-400 hover:text-red-600 transition-colors ml-2">
+                <Trash2 className="w-5 h-5" />
+              </button>
             </div>
-            <div className="grid grid-cols-2 gap-2 text-sm">
-              <div>
-                <span className="text-gray-500">Office:</span>
-                <p className="text-gray-900">{user.office}</p>
+
+            <div className="ml-14 space-y-2">
+              <div className="flex justify-between text-sm">
+                <span className="text-gray-500">Deal ID:</span>
+                <span className="font-medium text-gray-900">{order.id}</span>
               </div>
-              <div>
-                <span className="text-gray-500">Age:</span>
-                <p className="text-gray-900">{user.age}</p>
+              <div className="flex justify-between text-sm">
+                <span className="text-gray-500">Product:</span>
+                <span className="text-gray-900">{order.product}</span>
               </div>
-              <div>
-                <span className="text-gray-500">Start date:</span>
-                <p className="text-gray-900">{user.startDate}</p>
+              <div className="flex justify-between text-sm">
+                <span className="text-gray-500">Value:</span>
+                <span className="font-medium text-gray-900">{order.dealValue}</span>
               </div>
-              <div>
-                <span className="text-gray-500">Salary:</span>
-                <p className="text-gray-900 font-medium">{user.salary}</p>
+              <div className="flex justify-between text-sm">
+                <span className="text-gray-500">Close Date:</span>
+                <span className="text-gray-900">{order.closeDate}</span>
+              </div>
+              <div className="flex justify-between text-sm items-center">
+                <span className="text-gray-500">Status:</span>
+                <span className={`inline-flex px-3 py-1 text-xs font-semibold rounded-full ${order.status === 'Complete'
+                  ? 'bg-green-100 text-green-700'
+                  : 'bg-yellow-100 text-yellow-700'
+                  }`}>
+                  {order.status}
+                </span>
               </div>
             </div>
           </div>
         ))}
-      </div>
-
-      {/* Footer */}
-      <div className="flex flex-col sm:flex-row justify-between items-center gap-4 mt-6">
-        <span className="text-sm text-gray-600">
-          Showing {startIndex + 1} to {Math.min(endIndex, filteredUsers.length)} of {filteredUsers.length} entries
-        </span>
-
-        <div className="flex items-center gap-2">
-          <button
-            onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
-            disabled={currentPage === 1}
-            className="p-2 border border-gray-300 rounded-md hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            <ChevronLeft className="w-4 h-4" />
-          </button>
-          
-          {[...Array(totalPages)].map((_, index) => (
-            <button
-              key={index + 1}
-              onClick={() => setCurrentPage(index + 1)}
-              className={`px-3 py-1.5 rounded-md text-sm ${
-                currentPage === index + 1
-                  ? 'bg-blue-500 text-white'
-                  : 'border border-gray-300 hover:bg-gray-50'
-              }`}
-            >
-              {index + 1}
-            </button>
-          ))}
-
-          <button
-            onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
-            disabled={currentPage === totalPages}
-            className="p-2 border border-gray-300 rounded-md hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            <ChevronRight className="w-4 h-4" />
-          </button>
-        </div>
       </div>
     </div>
   );

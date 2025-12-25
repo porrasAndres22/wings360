@@ -16,7 +16,7 @@ export default () => {
   }, []);
 
 
-  if (!isLoaded) return <>Loading...</>
+  if (!isLoaded) return <div className="loader"></div>
   if (!isSignedIn) return <></>
   if (!has({ permission: 'org:testpermission:soysuperadmin' }) && !has({ permission: 'org:testpermission:soyadmin' })) return <></>
 
