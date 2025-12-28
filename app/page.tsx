@@ -1,7 +1,10 @@
 "use client"
 import { useEffect } from 'react'
+import {
+  SignedIn,
+} from '@clerk/nextjs'
 import Dashboard from '@/components/Dashboard'
-import Header from '@/components/Header'
+import Navigation from '@/components/Navigation'
 import { useAuth, useUser } from '@clerk/nextjs';
 import { userClerkHandler, useServiceWorker } from '@/lib';
 
@@ -21,9 +24,12 @@ export default () => {
   if (!has({ permission: 'org:testpermission:soysuperadmin' }) && !has({ permission: 'org:testpermission:soyadmin' })) return <></>
 
   return (
-    <div className="min-h-screen pb-8 text-black">
-      <Header />
-      <Dashboard user={user}></Dashboard>
-    </div>
+    <SignedIn>
+      <div className="min-h-screen pb-8 text-black">
+        <Dashboard user={user}></Dashboard>
+        <Navigation />
+      </div>
+
+    </SignedIn>
   )
 }

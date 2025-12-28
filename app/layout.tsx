@@ -4,7 +4,6 @@ import 'animate.css';
 import "./globals.css";
 import { ClerkProvider } from "@clerk/nextjs";
 import { esES } from '@clerk/localizations'
-// import Header from '@/components/Header'
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
