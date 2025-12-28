@@ -3,11 +3,7 @@
 
 self.addEventListener('fetch', (e) => {
 
-    const offlineResquest = new Response(`Hola Offline`)
-
-
-    const request = fetch(e.request).catch(() => offlineResquest)
-
+    const request = fetch(e.request).catch(() => caches.match('/jellyfish.html'))
 
     e.respondWith(request)
 

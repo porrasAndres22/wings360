@@ -1,4 +1,3 @@
-import { useUser } from "@clerk/nextjs";
 
 
 export const userClerkHandler = async (user: any) => {
@@ -28,6 +27,17 @@ export const userClerkHandler = async (user: any) => {
 
 export const useServiceWorker = (route: string) => {
     if (navigator.serviceWorker) {
-      navigator.serviceWorker.register(route)
+        navigator.serviceWorker.register(route)
+    }
+}
+
+export const useWindowCaches = () => {
+    if (window.caches) {
+        caches.open('cache-v1.1').then(caches => {
+            caches.add('/jellyfish.html')
+            caches.add('/')
+
+            caches.match('/jellyfish.html').then(res => { res?.text().then(console.log) })
+        })
     }
 }
