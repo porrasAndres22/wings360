@@ -29,7 +29,6 @@ export default () => {
         <Dashboard user={user}></Dashboard>
         <Navigation />
       </div>
-
     </SignedIn>
   )
 }

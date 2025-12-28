@@ -15,10 +15,10 @@ import { useChangeOption } from '@/store';
 
 export default function Navigation() {
 
-  const { handler }: { handler: (setHandler: String) => void } = useChangeOption();
+    const { data, handler }: { data: String, handler: (setHandler: String) => void } = useChangeOption();
 
   const [isDarkMode, setIsDarkMode] = useState(false);
-  const [activeNav, setActiveNav] = useState('Dashboard');
+  const [activeNav, setActiveNav] = useState('');
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [notificationsOpen, setNotificationsOpen] = useState(false);
 
@@ -26,6 +26,12 @@ export default function Navigation() {
   const notificationsRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    setActiveNav(location.hash)
+  }, [data]);
+
+
+  useEffect(() => {
+
     function handleClickOutside(event: MouseEvent) {
       if (mobileMenuRef.current && !mobileMenuRef.current.contains(event.target as Node)) {
         setMobileMenuOpen(false);
@@ -45,11 +51,11 @@ export default function Navigation() {
   }, [mobileMenuOpen, notificationsOpen]);
 
   const navItems = [
-    { name: 'Dashboard', href: '#' },
+    { name: 'Dashboard', href: '#36d0ca3bfe8d3596e9275c87b6ace9e67f1dd077' },
     { name: 'Speaking', href: '#' },
     { name: 'Progress', href: '#' },
     { name: 'Courses', href: '#' },
-    { name: 'Settings', href: '#' },
+    { name: 'Settings', href: "#3cc1d5a427a45820b04fe30f78a972b784952460" },
   ];
 
   const notifications = [
@@ -104,10 +110,10 @@ export default function Navigation() {
               {navItems.map((item) => (
                 <button
                   key={item.name}
-                  onClick={() => setActiveNav(item.name)}
+                  onClick={() => { setActiveNav(item.name); handler(item.href); location.hash = item.href}}
                   className={`
                     cursor-pointer px-4 py-2 rounded-xl font-medium text-sm transition-all duration-300
-                    ${activeNav === item.name
+                    ${activeNav === item.href
                       ? 'bg-gradient-to-r from-slate-900 to-slate-800 text-white shadow-lg shadow-slate-900/25'
                       : 'text-slate-400 hover:text-slate-600 hover:bg-slate-50'
                     }
@@ -235,7 +241,7 @@ export default function Navigation() {
           {/* Mobile Navigation */}
           {mobileMenuOpen && (
             <div className="md:hidden pb-4 animate-fadeIn relative z-[80]">
-              <nav className="flex flex-col space-y-2 bg-white/80 backdrop-blur-md rounded-2xl p-3 shadow-lg shadow-slate-200/50 border border-slate-200/50">
+              <nav className="flex flex-col space-y-2 bg-white backdrop-blur-md rounded-2xl p-3 shadow-lg shadow-slate-200/50 border border-slate-200/50">
                 {navItems.map((item) => (
                   <button
                     key={item.name}
