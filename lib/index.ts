@@ -1,5 +1,4 @@
 
-
 export const userClerkHandler = async (user: any) => {
     try {
         const appUser = localStorage.getItem("appUser")
@@ -37,7 +36,21 @@ export const useWindowCaches = () => {
             caches.add('/jellyfish.html')
             caches.add('/')
 
-            caches.match('/jellyfish.html').then(res => { res?.text().then(console.log) })
+            caches.match('/jellyfish.html').then(res => { res?.text().then() })
         })
+    }
+}
+
+export const useNotification = () => {
+    if (window.Notification) {
+        if (Notification.permission === 'granted') {
+            new Notification('Wings360 Notification')
+        } else if (Notification.permission !== 'denied') {
+            Notification.requestPermission(( permission ) => {
+                if (permission === 'granted') {
+                    new Notification('Wings Granted')
+                }
+            })
+        }
     }
 }

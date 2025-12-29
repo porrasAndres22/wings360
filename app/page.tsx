@@ -6,7 +6,7 @@ import {
 import Dashboard from '@/components/Dashboard'
 import Navigation from '@/components/Navigation'
 import { useAuth, useUser } from '@clerk/nextjs';
-import { userClerkHandler, useServiceWorker, useWindowCaches } from '@/lib';
+import { useNotification, userClerkHandler, useServiceWorker, useWindowCaches } from '@/lib';
 
 export default () => {
 
@@ -17,6 +17,7 @@ export default () => {
     useServiceWorker('/sw.js')
     useWindowCaches()
     userClerkHandler(user)
+    useNotification()
   }, []);
 
 

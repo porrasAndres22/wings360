@@ -156,7 +156,11 @@ export default function Navigation() {
               {navItems.map((item) => (
                 <div key={item.name} className="relative group">
                   <button
-                    onClick={() => { setActiveNav(item.name); handler(item.href); location.hash = item.href }}
+                    onClick={() => {
+                      if (item.href != data) {
+                        setActiveNav(item.name); handler(item.href); location.hash = item.href
+                      }
+                    }}
                     className={`
                       cursor-pointer px-4 py-2 rounded-xl font-medium text-sm transition-all duration-300 hover:scale-105 active:scale-95
                       ${activeNav === item.href
