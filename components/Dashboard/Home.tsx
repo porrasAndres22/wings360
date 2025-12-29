@@ -806,7 +806,7 @@ const IntegratedDashboard = () => {
       </aside>
 
       {/* Main Content */}
-      <div className="md:ml-16 pt-[120px] md:pt-[100px]">
+      <div className="md:ml-16 pt-[120px] md:pt-[100px] animate__animated animate__fadeIn">
         <div className="max-w-7xl mx-auto p-6 space-y-6">
           {renderContent()}
         </div>
