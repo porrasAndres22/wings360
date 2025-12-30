@@ -2,7 +2,7 @@
 
 :root {
   --background-purple: linear-gradient(95deg, rgba(230, 233, 255, 1) 23%, rgba(236, 244, 255, 1) 52%, rgba(216, 240, 255, 1) 82%);
-  --background-blue: linear-gradient(90deg,rgba(0, 137, 244, 1) 0%, rgba(114, 101, 255, 1) 50%);
+  --background-blue: linear-gradient(90deg, rgba(0, 137, 244, 1) 0%, rgba(114, 101, 255, 1) 50%);
   --text: white;
   --text-0: black;
   --text-1: #005091;
@@ -72,24 +72,4 @@
   .fluentContent {
     padding: 0;
   }
-}
-
-
-.loaderApp {
-  width: 80px;
-  aspect-ratio: 1.154;
-  clip-path: polygon(50% 0,100% 100%,0 100%);
-  --c:no-repeat linear-gradient(#f03355 0 0);
-  background: var(--c),var(--c),var(--c),var(--c),var(--c);
-  background-size: 100% calc(100%/5 + 1px);
-  animation: l15 2s infinite;
-}
-
-@keyframes l15 {
-  0%  {background-position: 0 calc(-2*100%/4),0 calc(-2*100%/4),0 calc(-2*100%/4),0 calc(-2*100%/4),0 calc(-2*100%/4)}
-  20% {background-position: 0 calc(4*100%/4) ,0 calc(-2*100%/4),0 calc(-2*100%/4),0 calc(-2*100%/4),0 calc(-2*100%/4)}
-  40% {background-position: 0 calc(4*100%/4) ,0 calc(3*100%/4) ,0 calc(-2*100%/4),0 calc(-2*100%/4),0 calc(-2*100%/4)}
-  60% {background-position: 0 calc(4*100%/4) ,0 calc(3*100%/4) ,0 calc(2*100%/4) ,0 calc(-2*100%/4),0 calc(-2*100%/4)}
-  80% {background-position: 0 calc(4*100%/4) ,0 calc(3*100%/4) ,0 calc(2*100%/4) ,0 calc(1*100%/4) ,0 calc(-2*100%/4)}
-  100%{background-position: 0 calc(4*100%/4) ,0 calc(3*100%/4) ,0 calc(2*100%/4) ,0 calc(1*100%/4) ,0 calc(0*100%/4)}
 }

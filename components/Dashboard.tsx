@@ -5,6 +5,9 @@ import UserList from '@/components/Dashboard/UserList'
 import BusinessOverview from '@/components/Dashboard/BusinessOverview'
 import Analyticsdashboard from '@/components/Dashboard/Analyticsdashboard'
 import Settings from '@/components/Dashboard/Settings'
+import Paster from '@/components/Paster'
+import ListSchema from '@/components/Dashboard/ListSchema'
+import Load from '@/components/Load'
 
 
 export default ({ user }: { user: any }) => {
@@ -13,9 +16,9 @@ export default ({ user }: { user: any }) => {
 
     useEffect(() => {
         handler(location.hash)
-        if (location.hash == "") {
-            location.href = "/#36d0ca3bfe8d3596e9275c87b6ace9e67f1dd077"
-        }
+        // if (location.hash == "") {
+        //     location.href = "/#36d0ca3bfe8d3596e9275c87b6ace9e67f1dd077"
+        // }
         window.onhashchange = () => {
             handler(location.hash)
         }
@@ -23,32 +26,39 @@ export default ({ user }: { user: any }) => {
 
 
     return (
-        data == "" ?
-            <>
-            </>
-            : data == "#36d0ca3bfe8d3596e9275c87b6ace9e67f1dd077" ?
-                <>
-                    <Home></Home>
-                </>
-
-                : data == "#a90a81a258e5ab81db32d3a05b349b9f6df4e207" ?
+        <div className="mt-[72px] pb-8">
+            {
+                data == "" ?
                     <>
-                        <UserList></UserList>
+                        <ListSchema></ListSchema>
                     </>
-                    : data == "#56acaf1d4b8590cbfac2aaafec411795f31c5bab" ?
+                    : data == "#36d0ca3bfe8d3596e9275c87b6ace9e67f1dd077" ?
                         <>
-                            <BusinessOverview></BusinessOverview>
-                        </>
-                    : data == "#cd2f1a458488e011a2fc1719ebe20437c52dc3e5" ?
-                        <>
-                            <Analyticsdashboard></Analyticsdashboard>
+                            {/* <Home></Home> */}
+                            {/* <Paster></Paster> */}
+                            {/* <Load></Load> */}
                         </>
 
-                        : data == "#3cc1d5a427a45820b04fe30f78a972b784952460" ?
+                        : data == "#a90a81a258e5ab81db32d3a05b349b9f6df4e207" ?
                             <>
-                                <Settings></Settings>
+                                <UserList></UserList>
                             </>
-                            : <></>
+                            : data == "#56acaf1d4b8590cbfac2aaafec411795f31c5bab" ?
+                                <>
+                                    <BusinessOverview></BusinessOverview>
+                                </>
+                                : data == "#cd2f1a458488e011a2fc1719ebe20437c52dc3e5" ?
+                                    <>
+                                        <Analyticsdashboard></Analyticsdashboard>
+                                    </>
+
+                                    : data == "#3cc1d5a427a45820b04fe30f78a972b784952460" ?
+                                        <>
+                                            <Settings></Settings>
+                                        </>
+                                        : <></>
+            }
+        </div>
 
 
     );

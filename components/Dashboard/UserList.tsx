@@ -711,7 +711,7 @@ const UserDashboard: React.FC = () => {
   // Render UserDetail if a user is selected
   if (currentView === 'detail' && selectedUser) {
     return (
-      <div className="min-h-screen from-slate-50 via-blue-50 to-indigo-100 p-4 md:p-8 font-['Instrument_Sans',sans-serif] mt-[72px] animate__animated animate__fadeIn">
+      <div className="min-h-screen from-slate-50 via-blue-50 to-indigo-100 p-4 md:p-8 font-['Instrument_Sans',sans-serif] animate__animated animate__fadeIn">
         <div className="max-w-5xl mx-auto">
           {/* Back Button */}
           <button
@@ -962,7 +962,7 @@ const UserDashboard: React.FC = () => {
   // Render Dashboard
   return (
     <div className="min-h-screen  from-slate-50 via-blue-50 to-indigo-100 p-4 md:p-8 font-['Instrument_Sans',sans-serif]">
-      <div className="max-w-7xl mx-auto space-y-6 pt-[70px] animate__animated animate__fadeIn">
+      <div className="max-w-7xl mx-auto space-y-6 animate__animated animate__fadeIn">
         {/* Header */}
         <div className="bg-white/90 backdrop-blur-xl rounded-3xl shadow-xl shadow-slate-200/50 p-6 border border-slate-200/60">
           <div className="flex flex-col md:flex-row gap-4 items-start md:items-center justify-between">

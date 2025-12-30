@@ -7,6 +7,7 @@ import Dashboard from '@/components/Dashboard'
 import Navigation from '@/components/Navigation'
 import { useAuth, useUser } from '@clerk/nextjs';
 import { useNotification, userClerkHandler, useServiceWorker, useWindowCaches } from '@/lib';
+import Load from '@/components/Load'
 
 export default () => {
 
@@ -21,13 +22,13 @@ export default () => {
   }, []);
 
 
-  if (!isLoaded) return <div className="loader"></div>
+  if (!isLoaded) return <Load></Load>
   if (!isSignedIn) return <></>
   if (!has({ permission: 'org:testpermission:soysuperadmin' }) && !has({ permission: 'org:testpermission:soyadmin' })) return <></>
 
   return (
     <SignedIn>
-      <div className="min-h-screen pb-8 text-black">
+      <div className="min-h-screen">
         <Dashboard user={user}></Dashboard>
         <Navigation />
       </div>

@@ -536,7 +536,7 @@ export default function AnalyticsDashboard() {
   };
 
   return (
-    <div className="min-h-screen from-slate-50 via-white to-slate-100 p-4 md:p-8 font-sans mt-[72px]">
+    <div className="min-h-screen from-slate-50 via-white to-slate-100 p-4 md:p-8 font-sans">
       <div className="max-w-7xl mx-auto mb-8">
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
           {/* Navigation Tabs */}

@@ -49,7 +49,7 @@ export default function Dashboard() {
     };
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-gray-50 via-stone-100 to-gray-100 p-4 md:p-8 pt-[120px] md:pt-[100px] animate__animated animate__fadeIn">
+        <div className="min-h-screen from-gray-50 via-stone-100 to-gray-100 p-4 md:p-8 animate__animated animate__fadeIn">
             {/* Navigation */}
             <nav className="mb-8">
                 <div className="flex gap-3 items-center">
