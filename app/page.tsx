@@ -16,6 +16,8 @@ export default () => {
   const { user, isSignedIn, isLoaded } = useUser();
   const { has }: { has: any } = useAuth()
 
+  
+
   useEffect(() => {
     useServiceWorker('/sw.js')
     useWindowCaches()

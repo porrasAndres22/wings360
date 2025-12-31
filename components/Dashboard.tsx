@@ -26,43 +26,53 @@ export default ({ user }: { user: any }) => {
         }
     }, [data]);
 
+    console.log(localStorage.getItem("appSchema"))
 
     return (
         <div className="mt-[72px] pb-8">
             {
-                has({ permission: 'org:testpermission:soysuperadmin' }) ? 
-                
-                data == "" ?
-                    <>
-                        <ListSchema></ListSchema>
-                    </>
-                    : data == "#36d0ca3bfe8d3596e9275c87b6ace9e67f1dd077" ?
+                has({ permission: 'org:testpermission:soysuperadmin' }) ?
+
+                    data == "" ?
                         <>
-                            {/* <Home></Home> */}
-                            {/* <Paster></Paster> */}
-                            {/* <Load></Load> */}
+                            {
+                                !localStorage.getItem("appSchema") ?
+                                    <ListSchema></ListSchema>
+                                    :
+                                    <Home></Home>
+                            }
+
                         </>
-
-                        : data == "#a90a81a258e5ab81db32d3a05b349b9f6df4e207" ?
+                        : data == "#36d0ca3bfe8d3596e9275c87b6ace9e67f1dd077" ?
                             <>
-                                <UserList></UserList>
+                                {
+                                    localStorage.getItem("appSchema") ?
+                                        <Home></Home>
+                                        :
+                                        <></>
+                                }
                             </>
-                            : data == "#56acaf1d4b8590cbfac2aaafec411795f31c5bab" ?
-                                <>
-                                    <BusinessOverview></BusinessOverview>
-                                </>
-                                : data == "#cd2f1a458488e011a2fc1719ebe20437c52dc3e5" ?
-                                    <>
-                                        <Analyticsdashboard></Analyticsdashboard>
-                                    </>
 
-                                    : data == "#3cc1d5a427a45820b04fe30f78a972b784952460" ?
+                            : data == "#a90a81a258e5ab81db32d3a05b349b9f6df4e207" ?
+                                <>
+                                    <UserList></UserList>
+                                </>
+                                : data == "#56acaf1d4b8590cbfac2aaafec411795f31c5bab" ?
+                                    <>
+                                        <BusinessOverview></BusinessOverview>
+                                    </>
+                                    : data == "#cd2f1a458488e011a2fc1719ebe20437c52dc3e5" ?
                                         <>
-                                            <Settings></Settings>
+                                            <Analyticsdashboard></Analyticsdashboard>
                                         </>
-                                        : <></>
-                
-                : <></> 
+
+                                        : data == "#3cc1d5a427a45820b04fe30f78a972b784952460" ?
+                                            <>
+                                                <Settings></Settings>
+                                            </>
+                                            : <></>
+
+                    : <></>
 
             }
         </div>

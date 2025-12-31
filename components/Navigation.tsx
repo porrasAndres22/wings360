@@ -34,8 +34,7 @@ export default function Navigation() {
 
   useEffect(() => {
     setActiveNav(location.hash)
-  }, [data]);
-
+  }, [data])
 
   useEffect(() => {
 
@@ -58,7 +57,7 @@ export default function Navigation() {
   }, [mobileMenuOpen, notificationsOpen]);
 
   const navItems = [
-    { name: 'Dashboard', href: '#36d0ca3bfe8d3596e9275c87b6ace9e67f1dd077' },
+    { name: 'Dashboard', href: '' },
     { name: 'UserList', href: '#a90a81a258e5ab81db32d3a05b349b9f6df4e207' },
     { name: 'Overview', href: '#56acaf1d4b8590cbfac2aaafec411795f31c5bab' },
     { name: 'Analytics', href: '#cd2f1a458488e011a2fc1719ebe20437c52dc3e5' },
@@ -163,7 +162,11 @@ export default function Navigation() {
                       <button
                         onClick={() => {
                           if (item.href != data) {
-                            setActiveNav(item.name); handler(item.href); location.hash = item.href
+                            if (item.name != "Dashboard") {
+                              setActiveNav(item.name); handler(item.href); location.hash = item.href
+                            } else {
+                              location.replace('/')
+                            }
                           }
                         }}
                         className={`

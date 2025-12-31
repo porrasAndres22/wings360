@@ -1,4 +1,3 @@
-'use client';
 
 import React, { useState } from 'react';
 import {
@@ -21,12 +20,19 @@ import {
   Inbox,
   Star,
   Archive,
+  UsersRound,
   ChevronRight,
   Paperclip,
-  Filter
+  Filter,
+  Power
 } from 'lucide-react';
+import ListConnection from './Home/ListConnection'
+import { useChangeOption } from '@/store';
 
 const IntegratedDashboard = () => {
+
+  const { handler }: { data: String, handler: (setHandler: String) => void } = useChangeOption();
+
   // Estados del sidebar
   const [activeSidebarIndex, setActiveSidebarIndex] = useState(0);
 
@@ -36,10 +42,10 @@ const IntegratedDashboard = () => {
 
   const sidebarMenuItems = [
     { icon: Home, label: 'Home' },
-    { icon: Clock, label: 'Recent' },
+    { icon: UsersRound, label: 'Conecciones' },
     { icon: Calendar, label: 'Calendar' },
     { icon: FileText, label: 'Documents' },
-    { icon: Mail, label: 'Mail' },
+    { icon: Power, label: 'Close' },
   ];
 
   // Datos del dashboard
@@ -138,7 +144,7 @@ const IntegratedDashboard = () => {
   };
 
   // Renderizar contenido según el botón activo
-  const renderContent = () => {
+  const renderContent = ({ name }: { name: string }) => {
     switch (activeSidebarIndex) {
       case 0: // Home
         return (
@@ -147,7 +153,7 @@ const IntegratedDashboard = () => {
             {/* Header */}
             <div className="mb-8">
               <h1 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-slate-800 via-slate-700 to-slate-600 bg-clip-text text-transparent tracking-tight">
-                Dashboard
+                {name}
               </h1>
             </div>
 
@@ -409,58 +415,7 @@ const IntegratedDashboard = () => {
 
       case 1: // Recent
         return (
-          <>
-            <div className="mb-8">
-              <h1 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-slate-800 via-slate-700 to-slate-600 bg-clip-text text-transparent tracking-tight">
-                Recent Activities
-              </h1>
-              <p className="text-slate-500 mt-2">Track your latest learning activities</p>
-            </div>
-
-            <div className="grid grid-cols-1 gap-4">
-              {recentActivities.map((activity) => {
-                const Icon = activity.icon;
-                return (
-                  <div
-                    key={activity.id}
-                    className="bg-white/80 backdrop-blur-xl rounded-2xl p-6 shadow-lg shadow-slate-200/50 border border-slate-200/50 hover:shadow-xl transition-all duration-300 group cursor-pointer"
-                  >
-                    <div className="flex items-start gap-4">
-                      <div className={`bg-gradient-to-br ${activity.color} p-4 rounded-2xl group-hover:scale-110 transition-transform duration-300`}>
-                        <Icon className="w-6 h-6 text-white" />
-                      </div>
-                      <div className="flex-1">
-                        <h3 className="text-lg font-bold text-slate-800 mb-1 group-hover:text-slate-900">
-                          {activity.title}
-                        </h3>
-                        <p className="text-sm text-slate-500">{activity.time}</p>
-                      </div>
-                      <ChevronRight className="w-5 h-5 text-slate-400 group-hover:text-slate-600 group-hover:translate-x-1 transition-all duration-300" />
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-
-            {/* Quick Stats */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8">
-              <div className="bg-gradient-to-br from-blue-500 to-cyan-500 rounded-3xl p-6 shadow-xl text-white">
-                <BookOpen className="w-8 h-8 mb-4 opacity-80" />
-                <p className="text-3xl font-bold mb-2">15</p>
-                <p className="text-blue-100">Activities This Week</p>
-              </div>
-              <div className="bg-gradient-to-br from-purple-500 to-pink-500 rounded-3xl p-6 shadow-xl text-white">
-                <Clock className="w-8 h-8 mb-4 opacity-80" />
-                <p className="text-3xl font-bold mb-2">8h 45m</p>
-                <p className="text-purple-100">Total Time Spent</p>
-              </div>
-              <div className="bg-gradient-to-br from-emerald-500 to-teal-500 rounded-3xl p-6 shadow-xl text-white">
-                <Trophy className="w-8 h-8 mb-4 opacity-80" />
-                <p className="text-3xl font-bold mb-2">3</p>
-                <p className="text-emerald-100">New Achievements</p>
-              </div>
-            </div>
-          </>
+          <ListConnection></ListConnection>
         );
 
       case 2: // Calendar
@@ -750,7 +705,12 @@ const IntegratedDashboard = () => {
                 <button
                   key={item.label}
                   onClick={() => {
-                    setActiveSidebarIndex(index);
+                    if (item.label != "Close") {
+                      setActiveSidebarIndex(index);
+                    } else {
+                      localStorage.removeItem("appSchema")
+                      handler("")
+                    }
                   }}
                   className={`
                     cursor-pointer w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0
@@ -772,7 +732,7 @@ const IntegratedDashboard = () => {
 
       {/* Desktop - Vertical Sidebar */}
       <aside className="hidden md:flex fixed left-0 top-0 h-screen w-16 backdrop-blur-md flex-col items-center py-6 z-50">
-        <nav className="flex-1 flex flex-col items-center justify-center space-y-0.5 w-full px-3 animate__animated animate__bounce">
+        <nav className="flex-1 flex flex-col items-center justify-center space-y-0.5 w-full px-3 animate__animated animate__fadeIn">
           {sidebarMenuItems.map((item, index) => {
             const Icon = item.icon;
             const isActive = index === activeSidebarIndex;
@@ -781,7 +741,12 @@ const IntegratedDashboard = () => {
               <button
                 key={item.label}
                 onClick={() => {
-                  setActiveSidebarIndex(index);
+                  if (item.label != "Close") {
+                    setActiveSidebarIndex(index);
+                  } else {
+                    localStorage.removeItem("appSchema")
+                    handler("")
+                  }
                 }}
                 className={`
                   cursor-pointer w-10 h-10 rounded-xl flex items-center justify-center
@@ -807,8 +772,8 @@ const IntegratedDashboard = () => {
 
       {/* Main Content */}
       <div className="animate__animated animate__fadeIn">
-        <div className="max-w-7xl mx-auto pt-6 py-6 space-y-6">
-          {renderContent()}
+        <div className="max-w-7xl mx-auto pt-6 py-6 space-y-6 pt-[80px]">
+          {renderContent({name: `${localStorage.getItem("appSchema")}`})}
         </div>
       </div>
 

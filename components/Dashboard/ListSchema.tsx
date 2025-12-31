@@ -1,5 +1,7 @@
 "use client";
 
+import { useChangeOption } from "@/store";
+import { useAuth } from "@clerk/nextjs";
 import { Combine } from "lucide-react";
 import { useState, useEffect } from "react";
 
@@ -7,6 +9,7 @@ import { useState, useEffect } from "react";
 type VariantType = "light" | "lime" | "purple" | "coral" | "cyan" | "indigo" | "amber" | "rose" | "emerald" | "slate";
 
 interface MetricCardProps {
+  id: string
   title: string;
   current: number | string;
   max: number | string;
@@ -144,6 +147,7 @@ const variantStyles: Record<VariantType, VariantStyle> = {
 };
 
 const MetricCard: React.FC<MetricCardProps> = ({
+  id,
   title,
   current,
   max,
@@ -152,6 +156,8 @@ const MetricCard: React.FC<MetricCardProps> = ({
   variant = "light",
   dotCount = 10,
 }) => {
+  const { handler }: { data: String, handler: (setHandler: String) => void } = useChangeOption();
+
   const [animatedPercentage, setAnimatedPercentage] = useState<number>(0);
   const [isHovered, setIsHovered] = useState<boolean>(false);
   const filledDots = Math.round((percentage / 100) * dotCount);
@@ -173,6 +179,10 @@ const MetricCard: React.FC<MetricCardProps> = ({
       `}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
+      onClick={() => {
+        localStorage.setItem("appSchema", id)
+        handler("#36d0ca3bfe8d3596e9275c87b6ace9e67f1dd077")
+      }}
     >
       {/* Header */}
       <div className="flex items-center justify-between mb-4 md:mb-3">
@@ -367,17 +377,34 @@ const metricsData: MetricData[] = [
 
 // Main Component
 export default () => {
+
+  const { has }: { has: any } = useAuth()
+
   return (
-    <div className="min-h-screen from-slate-100 via-gray-50 to-slate-200 p-4 sm:p-6 md:p-8 lg:p-12">
+    <div className="min-h-screen from-slate-100 via-gray-50 to-slate-200 p-4 sm:p-6 md:p-8 lg:p-12 animate__animated animate__fadeIn">
       <div className="w-full max-w-6xl mx-auto">
         {/* Header */}
         <div className="mb-8 sm:mb-10">
-          <h1 className="text-2xl sm:text-3xl font-bold text-slate-800 mb-2">
-            Dashboard Overview
-          </h1>
-          <p className="text-slate-500 text-sm sm:text-base">
-            Monitor your system metrics in real-time
+          <p className="text-slate-500 text-sm sm:text-base mb-1">
+            Manage and track your projects
           </p>
+          <div className="flex items-center gap-3">
+            <h1 className="text-3xl sm:text-4xl font-semibold text-slate-900 tracking-tight">
+              Project Dashboard
+            </h1>
+
+            <span className="px-4 py-1.5 text-sm font-medium text-slate-600 bg-slate-100 border border-slate-200 rounded-full">
+              {
+                has({ permission: 'org:testpermission:soysuperadmin' }) && has({ permission: 'org:testpermission:soyadmin' }) ?
+                  <>SuperAdmin</>
+                  : has({ permission: 'org:testpermission:soysuperadmin' }) && has({ permission: 'org:testpermission:soyadmin' }) ?
+                    <>Admin</>
+                    : <></>
+              }
+            </span>
+
+
+          </div>
         </div>
 
         {/* Cards Grid */}
@@ -385,6 +412,7 @@ export default () => {
           {metricsData.map((metric) => (
             <MetricCard
               key={metric.id}
+              id={metric.id}
               title={metric.title}
               current={metric.current}
               max={metric.max}
