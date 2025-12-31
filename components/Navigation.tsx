@@ -10,6 +10,7 @@ import {
   Download
 } from 'lucide-react';
 import {
+  useAuth,
   UserButton,
 } from '@clerk/nextjs'
 import { useChangeOption } from '@/store';
@@ -18,6 +19,7 @@ import { useChangeOption } from '@/store';
 export default function Navigation() {
 
   const { data, handler }: { data: String, handler: (setHandler: String) => void } = useChangeOption();
+  const { has }: { has: any } = useAuth()
 
   const [isDarkMode, setIsDarkMode] = useState(false);
   const [activeNav, setActiveNav] = useState('');
@@ -152,39 +154,45 @@ export default function Navigation() {
             <div className="flex-1 md:hidden"></div>
 
             {/* Desktop Navigation - Centered */}
-            <nav className="hidden md:flex items-center space-x-2 bg-white/80 backdrop-blur-md rounded-2xl px-3 py-2 shadow-lg shadow-slate-200/50 border border-slate-200/50 absolute left-1/2 transform -translate-x-1/2 animate__animated animate__fadeIn">
-              {navItems.map((item) => (
-                <div key={item.name} className="relative group">
-                  <button
-                    onClick={() => {
-                      if (item.href != data) {
-                        setActiveNav(item.name); handler(item.href); location.hash = item.href
-                      }
-                    }}
-                    className={`
-                      cursor-pointer px-4 py-2 rounded-xl font-medium text-sm transition-all duration-300 hover:scale-105 active:scale-95
-                      ${activeNav === item.href
-                        ? 'bg-gradient-to-r from-slate-900 to-slate-800 text-white shadow-lg shadow-slate-900/25'
-                        : 'text-slate-400 hover:text-slate-600 hover:bg-slate-50'
-                      }
-                    `}
-                  >
-                    {item.name === 'Settings' ? (
-                      <Settings className="w-5 h-5" />
-                    ) : (
-                      item.name
-                    )}
-                  </button>
-                  {/* Tooltip for Settings */}
-                  {item.name === 'Settings' && (
-                    <div className="absolute top-full left-1/2 -translate-x-1/2 mt-2 px-3 py-1.5 bg-slate-900 text-white text-xs font-medium rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap shadow-lg z-50">
-                      Settings
-                      <div className="absolute bottom-full left-1/2 -translate-x-1/2 -mb-1 border-4 border-transparent border-b-slate-900"></div>
+            {
+              has({ permission: 'org:testpermission:soysuperadmin' }) ?
+
+                <nav className="hidden md:flex items-center space-x-2 bg-white/80 backdrop-blur-md rounded-2xl px-3 py-2 shadow-lg shadow-slate-200/50 border border-slate-200/50 absolute left-1/2 transform -translate-x-1/2 animate__animated animate__fadeIn">
+                  {navItems.map((item) => (
+                    <div key={item.name} className="relative group">
+                      <button
+                        onClick={() => {
+                          if (item.href != data) {
+                            setActiveNav(item.name); handler(item.href); location.hash = item.href
+                          }
+                        }}
+                        className={`
+                          cursor-pointer px-4 py-2 rounded-xl font-medium text-sm transition-all duration-300 hover:scale-105 active:scale-95
+                          ${activeNav === item.href
+                            ? 'bg-gradient-to-r from-slate-900 to-slate-800 text-white shadow-lg shadow-slate-900/25'
+                            : 'text-slate-400 hover:text-slate-600 hover:bg-slate-50'
+                          }
+                        `}
+                      >
+                        {item.name === 'Settings' ? (
+                          <Settings className="w-5 h-5" />
+                        ) : (
+                          item.name
+                        )}
+                      </button>
+                      {/* Tooltip for Settings */}
+                      {item.name === 'Settings' && (
+                        <div className="absolute top-full left-1/2 -translate-x-1/2 mt-2 px-3 py-1.5 bg-slate-900 text-white text-xs font-medium rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap shadow-lg z-50">
+                          Settings
+                          <div className="absolute bottom-full left-1/2 -translate-x-1/2 -mb-1 border-4 border-transparent border-b-slate-900"></div>
+                        </div>
+                      )}
                     </div>
-                  )}
-                </div>
-              ))}
-            </nav>
+                  ))}
+                </nav>
+
+                : <></>
+            }
 
             {/* Right Section - Always visible */}
             <div className="flex items-center space-x-2 sm:space-x-3">
@@ -220,18 +228,23 @@ export default function Navigation() {
               </div>
 
               {/* Mobile Menu Button - Only on mobile */}
-              <button
-                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                className="md:hidden flex items-center justify-center w-11 h-11 rounded-xl bg-white hover:bg-slate-50 transition-all duration-300 shadow-sm active:scale-95"
-              >
-                {mobileMenuOpen ? (
-                  <X className="w-6 h-6 text-slate-600" />
-                ) : (
-                  <svg className="w-6 h-6 text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-                  </svg>
-                )}
-              </button>
+              {
+                has({ permission: 'org:testpermission:soysuperadmin' }) ?
+                  <button
+                    onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+                    className="md:hidden flex items-center justify-center w-11 h-11 rounded-xl bg-white hover:bg-slate-50 transition-all duration-300 shadow-sm active:scale-95"
+                  >
+                    {mobileMenuOpen ? (
+                      <X className="w-6 h-6 text-slate-600" />
+                    ) : (
+                      <svg className="w-6 h-6 text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+                      </svg>
+                    )}
+                  </button>
+
+                  : <></>
+              }
 
               {/* Notifications */}
               <div className="relative" ref={notificationsRef}>
@@ -423,66 +436,70 @@ export default function Navigation() {
           </div>
 
           {/* Mobile Navigation */}
-          {mobileMenuOpen && (
-            <div className="md:hidden pb-4 animate-fadeIn relative z-[80]">
-              <nav className="flex flex-col space-y-2 bg-white backdrop-blur-md rounded-2xl p-3 shadow-lg shadow-slate-200/50 border border-slate-200/50">
-                {navItems.filter(item => item.name !== 'Settings').map((item) => (
-                  <button
-                    key={item.name}
-                    onClick={() => {
-                      setActiveNav(item.name)
-                      setMobileMenuOpen(false)
-                      handler(item.href)
-                      location.hash = item.href
-                    }}
-                    className={`
-                      px-4 py-2.5 rounded-xl font-medium text-sm transition-all duration-300 text-left
-                      ${activeNav === item.href
-                        ? 'bg-gradient-to-r from-slate-900 to-slate-800 text-white shadow-lg shadow-slate-900/25'
-                        : 'text-slate-400 hover:text-slate-600 hover:bg-slate-50'
-                      }
-                    `}
-                  >
-                    {item.name}
-                  </button>
-                ))}
-
-                {/* Mobile Action Buttons */}
-                <div className="flex items-center gap-2 pt-3 border-t border-slate-200/60 mt-2">
-                  <button className="flex-1 flex items-center justify-center h-10 rounded-xl bg-white hover:bg-slate-50 text-slate-600 transition-all duration-300 shadow-sm">
-                    <Search className="w-5 h-5" />
-                  </button>
-                  <div className="flex-1 relative group">
-                    <button
-                      onClick={() => {
-                        const settingsItem = navItems.find(item => item.name === 'Settings');
-                        if (settingsItem) {
-                          setActiveNav(settingsItem.href)
+          {
+            has({ permission: 'org:testpermission:soysuperadmin' }) ?
+              mobileMenuOpen && (
+                <div className="md:hidden pb-4 animate-fadeIn relative z-[80]">
+                  <nav className="flex flex-col space-y-2 bg-white backdrop-blur-md rounded-2xl p-3 shadow-lg shadow-slate-200/50 border border-slate-200/50">
+                    {navItems.filter(item => item.name !== 'Settings').map((item) => (
+                      <button
+                        key={item.name}
+                        onClick={() => {
+                          setActiveNav(item.name)
                           setMobileMenuOpen(false)
-                          handler(settingsItem.href)
-                          location.hash = settingsItem.href
-                        }
-                      }}
-                      className={`
-                        w-full flex items-center justify-center h-10 rounded-xl transition-all duration-300 shadow-sm hover:scale-105 active:scale-95 cursor-pointer
-                        ${activeNav === '#3cc1d5a427a45820b04fe30f78a972b784952460'
-                          ? 'bg-gradient-to-r from-slate-900 to-slate-800 text-white shadow-lg shadow-slate-900/25'
-                          : 'bg-white hover:bg-slate-50 text-slate-600'
-                        }
+                          handler(item.href)
+                          location.hash = item.href
+                        }}
+                        className={`
+                        px-4 py-2.5 rounded-xl font-medium text-sm transition-all duration-300 text-left
+                        ${activeNav === item.href
+                            ? 'bg-gradient-to-r from-slate-900 to-slate-800 text-white shadow-lg shadow-slate-900/25'
+                            : 'text-slate-400 hover:text-slate-600 hover:bg-slate-50'
+                          }
                       `}
-                    >
-                      <Settings className="w-5 h-5" />
-                    </button>
-                    {/* Tooltip */}
-                    <div className="absolute top-full left-1/2 -translate-x-1/2 mt-2 px-3 py-1.5 bg-slate-900 text-white text-xs font-medium rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap shadow-lg z-50">
-                      Settings
-                      <div className="absolute bottom-full left-1/2 -translate-x-1/2 -mb-1 border-4 border-transparent border-b-slate-900"></div>
+                      >
+                        {item.name}
+                      </button>
+                    ))}
+
+                    {/* Mobile Action Buttons */}
+                    <div className="flex items-center gap-2 pt-3 border-t border-slate-200/60 mt-2">
+                      <button className="flex-1 flex items-center justify-center h-10 rounded-xl bg-white hover:bg-slate-50 text-slate-600 transition-all duration-300 shadow-sm">
+                        <Search className="w-5 h-5" />
+                      </button>
+                      <div className="flex-1 relative group">
+                        <button
+                          onClick={() => {
+                            const settingsItem = navItems.find(item => item.name === 'Settings');
+                            if (settingsItem) {
+                              setActiveNav(settingsItem.href)
+                              setMobileMenuOpen(false)
+                              handler(settingsItem.href)
+                              location.hash = settingsItem.href
+                            }
+                          }}
+                          className={`
+                          w-full flex items-center justify-center h-10 rounded-xl transition-all duration-300 shadow-sm hover:scale-105 active:scale-95 cursor-pointer
+                          ${activeNav === '#3cc1d5a427a45820b04fe30f78a972b784952460'
+                              ? 'bg-gradient-to-r from-slate-900 to-slate-800 text-white shadow-lg shadow-slate-900/25'
+                              : 'bg-white hover:bg-slate-50 text-slate-600'
+                            }
+                        `}
+                        >
+                          <Settings className="w-5 h-5" />
+                        </button>
+                        {/* Tooltip */}
+                        <div className="absolute top-full left-1/2 -translate-x-1/2 mt-2 px-3 py-1.5 bg-slate-900 text-white text-xs font-medium rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap shadow-lg z-50">
+                          Settings
+                          <div className="absolute bottom-full left-1/2 -translate-x-1/2 -mb-1 border-4 border-transparent border-b-slate-900"></div>
+                        </div>
+                      </div>
                     </div>
-                  </div>
+                  </nav>
                 </div>
-              </nav>
-            </div>
-          )}
+              )
+              : <></>
+          }
         </div>
       </header>
 

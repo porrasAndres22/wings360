@@ -8,11 +8,13 @@ import Settings from '@/components/Dashboard/Settings'
 import Paster from '@/components/Paster'
 import ListSchema from '@/components/Dashboard/ListSchema'
 import Load from '@/components/Load'
+import { useAuth } from '@clerk/nextjs';
 
 
 export default ({ user }: { user: any }) => {
 
     const { data, handler }: { data: String, handler: (setHandler: String) => void } = useChangeOption();
+    const { has }: { has: any } = useAuth()
 
     useEffect(() => {
         handler(location.hash)
@@ -28,6 +30,8 @@ export default ({ user }: { user: any }) => {
     return (
         <div className="mt-[72px] pb-8">
             {
+                has({ permission: 'org:testpermission:soysuperadmin' }) ? 
+                
                 data == "" ?
                     <>
                         <ListSchema></ListSchema>
@@ -57,6 +61,9 @@ export default ({ user }: { user: any }) => {
                                             <Settings></Settings>
                                         </>
                                         : <></>
+                
+                : <></> 
+
             }
         </div>
 

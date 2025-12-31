@@ -2,10 +2,12 @@
 import { useEffect } from 'react'
 import {
   SignedIn,
+  SignIn,
+  useAuth,
 } from '@clerk/nextjs'
 import Dashboard from '@/components/Dashboard'
 import Navigation from '@/components/Navigation'
-import { useAuth, useUser } from '@clerk/nextjs';
+import { useUser } from '@clerk/nextjs';
 import { useNotification, userClerkHandler, useServiceWorker, useWindowCaches } from '@/lib';
 import Load from '@/components/Load'
 
@@ -23,15 +25,18 @@ export default () => {
 
 
   if (!isLoaded) return <Load></Load>
-  if (!isSignedIn) return <></>
-  if (!has({ permission: 'org:testpermission:soysuperadmin' }) && !has({ permission: 'org:testpermission:soyadmin' })) return <></>
+  if (!isSignedIn) return <SignIn />
 
   return (
     <SignedIn>
-      <div className="min-h-screen">
-        <Dashboard user={user}></Dashboard>
-        <Navigation />
-      </div>
+      {
+        has({ permission: 'org:testpermission:soysuperadmin' }) ?
+          <div className="min-h-screen">
+            <Dashboard user={user}></Dashboard>
+            <Navigation />
+          </div>
+          : <Load></Load>
+      }
     </SignedIn>
   )
 }
