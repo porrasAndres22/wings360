@@ -43,8 +43,8 @@ const IntegratedDashboard = () => {
   const sidebarMenuItems = [
     { icon: Home, label: 'Home' },
     { icon: UsersRound, label: 'Conecciones' },
-    { icon: Calendar, label: 'Calendar' },
-    { icon: FileText, label: 'Documents' },
+    { icon: Calendar, label: 'My Employees' },
+    { icon: FileText, label: 'Action Plans' },
     { icon: Power, label: 'Close' },
   ];
 

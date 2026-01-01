@@ -61,8 +61,8 @@ export default function Navigation({ permission }: {
   let navItems = [
     { name: 'Dashboard', href: '' },
     { name: 'UserList', href: '#a90a81a258e5ab81db32d3a05b349b9f6df4e207' },
-    { name: 'Overview', href: '#56acaf1d4b8590cbfac2aaafec411795f31c5bab' },
-    { name: 'Analytics', href: '#cd2f1a458488e011a2fc1719ebe20437c52dc3e5' },
+    { name: 'Schemas', href: '#56acaf1d4b8590cbfac2aaafec411795f31c5bab' },
+    { name: 'Conections', href: '#cd2f1a458488e011a2fc1719ebe20437c52dc3e5' },
     { name: 'Settings', href: "#3cc1d5a427a45820b04fe30f78a972b784952460" },
   ];
 

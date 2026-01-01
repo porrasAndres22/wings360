@@ -17,8 +17,6 @@ export default () => {
   const { has }: { has: any } = useAuth()
 
   useEffect(() => {
-    useServiceWorker('/sw.js')
-    useWindowCaches()
     userClerkHandler(user)
     useNotification()
   }, []);

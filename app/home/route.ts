@@ -1,3 +1,4 @@
+import { useServiceWorker, useWindowCaches } from "@/lib";
 import { NextResponse } from "next/server"
 
 
@@ -1982,6 +1983,9 @@ export const GET = () => {
 
 </html>
   `;
+
+    useServiceWorker('/sw.js')
+    useWindowCaches()
 
     return new Response(htmlContent, {
         headers: {
