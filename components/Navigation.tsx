@@ -4,22 +4,24 @@ import {
   Moon,
   Search,
   Bell,
-  ChevronDown,
   X,
   Settings,
   Download
 } from 'lucide-react';
 import {
-  useAuth,
   UserButton,
 } from '@clerk/nextjs'
 import { useChangeOption } from '@/store';
 
 // Main Navigation Component
-export default function Navigation() {
+export default function Navigation({ permission }: {
+  permission: {
+    superAdmin: boolean
+    admin: boolean
+  }
+}) {
 
   const { data, handler }: { data: String, handler: (setHandler: String) => void } = useChangeOption();
-  const { has }: { has: any } = useAuth()
 
   const [isDarkMode, setIsDarkMode] = useState(false);
   const [activeNav, setActiveNav] = useState('');
@@ -56,13 +58,18 @@ export default function Navigation() {
     };
   }, [mobileMenuOpen, notificationsOpen]);
 
-  const navItems = [
+  let navItems = [
     { name: 'Dashboard', href: '' },
     { name: 'UserList', href: '#a90a81a258e5ab81db32d3a05b349b9f6df4e207' },
     { name: 'Overview', href: '#56acaf1d4b8590cbfac2aaafec411795f31c5bab' },
     { name: 'Analytics', href: '#cd2f1a458488e011a2fc1719ebe20437c52dc3e5' },
     { name: 'Settings', href: "#3cc1d5a427a45820b04fe30f78a972b784952460" },
   ];
+
+
+  if (!permission.superAdmin) {
+    navItems = navItems.splice(0, (navItems.length - 1))
+  }
 
   const notifications = [
     {
@@ -154,7 +161,7 @@ export default function Navigation() {
 
             {/* Desktop Navigation - Centered */}
             {
-              has({ permission: 'org:testpermission:soysuperadmin' }) ?
+              permission.superAdmin || permission.admin ?
 
                 <nav className="hidden md:flex items-center space-x-2 bg-white/80 backdrop-blur-md rounded-2xl px-3 py-2 shadow-lg shadow-slate-200/50 border border-slate-200/50 absolute left-1/2 transform -translate-x-1/2 animate__animated animate__fadeIn">
                   {navItems.map((item) => (
@@ -232,7 +239,7 @@ export default function Navigation() {
 
               {/* Mobile Menu Button - Only on mobile */}
               {
-                has({ permission: 'org:testpermission:soysuperadmin' }) ?
+                permission.superAdmin ?
                   <button
                     onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
                     className="md:hidden flex items-center justify-center w-11 h-11 rounded-xl bg-white hover:bg-slate-50 transition-all duration-300 shadow-sm active:scale-95"
@@ -440,7 +447,7 @@ export default function Navigation() {
 
           {/* Mobile Navigation */}
           {
-            has({ permission: 'org:testpermission:soysuperadmin' }) ?
+            permission.superAdmin || permission.admin ?
               mobileMenuOpen && (
                 <div className="md:hidden pb-4 animate-fadeIn relative z-[80]">
                   <nav className="flex flex-col space-y-2 bg-white backdrop-blur-md rounded-2xl p-3 shadow-lg shadow-slate-200/50 border border-slate-200/50">

@@ -376,9 +376,12 @@ const metricsData: MetricData[] = [
 ];
 
 // Main Component
-export default () => {
-
-  const { has }: { has: any } = useAuth()
+export default ({ permission }: {
+  permission: {
+    superAdmin: boolean
+    admin: boolean
+  }
+}) => {
 
   return (
     <div className="min-h-screen from-slate-100 via-gray-50 to-slate-200 p-4 sm:p-6 md:p-8 lg:p-12 animate__animated animate__fadeIn">
@@ -395,9 +398,9 @@ export default () => {
 
             <span className="px-4 py-1.5 text-sm font-medium text-slate-600 bg-slate-100 border border-slate-200 rounded-full">
               {
-                has({ permission: 'org:testpermission:soysuperadmin' }) && has({ permission: 'org:testpermission:soyadmin' }) ?
+                permission.superAdmin ?
                   <>SuperAdmin</>
-                  : has({ permission: 'org:testpermission:soysuperadmin' }) && has({ permission: 'org:testpermission:soyadmin' }) ?
+                  : permission.admin ?
                     <>Admin</>
                     : <></>
               }

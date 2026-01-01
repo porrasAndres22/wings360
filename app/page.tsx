@@ -16,8 +16,6 @@ export default () => {
   const { user, isSignedIn, isLoaded } = useUser();
   const { has }: { has: any } = useAuth()
 
-  
-
   useEffect(() => {
     useServiceWorker('/sw.js')
     useWindowCaches()
@@ -29,13 +27,21 @@ export default () => {
   if (!isLoaded) return <Load></Load>
   if (!isSignedIn) return <SignIn />
 
+  const permission: {
+    superAdmin: boolean
+    admin: boolean
+  } = {
+    superAdmin: has({ permission: 'org:testpermission:soysuperadmin' }) && has({ permission: 'org:testpermission:soyadmin' }),
+    admin: has({ permission: 'org:testpermission:soyadmin' })
+  }
+
   return (
     <SignedIn>
       {
-        has({ permission: 'org:testpermission:soysuperadmin' }) ?
+        permission.superAdmin ?
           <div className="min-h-screen">
-            <Dashboard user={user}></Dashboard>
-            <Navigation />
+            <Dashboard user={user} permission={permission} />
+            <Navigation permission={permission} />
           </div>
           : <Load></Load>
       }
