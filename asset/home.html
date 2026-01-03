@@ -41,18 +41,6 @@
         }
     </style>
     <style>
-        :root {
-            --switzer: Switzer, Arial, sans-serif;
-            --pale-gray: f6f5f4;
-            --inter: Inter, sans-serif;
-            --chinese-black: #111;
-            --transparent: transparent;
-            --white: white;
-            --light-off-white: #f1ebeb;
-            --bright-blue: #3480f1;
-            --burnt-red: #e64f22;
-        }
-
         html {
             -webkit-text-size-adjust: 100%;
             -ms-text-size-adjust: 100%;
@@ -2252,6 +2240,18 @@
             font-display: swap;
         }
 
+        :root {
+            --switzer: Switzer, Arial, sans-serif;
+            --pale-gray: #f6f5f4;
+            --inter: Inter, sans-serif;
+            --chinese-black: #111;
+            --transparent: transparent;
+            --white: white;
+            --light-off-white: #f1ebeb;
+            --bright-blue: #3480f1;
+            --burnt-red: #e64f22;
+        }
+
         .w-layout-grid {
             grid-row-gap: 16px;
             grid-column-gap: 16px;
@@ -2335,7 +2335,7 @@
         }
 
         .body {
-            background: linear-gradient(95deg, rgba(230, 233, 255, 1) 23%, rgba(236, 244, 255, 1) 52%, rgba(216, 240, 255, 1) 82%);
+            background-color: var(--pale-gray);
             font-family: var(--inter);
             color: var(--chinese-black);
             font-size: 16px;
@@ -5655,7 +5655,7 @@
             <div class="navbar w-nav" data-animation="default" data-collapse="medium" data-duration="400"
                 data-easing="ease" data-easing2="ease" role="banner">
                 <div class="nav-container">
-                    <div class="nav-logo-wrapper"><a aria-current="page" class="w-nav-brand w--current" href="/">
+                    <div class="nav-logo-wrapper"><a aria-current="page" class="w-nav-brand w--current" href="">
                             <svg style="height: 4rem">
                                 <use href="./sprite.svg#wings360"></use>
                             </svg>

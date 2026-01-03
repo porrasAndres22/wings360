@@ -1,7 +1,6 @@
-'use client';
-
 import React, { useState, useEffect } from 'react';
-import { Search, Calendar, Grid3x3, List, Mail, Phone, MapPin, MoreVertical, UserPlus, ArrowLeft, MessageSquare, History } from 'lucide-react';
+import { Search, Calendar, Grid3x3, List, Mail, MapPin, MoreVertical, UserPlus, MessageSquare, History } from 'lucide-react';
+import UserDetail from './UserList/UserDetail'
 
 interface User {
   id: string;
@@ -710,253 +709,7 @@ const UserDashboard: React.FC = () => {
 
   // Render UserDetail if a user is selected
   if (currentView === 'detail' && selectedUser) {
-    return (
-      <div className="min-h-screen from-slate-50 via-blue-50 to-indigo-100 p-4 md:p-8 font-['Instrument_Sans',sans-serif] animate__animated animate__fadeIn">
-        <div className="max-w-5xl mx-auto">
-          {/* Back Button */}
-          <button
-            onClick={handleBackToDashboard}
-            className="cursor-pointer flex items-center gap-2 px-4 py-2 mb-6 bg-white hover:bg-slate-50 rounded-2xl transition-all shadow-sm border border-slate-200"
-          >
-            <ArrowLeft className="w-5 h-5 text-slate-600" />
-            <span className="text-sm font-medium text-slate-700">Volver a usuarios</span>
-          </button>
-
-          {/* Profile Header Card */}
-          <div className="bg-white/90 backdrop-blur-xl rounded-3xl shadow-xl shadow-slate-200/50 p-8 border border-slate-200/60 mb-6">
-            <div className="flex flex-col md:flex-row items-start md:items-center gap-6">
-              <img 
-                src={selectedUser.profileImage} 
-                alt={selectedUser.name}
-                className="w-24 h-24 rounded-3xl object-cover shadow-lg ring-4 ring-white"
-                onError={(e) => {
-                  e.currentTarget.style.display = 'none';
-                  e.currentTarget.nextElementSibling?.classList.remove('hidden');
-                }}
-              />
-              <div className="w-24 h-24 rounded-3xl bg-gradient-to-br from-blue-400 to-purple-500 flex items-center justify-center text-6xl shadow-lg hidden">
-                {selectedUser.avatar}
-              </div>
-              <div className="flex-1">
-                <h1 className="text-4xl font-bold text-slate-900 mb-2">{selectedUser.name}</h1>
-                <p className="text-xl text-slate-600 mb-3">{selectedUser.role}</p>
-                <div className="flex items-center gap-3">
-                  {getStatusBadge(selectedUser.status)}
-                  <span className="px-3 py-1 bg-blue-50 text-blue-700 rounded-full text-sm font-medium">
-                    {selectedUser.department}
-                  </span>
-                </div>
-              </div>
-              <div className="flex flex-col sm:flex-row gap-3 w-full md:w-auto">
-                <button className="flex items-center justify-center gap-2 px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-2xl font-medium transition-all shadow-lg shadow-blue-600/30">
-                  <MessageSquare className="w-5 h-5" />
-                  Enviar Mensaje
-                </button>
-                <button className="flex items-center justify-center gap-2 px-6 py-3 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-2xl font-medium transition-all">
-                  <History className="w-5 h-5" />
-                  Ver Historial
-                </button>
-              </div>
-            </div>
-          </div>
-
-          {/* Information Grid */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            {/* Contact Information */}
-            <div className="bg-white/90 backdrop-blur-xl rounded-3xl shadow-xl shadow-slate-200/50 p-6 md:p-8 border border-slate-200/60">
-              <h2 className="text-2xl font-bold text-slate-900 mb-6 flex items-center gap-2">
-                <div className="w-10 h-10 rounded-xl bg-blue-100 flex items-center justify-center">
-                  <Mail className="w-5 h-5 text-blue-600" />
-                </div>
-                Información de Contacto
-              </h2>
-
-              <div className="space-y-4">
-                <div className="bg-slate-50 rounded-2xl p-5 hover:bg-slate-100 transition-colors">
-                  <div className="flex items-center gap-2 text-slate-500 text-sm mb-2">
-                    <Mail className="w-4 h-4" />
-                    <span className="font-medium">Email</span>
-                  </div>
-                  <a 
-                    href={`mailto:${selectedUser.email}`} 
-                    className="text-blue-600 hover:text-blue-700 font-medium text-lg break-all"
-                  >
-                    {selectedUser.email}
-                  </a>
-                </div>
-
-                <div className="bg-slate-50 rounded-2xl p-5 hover:bg-slate-100 transition-colors">
-                  <div className="flex items-center gap-2 text-slate-500 text-sm mb-2">
-                    <Phone className="w-4 h-4" />
-                    <span className="font-medium">Teléfono</span>
-                  </div>
-                  <p className="text-slate-900 font-medium text-lg">+1 (555) 123-4567</p>
-                </div>
-
-                <div className="bg-slate-50 rounded-2xl p-5 hover:bg-slate-100 transition-colors">
-                  <div className="flex items-center gap-2 text-slate-500 text-sm mb-2">
-                    <MapPin className="w-4 h-4" />
-                    <span className="font-medium">Ubicación</span>
-                  </div>
-                  <p className="text-slate-900 font-medium text-lg">{selectedUser.location}</p>
-                </div>
-
-                <div className="bg-slate-50 rounded-2xl p-5 hover:bg-slate-100 transition-colors">
-                  <div className="flex items-center gap-2 text-slate-500 text-sm mb-2">
-                    <Calendar className="w-4 h-4" />
-                    <span className="font-medium">Fecha de Ingreso</span>
-                  </div>
-                  <p className="text-slate-900 font-medium text-lg">{selectedUser.joinDate}</p>
-                </div>
-              </div>
-            </div>
-
-            {/* Work Information */}
-            <div className="bg-white/90 backdrop-blur-xl rounded-3xl shadow-xl shadow-slate-200/50 p-6 md:p-8 border border-slate-200/60">
-              <h2 className="text-2xl font-bold text-slate-900 mb-6 flex items-center gap-2">
-                <div className="w-10 h-10 rounded-xl bg-purple-100 flex items-center justify-center">
-                  <svg className="w-5 h-5 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                  </svg>
-                </div>
-                Información Laboral
-              </h2>
-
-              <div className="space-y-4">
-                <div className="bg-slate-50 rounded-2xl p-5 hover:bg-slate-100 transition-colors">
-                  <div className="text-slate-500 text-sm mb-2 font-medium">Cargo</div>
-                  <p className="text-slate-900 font-semibold text-lg">{selectedUser.role}</p>
-                </div>
-
-                <div className="bg-slate-50 rounded-2xl p-5 hover:bg-slate-100 transition-colors">
-                  <div className="text-slate-500 text-sm mb-2 font-medium">Departamento</div>
-                  <span className="inline-block px-4 py-2 bg-blue-100 text-blue-700 rounded-xl text-base font-semibold">
-                    {selectedUser.department}
-                  </span>
-                </div>
-
-                <div className="bg-slate-50 rounded-2xl p-5 hover:bg-slate-100 transition-colors">
-                  <div className="text-slate-500 text-sm mb-2 font-medium">ID de Empleado</div>
-                  <p className="text-slate-900 font-semibold text-lg">EMP-{selectedUser.id.padStart(5, '0')}</p>
-                </div>
-
-                <div className="bg-slate-50 rounded-2xl p-5 hover:bg-slate-100 transition-colors">
-                  <div className="text-slate-500 text-sm mb-2 font-medium">Reporta a</div>
-                  <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-full bg-gradient-to-br from-green-400 to-cyan-500 flex items-center justify-center text-xl">
-                      👤
-                    </div>
-                    <p className="text-slate-900 font-semibold text-lg">John Smith</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Statistics & Additional Info */}
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-6">
-            {/* Performance Stats */}
-            <div className="bg-white/90 backdrop-blur-xl rounded-3xl shadow-xl shadow-slate-200/50 p-6 border border-slate-200/60">
-              <h3 className="text-lg font-bold text-slate-900 mb-4">Rendimiento</h3>
-              <div className="space-y-4">
-                <div>
-                  <div className="flex justify-between items-center mb-2">
-                    <span className="text-sm text-slate-600">Proyectos Activos</span>
-                    <span className="text-2xl font-bold text-blue-600">3</span>
-                  </div>
-                  <div className="h-2 bg-slate-100 rounded-full overflow-hidden">
-                    <div className="h-full bg-blue-600 rounded-full" style={{ width: '60%' }}></div>
-                  </div>
-                </div>
-                <div>
-                  <div className="flex justify-between items-center mb-2">
-                    <span className="text-sm text-slate-600">Tareas Completadas</span>
-                    <span className="text-2xl font-bold text-emerald-600">127</span>
-                  </div>
-                  <div className="h-2 bg-slate-100 rounded-full overflow-hidden">
-                    <div className="h-full bg-emerald-600 rounded-full" style={{ width: '85%' }}></div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Time Tracking */}
-            <div className="bg-white/90 backdrop-blur-xl rounded-3xl shadow-xl shadow-slate-200/50 p-6 border border-slate-200/60">
-              <h3 className="text-lg font-bold text-slate-900 mb-4">Tiempo</h3>
-              <div className="space-y-4">
-                <div className="flex items-center justify-between p-3 bg-slate-50 rounded-xl">
-                  <div>
-                    <div className="text-sm text-slate-600">Horas este mes</div>
-                    <div className="text-2xl font-bold text-slate-900">156h</div>
-                  </div>
-                  <div className="w-12 h-12 rounded-xl bg-purple-100 flex items-center justify-center">
-                    <svg className="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                    </svg>
-                  </div>
-                </div>
-                <div className="flex items-center justify-between p-3 bg-slate-50 rounded-xl">
-                  <div>
-                    <div className="text-sm text-slate-600">Promedio diario</div>
-                    <div className="text-2xl font-bold text-slate-900">7.8h</div>
-                  </div>
-                  <div className="w-12 h-12 rounded-xl bg-blue-100 flex items-center justify-center">
-                    <svg className="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
-                    </svg>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Vacation Info */}
-            <div className="bg-white/90 backdrop-blur-xl rounded-3xl shadow-xl shadow-slate-200/50 p-6 border border-slate-200/60">
-              <h3 className="text-lg font-bold text-slate-900 mb-4">Vacaciones</h3>
-              <div className="space-y-4">
-                <div className="text-center p-6 bg-gradient-to-br from-amber-50 to-orange-50 rounded-2xl">
-                  <div className="text-5xl font-bold text-amber-600 mb-2">12</div>
-                  <div className="text-sm text-amber-700 font-medium">Días disponibles</div>
-                </div>
-                <div className="flex justify-between text-sm">
-                  <div className="text-center">
-                    <div className="text-xl font-bold text-slate-900">8</div>
-                    <div className="text-slate-600">Usados</div>
-                  </div>
-                  <div className="w-px bg-slate-200"></div>
-                  <div className="text-center">
-                    <div className="text-xl font-bold text-slate-900">20</div>
-                    <div className="text-slate-600">Total anual</div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Recent Activity */}
-          <div className="bg-white/90 backdrop-blur-xl rounded-3xl shadow-xl shadow-slate-200/50 p-6 md:p-8 border border-slate-200/60 mt-6">
-            <h2 className="text-2xl font-bold text-slate-900 mb-6">Actividad Reciente</h2>
-            <div className="space-y-4">
-              {[
-                { action: 'Completó la tarea "Diseño de wireframes"', time: 'Hace 2 horas', color: 'emerald' },
-                { action: 'Se unió al proyecto "Rediseño de Dashboard"', time: 'Hace 5 horas', color: 'blue' },
-                { action: 'Actualizó el documento de especificaciones', time: 'Ayer', color: 'purple' },
-                { action: 'Comentó en "Revisión de código"', time: 'Hace 2 días', color: 'amber' }
-              ].map((activity, index) => (
-                <div key={index} className="flex items-start gap-4 p-4 bg-slate-50 rounded-2xl hover:bg-slate-100 transition-colors">
-                  <div className={`w-10 h-10 rounded-xl bg-${activity.color}-100 flex items-center justify-center flex-shrink-0 mt-1`}>
-                    <div className={`w-3 h-3 rounded-full bg-${activity.color}-500`}></div>
-                  </div>
-                  <div className="flex-1">
-                    <p className="text-slate-900 font-medium">{activity.action}</p>
-                    <p className="text-slate-500 text-sm mt-1">{activity.time}</p>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </div>
-    );
+    return <UserDetail selectedUser={selectedUser} handleBackToDashboard={handleBackToDashboard} getStatusBadge={getStatusBadge}></UserDetail>
   }
 
   // Render Dashboard
@@ -968,15 +721,15 @@ const UserDashboard: React.FC = () => {
           <div className="flex flex-col md:flex-row gap-4 items-start md:items-center justify-between">
             <div className="flex items-center gap-3 w-full md:w-auto">
               {/* Back Button - Circular */}
-              <button 
+              <button
                 onClick={() => window.history.back()}
                 className="cursor-pointer w-12 h-12 flex items-center justify-center bg-slate-100 hover:bg-slate-200 rounded-full transition-all group"
                 aria-label="Go back"
               >
-                <svg 
-                  className="w-5 h-5 text-slate-600 group-hover:text-slate-900 transition-colors" 
-                  fill="none" 
-                  stroke="currentColor" 
+                <svg
+                  className="w-5 h-5 text-slate-600 group-hover:text-slate-900 transition-colors"
+                  fill="none"
+                  stroke="currentColor"
                   viewBox="0 0 24 24"
                 >
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
@@ -1006,37 +759,35 @@ const UserDashboard: React.FC = () => {
                 )}
               </div>
             </div>
-            
+
             <div className="flex items-center gap-3 w-full md:w-auto">
               <button className="flex items-center gap-2 px-4 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-2xl transition-all shadow-lg shadow-blue-600/30 font-medium">
                 <UserPlus className="w-4 h-4" />
                 <span className="text-sm">Add User</span>
               </button>
-              
+
               <button className="flex items-center gap-2 px-4 py-3 bg-slate-50 rounded-2xl text-slate-700 hover:bg-slate-100 transition-all border border-slate-200/60">
                 <Calendar className="w-4 h-4" />
                 <span className="text-sm font-medium hidden sm:inline">{selectedDate}</span>
               </button>
-              
+
               <div className="flex bg-slate-900 rounded-2xl p-1.5">
                 <button
                   onClick={() => setViewMode('card')}
-                  className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium transition-all ${
-                    viewMode === 'card'
+                  className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium transition-all ${viewMode === 'card'
                       ? 'bg-white text-slate-900 shadow-lg'
                       : 'text-white/70 hover:text-white'
-                  }`}
+                    }`}
                 >
                   <Grid3x3 className="w-4 h-4" />
                   <span className="hidden sm:inline">Card</span>
                 </button>
                 <button
                   onClick={() => setViewMode('list')}
-                  className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium transition-all ${
-                    viewMode === 'list'
+                  className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium transition-all ${viewMode === 'list'
                       ? 'bg-white text-slate-900 shadow-lg'
                       : 'text-white/70 hover:text-white'
-                  }`}
+                    }`}
                 >
                   <List className="w-4 h-4" />
                   <span className="hidden sm:inline">List</span>
@@ -1079,7 +830,7 @@ const UserDashboard: React.FC = () => {
                 )}
               </p>
             </div>
-            
+
             {/* Pagination - Centered (Mobile) / Top Right (Desktop) */}
             {filteredUsers.length > 0 && totalPages > 1 && (
               <div className="flex items-center gap-2 w-full justify-center lg:w-auto lg:absolute lg:top-6 lg:right-6 md:top-8 md:right-8">
@@ -1096,13 +847,13 @@ const UserDashboard: React.FC = () => {
                 <div className="hidden sm:flex items-center gap-1">
                   {Array.from({ length: totalPages }, (_, i) => i + 1).map(pageNum => {
                     // Show first page, last page, current page, and pages around current
-                    const showPage = 
-                      pageNum === 1 || 
-                      pageNum === totalPages || 
+                    const showPage =
+                      pageNum === 1 ||
+                      pageNum === totalPages ||
                       (pageNum >= currentPage - 1 && pageNum <= currentPage + 1);
-                    
-                    const showEllipsis = 
-                      (pageNum === 2 && currentPage > 3) || 
+
+                    const showEllipsis =
+                      (pageNum === 2 && currentPage > 3) ||
                       (pageNum === totalPages - 1 && currentPage < totalPages - 2);
 
                     if (showEllipsis) {
@@ -1119,11 +870,10 @@ const UserDashboard: React.FC = () => {
                       <button
                         key={pageNum}
                         onClick={() => handlePageChange(pageNum)}
-                        className={`cursor-pointer w-10 h-10 rounded-xl font-medium transition-all ${
-                          currentPage === pageNum
+                        className={`cursor-pointer w-10 h-10 rounded-xl font-medium transition-all ${currentPage === pageNum
                             ? 'bg-blue-600 text-white shadow-lg shadow-blue-600/30'
                             : 'border border-slate-200 text-slate-700 hover:bg-slate-50'
-                        }`}
+                          }`}
                       >
                         {pageNum}
                       </button>
@@ -1163,9 +913,8 @@ const UserDashboard: React.FC = () => {
 
           {/* User Rows - List View */}
           {viewMode === 'list' && (
-            <div className={`space-y-2 mt-2 transition-all duration-300 ${
-              isPageAnimating ? 'opacity-0 -translate-y-4' : 'opacity-100 translate-y-0'
-            }`}>
+            <div className={`space-y-2 mt-2 transition-all duration-300 ${isPageAnimating ? 'opacity-0 -translate-y-4' : 'opacity-100 translate-y-0'
+              }`}>
               {filteredUsers.length === 0 ? (
                 <div className="text-center py-12">
                   <div className="text-6xl mb-4">🔍</div>
@@ -1174,121 +923,120 @@ const UserDashboard: React.FC = () => {
                 </div>
               ) : (
                 currentUsers.map((user) => (
-                <div
-                  key={user.id}
-                  onClick={() => handleUserClick(user)}
-                  className="grid grid-cols-1 lg:grid-cols-[2fr_1.5fr_1fr_1fr_1fr_1fr_50px] gap-4 p-4 md:px-6 md:py-5 rounded-2xl hover:bg-slate-50 transition-all group border border-transparent hover:border-slate-200 hover:shadow-md cursor-pointer"
-                >
-                  <div className="flex items-center gap-3">
-                    <img 
-                      src={user.profileImage} 
-                      alt={user.name}
-                      className="w-12 h-12 rounded-2xl object-cover shadow-lg ring-2 ring-white"
-                      onError={(e) => {
-                        // Fallback to gradient with emoji if image fails to load
-                        e.currentTarget.style.display = 'none';
-                        e.currentTarget.nextElementSibling?.classList.remove('hidden');
-                      }}
-                    />
-                    <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-blue-400 to-purple-500 flex items-center justify-center text-2xl shadow-lg hidden">
-                      {user.avatar}
-                    </div>
-                    <div>
-                      <div className="font-semibold text-slate-900">{user.name}</div>
-                      <div className="text-xs text-slate-500 flex items-center gap-1 mt-0.5">
-                        <MapPin className="w-3 h-3" />
-                        {user.location}
+                  <div
+                    key={user.id}
+                    onClick={() => handleUserClick(user)}
+                    className="grid grid-cols-1 lg:grid-cols-[2fr_1.5fr_1fr_1fr_1fr_1fr_50px] gap-4 p-4 md:px-6 md:py-5 rounded-2xl hover:bg-slate-50 transition-all group border border-transparent hover:border-slate-200 hover:shadow-md cursor-pointer"
+                  >
+                    <div className="flex items-center gap-3">
+                      <img
+                        src={user.profileImage}
+                        alt={user.name}
+                        className="w-12 h-12 rounded-2xl object-cover shadow-lg ring-2 ring-white"
+                        onError={(e) => {
+                          // Fallback to gradient with emoji if image fails to load
+                          e.currentTarget.style.display = 'none';
+                          e.currentTarget.nextElementSibling?.classList.remove('hidden');
+                        }}
+                      />
+                      <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-blue-400 to-purple-500 flex items-center justify-center text-2xl shadow-lg hidden">
+                        {user.avatar}
+                      </div>
+                      <div>
+                        <div className="font-semibold text-slate-900">{user.name}</div>
+                        <div className="text-xs text-slate-500 flex items-center gap-1 mt-0.5">
+                          <MapPin className="w-3 h-3" />
+                          {user.location}
+                        </div>
                       </div>
                     </div>
-                  </div>
-                  
-                  <div className="flex items-center text-slate-600 text-sm lg:text-base">
-                    <div className="lg:hidden mr-2">
-                      <Mail className="w-4 h-4 text-slate-400" />
-                    </div>
-                    <a href={`mailto:${user.email}`} className="hover:text-blue-600 transition-colors truncate">
-                      {user.email}
-                    </a>
-                  </div>
-                  
-                  <div className="flex items-center">
-                    <span className="lg:hidden text-xs text-slate-500 mr-2">Role:</span>
-                    <span className="text-slate-700 font-medium text-sm">{user.role}</span>
-                  </div>
-                  
-                  <div className="flex items-center">
-                    <span className="lg:hidden text-xs text-slate-500 mr-2">Department:</span>
-                    <span className="px-3 py-1 bg-blue-50 text-blue-700 rounded-full text-sm font-medium">
-                      {user.department}
-                    </span>
-                  </div>
-                  
-                  <div className="flex items-center">
-                    <span className="lg:hidden text-xs text-slate-500 mr-2">Status:</span>
-                    {getStatusBadge(user.status)}
-                  </div>
-                  
-                  <div className="flex items-center text-slate-600 text-sm">
-                    <span className="lg:hidden text-xs text-slate-500 mr-2">Joined:</span>
-                    {user.joinDate}
-                  </div>
-                  
-                  <div className="flex items-center justify-end lg:justify-center relative">
-                    <button 
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        toggleMenu(user.id);
-                      }}
-                      className="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-slate-200 transition-all text-slate-400 hover:text-slate-700"
-                    >
-                      <MoreVertical className="w-5 h-5" />
-                    </button>
 
-                    {/* Dropdown Menu */}
-                    {openMenuId === user.id && (
-                      <div className="absolute right-0 top-10 w-48 bg-white rounded-xl shadow-xl border border-slate-200 py-2 z-50">
-                        <button
-                          onClick={() => handleViewMore(user.id)}
-                          className="w-full px-4 py-2 text-left text-sm text-slate-700 hover:bg-slate-50 flex items-center gap-2 transition-colors"
-                        >
-                          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                          </svg>
-                          Ver más
-                        </button>
-                        <button
-                          onClick={() => handleSuspend(user.id)}
-                          className="w-full px-4 py-2 text-left text-sm text-amber-600 hover:bg-amber-50 flex items-center gap-2 transition-colors"
-                        >
-                          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636" />
-                          </svg>
-                          Suspender
-                        </button>
-                        <button
-                          onClick={() => handleDelete(user.id)}
-                          className="w-full px-4 py-2 text-left text-sm text-red-600 hover:bg-red-50 flex items-center gap-2 transition-colors"
-                        >
-                          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                          </svg>
-                          Eliminar
-                        </button>
+                    <div className="flex items-center text-slate-600 text-sm lg:text-base">
+                      <div className="lg:hidden mr-2">
+                        <Mail className="w-4 h-4 text-slate-400" />
                       </div>
-                    )}
+                      <a href={`mailto:${user.email}`} className="hover:text-blue-600 transition-colors truncate">
+                        {user.email}
+                      </a>
+                    </div>
+
+                    <div className="flex items-center">
+                      <span className="lg:hidden text-xs text-slate-500 mr-2">Role:</span>
+                      <span className="text-slate-700 font-medium text-sm">{user.role}</span>
+                    </div>
+
+                    <div className="flex items-center">
+                      <span className="lg:hidden text-xs text-slate-500 mr-2">Department:</span>
+                      <span className="px-3 py-1 bg-blue-50 text-blue-700 rounded-full text-sm font-medium">
+                        {user.department}
+                      </span>
+                    </div>
+
+                    <div className="flex items-center">
+                      <span className="lg:hidden text-xs text-slate-500 mr-2">Status:</span>
+                      {getStatusBadge(user.status)}
+                    </div>
+
+                    <div className="flex items-center text-slate-600 text-sm">
+                      <span className="lg:hidden text-xs text-slate-500 mr-2">Joined:</span>
+                      {user.joinDate}
+                    </div>
+
+                    <div className="flex items-center justify-end lg:justify-center relative">
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          toggleMenu(user.id);
+                        }}
+                        className="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-slate-200 transition-all text-slate-400 hover:text-slate-700"
+                      >
+                        <MoreVertical className="w-5 h-5" />
+                      </button>
+
+                      {/* Dropdown Menu */}
+                      {openMenuId === user.id && (
+                        <div className="absolute right-0 top-10 w-48 bg-white rounded-xl shadow-xl border border-slate-200 py-2 z-50">
+                          <button
+                            onClick={() => handleViewMore(user.id)}
+                            className="w-full px-4 py-2 text-left text-sm text-slate-700 hover:bg-slate-50 flex items-center gap-2 transition-colors"
+                          >
+                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                            </svg>
+                            Ver más
+                          </button>
+                          <button
+                            onClick={() => handleSuspend(user.id)}
+                            className="w-full px-4 py-2 text-left text-sm text-amber-600 hover:bg-amber-50 flex items-center gap-2 transition-colors"
+                          >
+                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636" />
+                            </svg>
+                            Suspender
+                          </button>
+                          <button
+                            onClick={() => handleDelete(user.id)}
+                            className="w-full px-4 py-2 text-left text-sm text-red-600 hover:bg-red-50 flex items-center gap-2 transition-colors"
+                          >
+                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                            </svg>
+                            Eliminar
+                          </button>
+                        </div>
+                      )}
+                    </div>
                   </div>
-                </div>
-              ))
+                ))
               )}
             </div>
           )}
 
           {/* User Cards - Card View */}
           {viewMode === 'card' && (
-            <div className={`grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 mt-6 transition-all duration-300 ${
-              isPageAnimating ? 'opacity-0 scale-95' : 'opacity-100 scale-100'
-            }`}>
+            <div className={`grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 mt-6 transition-all duration-300 ${isPageAnimating ? 'opacity-0 scale-95' : 'opacity-100 scale-100'
+              }`}>
               {filteredUsers.length === 0 ? (
                 <div className="col-span-full text-center py-12">
                   <div className="text-6xl mb-4">🔍</div>
@@ -1297,121 +1045,121 @@ const UserDashboard: React.FC = () => {
                 </div>
               ) : (
                 currentUsers.map((user) => (
-                <div
-                  key={user.id}
-                  onClick={() => handleUserClick(user)}
-                  className="bg-white border-2 border-slate-200 rounded-3xl p-6 hover:border-blue-300 hover:shadow-xl transition-all duration-300 group relative overflow-hidden cursor-pointer"
-                >
-                  {/* Background gradient effect */}
-                  <div className="absolute inset-0 bg-gradient-to-br from-blue-50/50 via-transparent to-purple-50/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                  
-                  <div className="relative z-10">
-                    {/* Header */}
-                    <div className="flex items-start justify-between mb-4">
-                      <div className="flex items-center gap-3">
-                        <img 
-                          src={user.profileImage} 
-                          alt={user.name}
-                          className="w-16 h-16 rounded-2xl object-cover shadow-lg ring-2 ring-white group-hover:scale-110 transition-transform duration-300"
-                          onError={(e) => {
-                            e.currentTarget.style.display = 'none';
-                            e.currentTarget.nextElementSibling?.classList.remove('hidden');
-                          }}
-                        />
-                        <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-blue-400 to-purple-500 flex items-center justify-center text-4xl shadow-lg group-hover:scale-110 transition-transform duration-300 hidden">
-                          {user.avatar}
+                  <div
+                    key={user.id}
+                    onClick={() => handleUserClick(user)}
+                    className="bg-white border-2 border-slate-200 rounded-3xl p-6 hover:border-blue-300 hover:shadow-xl transition-all duration-300 group relative overflow-hidden cursor-pointer"
+                  >
+                    {/* Background gradient effect */}
+                    <div className="absolute inset-0 bg-gradient-to-br from-blue-50/50 via-transparent to-purple-50/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+
+                    <div className="relative z-10">
+                      {/* Header */}
+                      <div className="flex items-start justify-between mb-4">
+                        <div className="flex items-center gap-3">
+                          <img
+                            src={user.profileImage}
+                            alt={user.name}
+                            className="w-16 h-16 rounded-2xl object-cover shadow-lg ring-2 ring-white group-hover:scale-110 transition-transform duration-300"
+                            onError={(e) => {
+                              e.currentTarget.style.display = 'none';
+                              e.currentTarget.nextElementSibling?.classList.remove('hidden');
+                            }}
+                          />
+                          <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-blue-400 to-purple-500 flex items-center justify-center text-4xl shadow-lg group-hover:scale-110 transition-transform duration-300 hidden">
+                            {user.avatar}
+                          </div>
+                        </div>
+                        <div className="relative">
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              toggleMenu(user.id);
+                            }}
+                            className="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-slate-200 transition-all text-slate-400 hover:text-slate-700"
+                          >
+                            <MoreVertical className="w-5 h-5" />
+                          </button>
+
+                          {/* Dropdown Menu */}
+                          {openMenuId === user.id && (
+                            <div className="absolute right-0 top-10 w-48 bg-white rounded-xl shadow-xl border border-slate-200 py-2 z-50">
+                              <button
+                                onClick={() => handleViewMore(user.id)}
+                                className="w-full px-4 py-2 text-left text-sm text-slate-700 hover:bg-slate-50 flex items-center gap-2 transition-colors"
+                              >
+                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                                </svg>
+                                Ver más
+                              </button>
+                              <button
+                                onClick={() => handleSuspend(user.id)}
+                                className="w-full px-4 py-2 text-left text-sm text-amber-600 hover:bg-amber-50 flex items-center gap-2 transition-colors"
+                              >
+                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636" />
+                                </svg>
+                                Suspender
+                              </button>
+                              <button
+                                onClick={() => handleDelete(user.id)}
+                                className="w-full px-4 py-2 text-left text-sm text-red-600 hover:bg-red-50 flex items-center gap-2 transition-colors"
+                              >
+                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                </svg>
+                                Eliminar
+                              </button>
+                            </div>
+                          )}
                         </div>
                       </div>
-                      <div className="relative">
-                        <button 
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            toggleMenu(user.id);
-                          }}
-                          className="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-slate-200 transition-all text-slate-400 hover:text-slate-700"
+
+                      {/* Name and Role */}
+                      <div className="mb-4">
+                        <h3 className="text-xl font-bold text-slate-900 mb-1">{user.name}</h3>
+                        <p className="text-sm text-slate-600 font-medium mb-2">{user.role}</p>
+                        <div className="flex items-center gap-1 text-xs text-slate-500">
+                          <MapPin className="w-3 h-3" />
+                          {user.location}
+                        </div>
+                      </div>
+
+                      {/* Contact Info */}
+                      <div className="space-y-2 mb-4 pb-4 border-b border-slate-200">
+                        <a
+                          href={`mailto:${user.email}`}
+                          className="flex items-center gap-2 text-sm text-slate-600 hover:text-blue-600 transition-colors group/email"
                         >
-                          <MoreVertical className="w-5 h-5" />
-                        </button>
-
-                        {/* Dropdown Menu */}
-                        {openMenuId === user.id && (
-                          <div className="absolute right-0 top-10 w-48 bg-white rounded-xl shadow-xl border border-slate-200 py-2 z-50">
-                            <button
-                              onClick={() => handleViewMore(user.id)}
-                              className="w-full px-4 py-2 text-left text-sm text-slate-700 hover:bg-slate-50 flex items-center gap-2 transition-colors"
-                            >
-                              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                              </svg>
-                              Ver más
-                            </button>
-                            <button
-                              onClick={() => handleSuspend(user.id)}
-                              className="w-full px-4 py-2 text-left text-sm text-amber-600 hover:bg-amber-50 flex items-center gap-2 transition-colors"
-                            >
-                              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636" />
-                              </svg>
-                              Suspender
-                            </button>
-                            <button
-                              onClick={() => handleDelete(user.id)}
-                              className="w-full px-4 py-2 text-left text-sm text-red-600 hover:bg-red-50 flex items-center gap-2 transition-colors"
-                            >
-                              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                              </svg>
-                              Eliminar
-                            </button>
-                          </div>
-                        )}
+                          <Mail className="w-4 h-4 text-slate-400 group-hover/email:text-blue-600" />
+                          <span className="truncate">{user.email}</span>
+                        </a>
                       </div>
-                    </div>
 
-                    {/* Name and Role */}
-                    <div className="mb-4">
-                      <h3 className="text-xl font-bold text-slate-900 mb-1">{user.name}</h3>
-                      <p className="text-sm text-slate-600 font-medium mb-2">{user.role}</p>
-                      <div className="flex items-center gap-1 text-xs text-slate-500">
-                        <MapPin className="w-3 h-3" />
-                        {user.location}
+                      {/* Department and Status */}
+                      <div className="flex items-center justify-between mb-4">
+                        <div>
+                          <p className="text-xs text-slate-500 mb-1">Department</p>
+                          <span className="inline-block px-3 py-1 bg-blue-50 text-blue-700 rounded-full text-sm font-medium">
+                            {user.department}
+                          </span>
+                        </div>
+                        <div>
+                          <p className="text-xs text-slate-500 mb-1 text-right">Status</p>
+                          {getStatusBadge(user.status)}
+                        </div>
                       </div>
-                    </div>
 
-                    {/* Contact Info */}
-                    <div className="space-y-2 mb-4 pb-4 border-b border-slate-200">
-                      <a
-                        href={`mailto:${user.email}`}
-                        className="flex items-center gap-2 text-sm text-slate-600 hover:text-blue-600 transition-colors group/email"
-                      >
-                        <Mail className="w-4 h-4 text-slate-400 group-hover/email:text-blue-600" />
-                        <span className="truncate">{user.email}</span>
-                      </a>
-                    </div>
-
-                    {/* Department and Status */}
-                    <div className="flex items-center justify-between mb-4">
-                      <div>
-                        <p className="text-xs text-slate-500 mb-1">Department</p>
-                        <span className="inline-block px-3 py-1 bg-blue-50 text-blue-700 rounded-full text-sm font-medium">
-                          {user.department}
-                        </span>
+                      {/* Join Date */}
+                      <div className="flex items-center justify-between text-xs text-slate-500">
+                        <span>Joined</span>
+                        <span className="font-medium text-slate-700">{user.joinDate}</span>
                       </div>
-                      <div>
-                        <p className="text-xs text-slate-500 mb-1 text-right">Status</p>
-                        {getStatusBadge(user.status)}
-                      </div>
-                    </div>
-
-                    {/* Join Date */}
-                    <div className="flex items-center justify-between text-xs text-slate-500">
-                      <span>Joined</span>
-                      <span className="font-medium text-slate-700">{user.joinDate}</span>
                     </div>
                   </div>
-                </div>
-              ))
+                ))
               )}
             </div>
           )}
@@ -1438,7 +1186,7 @@ const UserDashboard: React.FC = () => {
                 <span>01-07 May</span>
               </button>
             </div>
-            
+
             <div className="flex gap-4 mb-6">
               <div className="flex items-center gap-2">
                 <div className="w-3 h-3 rounded-full bg-cyan-400"></div>
@@ -1509,7 +1257,7 @@ const UserDashboard: React.FC = () => {
           {/* Projects in Progress */}
           <div className="bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 rounded-3xl shadow-xl shadow-slate-400/50 p-6 md:p-8 border border-slate-700/50 relative overflow-hidden">
             <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_120%,rgba(120,119,198,0.3),transparent_50%)]"></div>
-            
+
             <div className="relative z-10">
               <div className="flex items-center justify-between mb-6">
                 <h3 className="text-2xl font-bold text-white">Projects in progress:</h3>
@@ -1517,46 +1265,42 @@ const UserDashboard: React.FC = () => {
                   <span className="text-white/60 text-sm">{currentProjectIndex + 1} / {projects.length}</span>
                 </div>
               </div>
-              
+
               <div className="relative">
                 {/* Cards stack effect */}
-                <div className={`absolute top-4 left-4 right-0 bottom-0 bg-slate-700/40 rounded-2xl transform transition-all duration-300 ${
-                  isAnimating ? 'rotate-3 scale-98' : 'rotate-1'
-                }`}></div>
-                <div className={`absolute top-2 left-2 right-0 bottom-0 bg-slate-700/20 rounded-2xl transform transition-all duration-300 ${
-                  isAnimating ? '-rotate-3 scale-98' : '-rotate-1'
-                }`}></div>
-                
+                <div className={`absolute top-4 left-4 right-0 bottom-0 bg-slate-700/40 rounded-2xl transform transition-all duration-300 ${isAnimating ? 'rotate-3 scale-98' : 'rotate-1'
+                  }`}></div>
+                <div className={`absolute top-2 left-2 right-0 bottom-0 bg-slate-700/20 rounded-2xl transform transition-all duration-300 ${isAnimating ? '-rotate-3 scale-98' : '-rotate-1'
+                  }`}></div>
+
                 {/* Main card */}
-                <div className={`relative bg-white rounded-2xl p-6 shadow-2xl transition-all duration-300 ${
-                  isAnimating ? 'opacity-0 scale-95 rotate-2' : 'opacity-100 scale-100 rotate-0'
-                }`}>
+                <div className={`relative bg-white rounded-2xl p-6 shadow-2xl transition-all duration-300 ${isAnimating ? 'opacity-0 scale-95 rotate-2' : 'opacity-100 scale-100 rotate-0'
+                  }`}>
                   <div className="flex flex-wrap gap-2 mb-4">
                     {currentProject.tags.map((tag, index) => (
                       <span
                         key={index}
-                        className={`px-3 py-1 rounded-full text-xs font-semibold ${
-                          tag === 'Feedback' || tag === 'Feature'
+                        className={`px-3 py-1 rounded-full text-xs font-semibold ${tag === 'Feedback' || tag === 'Feature'
                             ? 'bg-teal-100 text-teal-700'
                             : tag === 'Bug'
-                            ? 'bg-amber-100 text-amber-700'
-                            : tag === 'Security'
-                            ? 'bg-red-100 text-red-700'
-                            : tag === 'Analytics' || tag === 'Backend'
-                            ? 'bg-blue-100 text-blue-700'
-                            : tag === 'UX' || tag === 'Design'
-                            ? 'bg-pink-100 text-pink-700'
-                            : 'bg-purple-100 text-purple-700'
-                        }`}
+                              ? 'bg-amber-100 text-amber-700'
+                              : tag === 'Security'
+                                ? 'bg-red-100 text-red-700'
+                                : tag === 'Analytics' || tag === 'Backend'
+                                  ? 'bg-blue-100 text-blue-700'
+                                  : tag === 'UX' || tag === 'Design'
+                                    ? 'bg-pink-100 text-pink-700'
+                                    : 'bg-purple-100 text-purple-700'
+                          }`}
                       >
                         {tag}
                       </span>
                     ))}
                   </div>
-                  
+
                   <h4 className="text-xl font-bold text-slate-900 mb-2">{currentProject.title}</h4>
                   <p className="text-sm text-slate-500 mb-6">{currentProject.date}</p>
-                  
+
                   <div className="flex items-center justify-between">
                     <div className="flex -space-x-2">
                       {currentProject.avatars.map((avatar, index) => (
@@ -1568,7 +1312,7 @@ const UserDashboard: React.FC = () => {
                         </div>
                       ))}
                     </div>
-                    
+
                     <div className="flex items-center gap-4 text-sm text-slate-500">
                       <span className="flex items-center gap-1">
                         💬 {currentProject.comments} comments
@@ -1581,7 +1325,7 @@ const UserDashboard: React.FC = () => {
                 </div>
 
                 {/* Previous button */}
-                <button 
+                <button
                   onClick={handlePrevProject}
                   className="cursor-pointer absolute -left-2 top-1/2 -translate-y-1/2 w-10 h-10 bg-white rounded-full shadow-xl flex items-center justify-center hover:scale-110 transition-transform z-20"
                 >
@@ -1589,7 +1333,7 @@ const UserDashboard: React.FC = () => {
                 </button>
 
                 {/* Next button */}
-                <button 
+                <button
                   onClick={handleNextProject}
                   className="cursor-pointer absolute -right-2 top-1/2 -translate-y-1/2 w-10 h-10 bg-white rounded-full shadow-xl flex items-center justify-center hover:scale-110 transition-transform z-20"
                 >

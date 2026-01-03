@@ -2,8 +2,8 @@ import { useEffect } from 'react';
 import { useChangeOption } from '@/store'
 import Home from '@/components/Dashboard/Home'
 import UserList from '@/components/Dashboard/UserList'
-import BusinessOverview from '@/components/Dashboard/BusinessOverview'
-import Analyticsdashboard from '@/components/Dashboard/Analyticsdashboard'
+import AdminSchema from '@/components/Dashboard/AdminSchema'
+import AdminConnection from '@/components/Dashboard/AdminConnection'
 import Settings from '@/components/Dashboard/Settings'
 import ListSchema from '@/components/Dashboard/ListSchema'
 
@@ -43,13 +43,13 @@ export default ({ user, permission }: { user: any, permission: { superAdmin: boo
                         : data == "#56acaf1d4b8590cbfac2aaafec411795f31c5bab" ?
                             <>
                                 {permission.superAdmin || permission.admin ?
-                                    <BusinessOverview></BusinessOverview>
+                                    <AdminSchema />
                                     : <></>}
                             </>
                             : data == "#cd2f1a458488e011a2fc1719ebe20437c52dc3e5" ?
                                 <>
                                     {permission.superAdmin || permission.admin ?
-                                        <Analyticsdashboard></Analyticsdashboard>
+                                        <AdminConnection />
                                         : <></>}
                                 </>
 
