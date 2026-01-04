@@ -14,11 +14,31 @@ export interface usuarios {
 }
 
 export interface ProccesSchema {
-  nameProccess: string
-  yearProccess: number
-  competencess: string[]
-  answers: any
-  scaleValues: string[]
+  name: string
+  status: string
+  competencies: {
+    id: string
+    name: string
+    order: number
+    questions: {
+      id: string
+      text: string
+      order: number
+    }[]
+  }[]
+  likertScale: {
+    id: string
+    value: number
+    label: string
+    order: number
+  }[],
+  metadata: {
+    totalCompetencies: number
+    totalQuestions: number
+    totalScaleOptions: number
+    colorScheme: string
+    createdAt: string
+  }
 }
 
 export interface ConnectionUser {

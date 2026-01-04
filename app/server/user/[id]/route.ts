@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server"
-import { connectDb } from '@/config/config'
+import { connectDb } from '@/config'
 
 
 export const GET = async (request: Request, {params}: RouteContext<'/server/user/[id]'>) => {
