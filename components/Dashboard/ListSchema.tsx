@@ -1,12 +1,8 @@
-"use client";
-
 import { useChangeOption } from "@/store";
-import { useAuth } from "@clerk/nextjs";
-import { Combine } from "lucide-react";
+import { Combine, ChevronLeft, ChevronRight, CreditCard } from "lucide-react";
 import { useState, useEffect } from "react";
-
-// Types
-type VariantType = "light" | "lime" | "purple" | "coral" | "cyan" | "indigo" | "amber" | "rose" | "emerald" | "slate";
+import { ColorDealSchemaType as VariantType } from '@/interfaces';
+import { colorDealSchema as cardVariantStyles } from '@/global'
 
 interface MetricCardProps {
   id: string
@@ -17,17 +13,8 @@ interface MetricCardProps {
   percentage: number;
   variant?: VariantType;
   dotCount?: number;
-}
-
-interface VariantStyle {
-  card: string;
-  text: string;
-  subtext: string;
-  percentage: string;
-  iconBg: string;
-  iconColor: string;
-  dotsfilled: string
-  dotsempty: string
+  cardNumber?: string;
+  expiry?: string;
 }
 
 // Metric Data
@@ -40,111 +27,9 @@ interface MetricData {
   percentage: number;
   variant: VariantType;
   dotCount?: number;
+  cardNumber?: string;
+  expiry?: string;
 }
-
-// Variant Styles
-const variantStyles: Record<VariantType, VariantStyle> = {
-  light: {
-    card: "bg-gradient-to-br from-slate-50 via-white to-slate-100 border border-slate-200/50",
-    text: "text-slate-700",
-    subtext: "text-slate-500",
-    percentage: "text-emerald-600 bg-emerald-50 border border-emerald-100",
-    iconBg: "bg-slate-100",
-    iconColor: "text-slate-600",
-    dotsfilled: "bg-slate-800",
-    dotsempty: "bg-slate-300/60",
-  },
-  lime: {
-    card: "bg-gradient-to-br from-lime-300 via-lime-400 to-yellow-300",
-    text: "text-slate-800",
-    subtext: "text-slate-700",
-    percentage: "text-emerald-800 bg-emerald-400/30 border border-emerald-500/30",
-    iconBg: "bg-white/30",
-    iconColor: "text-slate-700",
-    dotsfilled: "bg-slate-800",
-    dotsempty: "bg-lime-300/50",
-  },
-  purple: {
-    card: "bg-gradient-to-br from-violet-500 via-purple-500 to-fuchsia-500",
-    text: "text-white",
-    subtext: "text-purple-100",
-    percentage: "text-white bg-white/20 border border-white/30",
-    iconBg: "bg-white/20",
-    iconColor: "text-white",
-    dotsfilled: "bg-white",
-    dotsempty: "bg-purple-400/40",
-  },
-  coral: {
-    card: "bg-gradient-to-br from-orange-400 via-rose-400 to-pink-500",
-    text: "text-white",
-    subtext: "text-orange-100",
-    percentage: "text-white bg-white/20 border border-white/30",
-    iconBg: "bg-white/20",
-    iconColor: "text-white",
-    dotsfilled: "bg-white",
-    dotsempty: "bg-orange-300/40",
-  },
-  cyan: {
-    card: "bg-gradient-to-br from-cyan-300 via-teal-400 to-emerald-400",
-    text: "text-slate-800",
-    subtext: "text-slate-700",
-    percentage: "text-teal-800 bg-teal-600/20 border border-teal-600/30",
-    iconBg: "bg-white/30",
-    iconColor: "text-slate-700",
-    dotsfilled: "bg-slate-800",
-    dotsempty: "bg-cyan-300/50",
-  },
-  indigo: {
-    card: "bg-gradient-to-br from-indigo-500 via-blue-600 to-sky-500",
-    text: "text-white",
-    subtext: "text-blue-100",
-    percentage: "text-white bg-white/20 border border-white/30",
-    iconBg: "bg-white/20",
-    iconColor: "text-white",
-    dotsfilled: "bg-white",
-    dotsempty: "bg-blue-400/40",
-  },
-  amber: {
-    card: "bg-gradient-to-br from-amber-300 via-yellow-400 to-orange-400",
-    text: "text-slate-800",
-    subtext: "text-amber-800",
-    percentage: "text-amber-900 bg-amber-600/20 border border-amber-600/30",
-    iconBg: "bg-white/30",
-    iconColor: "text-slate-700",
-    dotsfilled: "bg-slate-800",
-    dotsempty: "bg-amber-300/50",
-  },
-  rose: {
-    card: "bg-gradient-to-br from-rose-400 via-pink-500 to-red-500",
-    text: "text-white",
-    subtext: "text-rose-100",
-    percentage: "text-white bg-white/20 border border-white/30",
-    iconBg: "bg-white/20",
-    iconColor: "text-white",
-    dotsfilled: "bg-white",
-    dotsempty: "bg-rose-300/40",
-  },
-  emerald: {
-    card: "bg-gradient-to-br from-emerald-400 via-green-500 to-teal-500",
-    text: "text-white",
-    subtext: "text-emerald-100",
-    percentage: "text-white bg-white/20 border border-white/30",
-    iconBg: "bg-white/20",
-    iconColor: "text-white",
-    dotsfilled: "bg-white",
-    dotsempty: "bg-emerald-300/40",
-  },
-  slate: {
-    card: "bg-gradient-to-br from-slate-600 via-slate-700 to-zinc-800",
-    text: "text-white",
-    subtext: "text-slate-300",
-    percentage: "text-emerald-400 bg-emerald-500/20 border border-emerald-500/30",
-    iconBg: "bg-white/10",
-    iconColor: "text-white",
-    dotsfilled: "bg-emerald-400",
-    dotsempty: "bg-slate-600/60",
-  },
-};
 
 const MetricCard: React.FC<MetricCardProps> = ({
   id,
@@ -155,13 +40,15 @@ const MetricCard: React.FC<MetricCardProps> = ({
   percentage,
   variant = "light",
   dotCount = 10,
+  cardNumber,
+  expiry,
 }) => {
   const { handler }: { data: String, handler: (setHandler: String) => void } = useChangeOption();
 
   const [animatedPercentage, setAnimatedPercentage] = useState<number>(0);
   const [isHovered, setIsHovered] = useState<boolean>(false);
   const filledDots = Math.round((percentage / 100) * dotCount);
-  const styles = variantStyles[variant];
+  const styles = cardVariantStyles[variant] || cardVariantStyles.light;
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -170,12 +57,18 @@ const MetricCard: React.FC<MetricCardProps> = ({
     return () => clearTimeout(timer);
   }, [percentage]);
 
+  // Mask card number if provided
+  const maskedCardNumber = cardNumber 
+    ? `${cardNumber.slice(0, 4)} ${cardNumber.slice(4, 8)} ${cardNumber.slice(8, 12)} ••••`
+    : undefined;
+
   return (
     <div
-      className={`${styles.card} rounded-3xl p-5 sm:p-6 md:p-5 lg:p-4 shadow-lg 
+      className={`${styles.card} ${styles.shadow} rounded-[28px] p-6 
         transition-all duration-500 ease-out cursor-pointer
         hover:shadow-2xl hover:-translate-y-2 hover:scale-[1.02]
-        ${isHovered ? "ring-2 ring-white/30 ring-offset-2 ring-offset-transparent" : ""}
+        border border-white/40 backdrop-blur-sm
+        relative overflow-hidden
       `}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
@@ -184,194 +77,221 @@ const MetricCard: React.FC<MetricCardProps> = ({
         handler("#36d0ca3bfe8d3596e9275c87b6ace9e67f1dd077")
       }}
     >
-      {/* Header */}
-      <div className="flex items-center justify-between mb-4 md:mb-3">
-        <div className="flex items-center gap-2 sm:gap-3">
-          <div
-            className={`p-2 sm:p-2.5 rounded-xl ${styles.iconBg} transition-all duration-500
-              ${isHovered ? "rotate-12 scale-110" : ""}
-            `}
-          >
-            <span className={`${styles.iconColor} transition-all duration-300`}>
-              <Combine />
+      {/* Decorative background gradient */}
+      <div className="absolute inset-0 bg-gradient-to-br from-white/60 via-transparent to-transparent pointer-events-none" />
+      
+      {/* Content */}
+      <div className="relative z-10">
+        {/* Header with Icon and Title */}
+        <div className="flex items-center justify-between mb-6">
+          <div className="flex items-center gap-3">
+            <div
+              className={`p-2.5 rounded-xl ${styles.iconBg} ${styles.iconColor} transition-all duration-500
+                ${isHovered ? "rotate-12 scale-110" : ""}
+              `}
+            >
+              <CreditCard className="w-5 h-5" />
+            </div>
+            <span
+              className={`font-bold text-base ${styles.text} tracking-wide uppercase transition-all duration-300`}
+            >
+              {title}
             </span>
           </div>
+          <button
+            className={`p-1.5 rounded-lg hover:bg-black/5 transition-all duration-300 ${styles.text}
+              ${isHovered ? "rotate-90" : ""}
+            `}
+            aria-label="More options"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="18"
+              height="18"
+              viewBox="0 0 24 24"
+              fill="currentColor"
+            >
+              <circle cx="12" cy="5" r="2" />
+              <circle cx="12" cy="12" r="2" />
+              <circle cx="12" cy="19" r="2" />
+            </svg>
+          </button>
+        </div>
+
+        {/* Main Value - Large and prominent */}
+        <div className="mb-4">
           <span
-            className={`font-semibold text-sm sm:text-base ${styles.text} transition-all duration-300
-              ${isHovered ? "tracking-wide" : ""}
+            className={`text-5xl font-bold tracking-tight ${styles.text}
+              inline-block transition-all duration-500
+              ${isHovered ? "scale-105" : ""}
             `}
           >
-            {title}
+            ${typeof current === 'number' ? current.toLocaleString() : current}
           </span>
         </div>
-        <button
-          className={`p-1.5 rounded-lg hover:bg-black/5 transition-all duration-300 ${styles.text}
-            ${isHovered ? "rotate-90" : ""}
-          `}
-          aria-label="More options"
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="18"
-            height="18"
-            viewBox="0 0 24 24"
-            fill="currentColor"
+
+        {/* Status Badge */}
+        <div className="mb-5">
+          <span
+            className={`inline-flex items-center px-3 py-1.5 rounded-full text-sm font-bold 
+              ${styles.percentage} transition-all duration-500
+              ${isHovered ? "scale-105" : ""}
+            `}
           >
-            <circle cx="12" cy="5" r="2" />
-            <circle cx="12" cy="12" r="2" />
-            <circle cx="12" cy="19" r="2" />
-          </svg>
-        </button>
-      </div>
+            {animatedPercentage}% Active
+          </span>
+        </div>
 
-      {/* Main Value */}
-      <div className="mb-2 md:mb-1 overflow-hidden">
-        <span
-          className={`text-4xl sm:text-5xl md:text-4xl lg:text-5xl font-bold tracking-tight ${styles.text}
-            inline-block transition-all duration-500
-            ${isHovered ? "scale-105 translate-x-1" : ""}
-          `}
-        >
-          {current}
-        </span>
-        <span
-          className={`text-base sm:text-lg md:text-xl ml-1 ${styles.subtext} opacity-70 
-            inline-block transition-all duration-500
-            ${isHovered ? "opacity-100 translate-x-1" : ""}
-          `}
-        >
-          /{max}{unit && ` ${unit}`}
-        </span>
-      </div>
+        {/* Dot Progress Indicator */}
+        <div className="flex gap-2 mb-6">
+          {Array.from({ length: dotCount }).map((_, index) => (
+            <div
+              key={index}
+              className={`w-6 h-6 rounded-full transition-all duration-300 
+                ${index < filledDots ? styles.dotsfilled : styles.dotsempty}
+                ${isHovered ? "animate-bounce" : ""}
+              `}
+              style={{
+                animationDelay: isHovered ? `${index * 50}ms` : "0ms",
+                animationDuration: "0.6s",
+                transform: isHovered && (index < filledDots) ? "scale(1.1)" : "scale(1)",
+              }}
+            />
+          ))}
+        </div>
 
-      {/* Percentage Badge */}
-      <div className="mb-4 md:mb-3">
-        <span
-          className={`inline-flex items-center px-2.5 py-1 rounded-lg text-xs sm:text-sm font-semibold 
-            ${styles.percentage} transition-all duration-500
-            ${isHovered ? "scale-110 shadow-lg" : ""}
-          `}
-        >
-          {animatedPercentage}%
-        </span>
-      </div>
-
-      {/* Dot Progress Indicator */}
-      <div className="flex gap-1.5 sm:gap-2 flex-wrap">
-        {Array.from({ length: dotCount }).map((_, index) => (
-          <div
-            key={index}
-            className={`w-5 h-5 sm:w-6 sm:h-6 md:w-5 md:h-5 lg:w-6 lg:h-6 rounded-full transition-all duration-300 ${index < filledDots ? styles.dotsfilled : styles.dotsempty} ${isHovered ? "animate-bounce" : ""
-              }`}
-            style={{
-              animationDelay: isHovered ? `${index * 50}ms` : "0ms",
-              animationDuration: "0.6s",
-              transform: isHovered && (index < filledDots) ? "scale(1.1)" : "scale(1)",
-            }}
-          />
-        ))}
+        {/* Bottom Info - Card Number and Expiry */}
+        <div className="flex items-end justify-between">
+          <div>
+            <div className={`text-xs ${styles.text} mb-1 opacity-60`}>
+              Card Number
+            </div>
+            <div className={`text-sm font-medium ${styles.text}`}>
+              {maskedCardNumber || `${Math.floor(Math.random() * 9000) + 1000} ${Math.floor(Math.random() * 9000) + 1000} ${Math.floor(Math.random() * 9000) + 1000} ••••`}
+            </div>
+          </div>
+          <div className="text-right">
+            <div className={`text-xs ${styles.text} mb-1 opacity-60`}>
+              Exp
+            </div>
+            <div className={`text-sm font-medium ${styles.text}`}>
+              {expiry || `••/••`}
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );
 };
 
+// Metrics Data - Updated with card-like information
 const metricsData: MetricData[] = [
   {
     id: "operations",
     title: "Operations",
-    current: 780,
-    max: 1000,
-    percentage: 82,
+    current: 21426,
+    max: 30000,
+    percentage: 85,
     variant: "light",
-    dotCount: 10,
+    cardNumber: "3253824311000000",
+    expiry: "12/25",
   },
   {
     id: "data-transfer",
     title: "Data Transfer",
-    current: 163,
-    max: "512.0",
-    unit: "MB",
-    percentage: 68,
+    current: 45200,
+    max: 100000,
+    unit: "GB",
+    percentage: 45,
     variant: "lime",
-    dotCount: 10,
+    cardNumber: "5467123456780000",
+    expiry: "08/26",
   },
   {
     id: "storage",
     title: "Storage",
-    current: 45,
-    max: 100,
+    current: 25680,
+    max: 51200,
     unit: "GB",
-    percentage: 45,
+    percentage: 50,
     variant: "purple",
-    dotCount: 10,
+    cardNumber: "4532876543210000",
+    expiry: "03/27",
   },
   {
     id: "active-users",
-    title: "Active Users",
-    current: "1.2K",
-    max: "2K",
-    percentage: 60,
+    title: "Users",
+    current: 84320,
+    max: 100000,
+    percentage: 84,
     variant: "coral",
-    dotCount: 10,
+    cardNumber: "6011345678900000",
+    expiry: "11/25",
   },
   {
     id: "cpu-usage",
     title: "CPU Usage",
-    current: 73,
-    max: 100,
+    current: 67000,
+    max: 100000,
     unit: "%",
-    percentage: 73,
+    percentage: 67,
     variant: "cyan",
-    dotCount: 10,
+    cardNumber: "3782123456780000",
+    expiry: "06/26",
   },
   {
     id: "memory",
     title: "Memory",
-    current: 12.4,
-    max: 16,
+    current: 12400,
+    max: 16000,
     unit: "GB",
     percentage: 78,
     variant: "indigo",
-    dotCount: 10,
+    cardNumber: "5234567890120000",
+    expiry: "09/27",
   },
   {
-    id: "bandwidth",
-    title: "Bandwidth",
-    current: 850,
-    max: 1000,
+    id: "network",
+    title: "Network",
+    current: 23400,
+    max: 100000,
     unit: "Mbps",
-    percentage: 85,
+    percentage: 23,
     variant: "amber",
-    dotCount: 10,
+    cardNumber: "4916123456780000",
+    expiry: "04/26",
   },
   {
-    id: "api-requests",
-    title: "API Requests",
-    current: "8.5K",
-    max: "10K",
-    percentage: 85,
+    id: "requests",
+    title: "Requests",
+    current: 156700,
+    max: 200000,
+    percentage: 78,
     variant: "rose",
-    dotCount: 10,
+    cardNumber: "6759012345670000",
+    expiry: "07/25",
   },
   {
     id: "error-rate",
     title: "Error Rate",
-    current: 2.3,
-    max: 100,
+    current: 2300,
+    max: 100000,
     unit: "%",
     percentage: 2,
     variant: "emerald",
-    dotCount: 10,
+    cardNumber: "5412345678900000",
+    expiry: "10/26",
   },
   {
     id: "uptime",
     title: "Uptime",
-    current: 99.9,
-    max: 100,
+    current: 99900,
+    max: 100000,
     unit: "%",
     percentage: 99,
     variant: "slate",
-    dotCount: 10,
+    cardNumber: "4024007102340000",
+    expiry: "01/28",
   },
 ];
 
@@ -382,21 +302,36 @@ export default ({ permission }: {
     admin: boolean
   }
 }) => {
+  const [currentPage, setCurrentPage] = useState(0);
+  const ITEMS_PER_PAGE = 3;
+  const totalPages = Math.ceil(metricsData.length / ITEMS_PER_PAGE);
+
+  const startIndex = currentPage * ITEMS_PER_PAGE;
+  const endIndex = startIndex + ITEMS_PER_PAGE;
+  const currentMetrics = metricsData.slice(startIndex, endIndex);
+
+  const handlePrevious = () => {
+    setCurrentPage((prev) => (prev > 0 ? prev - 1 : prev));
+  };
+
+  const handleNext = () => {
+    setCurrentPage((prev) => (prev < totalPages - 1 ? prev + 1 : prev));
+  };
 
   return (
-    <div className="min-h-screen from-slate-100 via-gray-50 to-slate-200 p-4 sm:p-6 md:p-8 lg:p-12 animate__animated animate__fadeIn">
-      <div className="w-full max-w-6xl mx-auto">
+    <div className="p-4 sm:p-6 md:p-8 lg:p-12">
+      <div className="w-full max-w-7xl mx-auto">
         {/* Header */}
-        <div className="mb-8 sm:mb-10">
-          <p className="text-slate-500 text-sm sm:text-base mb-1">
+        <div className="mb-10">
+          <p className="text-slate-500 text-sm sm:text-base mb-2 font-medium">
             Manage and track your projects
           </p>
-          <div className="flex items-center gap-3">
-            <h1 className="text-3xl sm:text-4xl font-semibold text-slate-900 tracking-tight">
+          <div className="flex items-center gap-4">
+            <h1 className="text-4xl sm:text-5xl font-bold text-slate-900 tracking-tight">
               Project Dashboard
             </h1>
 
-            <span className="px-4 py-1.5 text-sm font-medium text-slate-600 bg-slate-100 border border-slate-200 rounded-full">
+            <span className="px-4 py-2 text-sm font-bold text-white bg-gradient-to-r from-slate-700 to-slate-900 rounded-full shadow-lg">
               {
                 permission.superAdmin ?
                   <>SuperAdmin</>
@@ -405,222 +340,99 @@ export default ({ permission }: {
                     : <></>
               }
             </span>
-
-
           </div>
         </div>
 
+        {/* Navigation Controls */}
+        {metricsData.length > ITEMS_PER_PAGE && (
+          <div className="flex items-center justify-between mb-8">
+            <div className="text-sm text-slate-600 font-medium">
+              Showing {startIndex + 1}-{Math.min(endIndex, metricsData.length)} of {metricsData.length} items
+            </div>
+            <div className="flex gap-3">
+              <button
+                onClick={handlePrevious}
+                disabled={currentPage === 0}
+                className={`p-3 rounded-xl border-2 transition-all duration-300 ${currentPage === 0
+                    ? 'bg-slate-100 text-slate-400 border-slate-200 cursor-not-allowed'
+                    : 'bg-white text-slate-700 border-slate-300 hover:bg-slate-50 hover:border-slate-400 hover:shadow-lg hover:-translate-y-0.5'
+                  }`}
+                aria-label="Previous page"
+              >
+                <ChevronLeft className="w-5 h-5" />
+              </button>
+              <button
+                onClick={handleNext}
+                disabled={currentPage === totalPages - 1}
+                className={`p-3 rounded-xl border-2 transition-all duration-300 ${currentPage === totalPages - 1
+                    ? 'bg-slate-100 text-slate-400 border-slate-200 cursor-not-allowed'
+                    : 'bg-white text-slate-700 border-slate-300 hover:bg-slate-50 hover:border-slate-400 hover:shadow-lg hover:-translate-y-0.5'
+                  }`}
+                aria-label="Next page"
+              >
+                <ChevronRight className="w-5 h-5" />
+              </button>
+            </div>
+          </div>
+        )}
+
         {/* Cards Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-5 md:gap-6">
-          {metricsData.map((metric) => (
-            <MetricCard
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
+          {currentMetrics.map((metric, index) => (
+            <div
               key={metric.id}
-              id={metric.id}
-              title={metric.title}
-              current={metric.current}
-              max={metric.max}
-              unit={metric.unit}
-              percentage={metric.percentage}
-              variant={metric.variant}
-              dotCount={metric.dotCount}
-            />
+              className="transform transition-all duration-500"
+              style={{
+                opacity: 0,
+                animation: `fadeInUp 0.6s ease-out ${index * 100}ms forwards`,
+              }}
+            >
+              <MetricCard
+                id={metric.id}
+                title={metric.title}
+                current={metric.current}
+                max={metric.max}
+                unit={metric.unit}
+                percentage={metric.percentage}
+                variant={metric.variant}
+                dotCount={metric.dotCount}
+                cardNumber={metric.cardNumber}
+                expiry={metric.expiry}
+              />
+            </div>
           ))}
         </div>
+
+        {/* Page Indicators */}
+        {metricsData.length > ITEMS_PER_PAGE && (
+          <div className="flex justify-center gap-2 mt-12">
+            {Array.from({ length: totalPages }).map((_, index) => (
+              <button
+                key={index}
+                onClick={() => setCurrentPage(index)}
+                className={`h-2.5 rounded-full transition-all duration-300 ${index === currentPage
+                    ? 'bg-slate-700 w-10'
+                    : 'bg-slate-300 hover:bg-slate-400 w-2.5'
+                  }`}
+                aria-label={`Go to page ${index + 1}`}
+              />
+            ))}
+          </div>
+        )}
       </div>
+
+      <style>{`
+        @keyframes fadeInUp {
+          from {
+            opacity: 0;
+            transform: translateY(20px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+      `}</style>
     </div>
   );
 };
-
-
-// Icons
-const OperationsIcon: React.FC = () => (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    width="20"
-    height="20"
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="2"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-  >
-    <line x1="4" y1="21" x2="4" y2="14" />
-    <line x1="4" y1="10" x2="4" y2="3" />
-    <line x1="12" y1="21" x2="12" y2="12" />
-    <line x1="12" y1="8" x2="12" y2="3" />
-    <line x1="20" y1="21" x2="20" y2="16" />
-    <line x1="20" y1="12" x2="20" y2="3" />
-    <line x1="1" y1="14" x2="7" y2="14" />
-    <line x1="9" y1="8" x2="15" y2="8" />
-    <line x1="17" y1="16" x2="23" y2="16" />
-  </svg>
-);
-
-const DataTransferIcon: React.FC = () => (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    width="20"
-    height="20"
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="2"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-  >
-    <polyline points="17 1 21 5 17 9" />
-    <path d="M3 11V9a4 4 0 0 1 4-4h14" />
-    <polyline points="7 23 3 19 7 15" />
-    <path d="M21 13v2a4 4 0 0 1-4 4H3" />
-  </svg>
-);
-
-const StorageIcon: React.FC = () => (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    width="20"
-    height="20"
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="2"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-  >
-    <ellipse cx="12" cy="5" rx="9" ry="3" />
-    <path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3" />
-    <path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5" />
-  </svg>
-);
-
-const UsersIcon: React.FC = () => (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    width="20"
-    height="20"
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="2"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-  >
-    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
-    <circle cx="9" cy="7" r="4" />
-    <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
-    <path d="M16 3.13a4 4 0 0 1 0 7.75" />
-  </svg>
-);
-
-const CpuIcon: React.FC = () => (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    width="20"
-    height="20"
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="2"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-  >
-    <rect x="4" y="4" width="16" height="16" rx="2" ry="2" />
-    <rect x="9" y="9" width="6" height="6" />
-    <line x1="9" y1="1" x2="9" y2="4" />
-    <line x1="15" y1="1" x2="15" y2="4" />
-    <line x1="9" y1="20" x2="9" y2="23" />
-    <line x1="15" y1="20" x2="15" y2="23" />
-    <line x1="20" y1="9" x2="23" y2="9" />
-    <line x1="20" y1="14" x2="23" y2="14" />
-    <line x1="1" y1="9" x2="4" y2="9" />
-    <line x1="1" y1="14" x2="4" y2="14" />
-  </svg>
-);
-
-const MemoryIcon: React.FC = () => (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    width="20"
-    height="20"
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="2"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-  >
-    <rect x="2" y="6" width="20" height="12" rx="2" />
-    <path d="M6 12h.01M10 12h.01M14 12h.01M18 12h.01" />
-    <path d="M6 2v4M10 2v4M14 2v4M18 2v4M6 18v4M10 18v4M14 18v4M18 18v4" />
-  </svg>
-);
-
-const NetworkIcon: React.FC = () => (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    width="20"
-    height="20"
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="2"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-  >
-    <circle cx="12" cy="12" r="10" />
-    <line x1="2" y1="12" x2="22" y2="12" />
-    <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
-  </svg>
-);
-
-const RequestsIcon: React.FC = () => (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    width="20"
-    height="20"
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="2"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-  >
-    <path d="M22 12h-4l-3 9L9 3l-3 9H2" />
-  </svg>
-);
-
-const ErrorsIcon: React.FC = () => (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    width="20"
-    height="20"
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="2"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-  >
-    <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z" />
-    <line x1="12" y1="9" x2="12" y2="13" />
-    <line x1="12" y1="17" x2="12.01" y2="17" />
-  </svg>
-);
-
-const UptimeIcon: React.FC = () => (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    width="20"
-    height="20"
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="2"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-  >
-    <circle cx="12" cy="12" r="10" />
-    <polyline points="12 6 12 12 16 14" />
-  </svg>
-);

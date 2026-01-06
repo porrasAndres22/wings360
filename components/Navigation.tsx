@@ -35,7 +35,7 @@ export default function Navigation({ permission }: {
   const notificationsRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    setActiveNav(location.hash)
+    setActiveNav(location.hash == "" ? "#" : location.hash)
   }, [data])
 
   useEffect(() => {
@@ -59,7 +59,7 @@ export default function Navigation({ permission }: {
   }, [mobileMenuOpen, notificationsOpen]);
 
   let navItems = [
-    { name: 'Dashboard', href: '' },
+    { name: 'Dashboard', href: '#' },
     { name: 'UserList', href: '#a90a81a258e5ab81db32d3a05b349b9f6df4e207' },
     { name: 'Schemas', href: '#56acaf1d4b8590cbfac2aaafec411795f31c5bab' },
     { name: 'Conections', href: '#cd2f1a458488e011a2fc1719ebe20437c52dc3e5' },
@@ -169,11 +169,7 @@ export default function Navigation({ permission }: {
                       <button
                         onClick={() => {
                           if (item.href != data) {
-                            if (item.name != "Dashboard") {
-                              setActiveNav(item.name); handler(item.href); location.hash = item.href
-                            } else {
-                              location.replace('/')
-                            }
+                              setActiveNav(item.href); handler(item.href); location.hash = item.href
                           }
                         }}
                         className={`
@@ -455,10 +451,10 @@ export default function Navigation({ permission }: {
                       <button
                         key={item.name}
                         onClick={() => {
-                          setActiveNav(item.name)
                           setMobileMenuOpen(false)
-                          handler(item.href)
-                          location.hash = item.href
+                          if (item.href != data) {
+                              setActiveNav(item.href); handler(item.href); location.hash = item.href
+                          }
                         }}
                         className={`
                         px-4 py-2.5 rounded-xl font-medium text-sm transition-all duration-300 text-left

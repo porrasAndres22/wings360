@@ -5,7 +5,7 @@ import DataSchema from './AdminSchema/DataSchema'
 import { Download, Share2, Plus } from 'lucide-react';
 
 export default function AnalyticsDashboard() {
-  const [activeTab, setActiveTab] = useState('overview');
+  const [activeTab, setActiveTab] = useState('Home');
   const [dateRange, setDateRange] = useState('30 days Oct 16 / 21 - Nov 14 / 21');
   const [showNewSchemaForm, setShowNewSchemaForm] = useState(false);
 
@@ -17,65 +17,7 @@ export default function AnalyticsDashboard() {
     dateRange: ''
   });
 
-  const navTabs = ['overview', 'ppc', 'year-to-year', 'customize'];
-
-  const summaryItems = [
-    { label: 'Overview', value: '1,552', color: 'bg-blue-100 text-blue-900' },
-    { label: 'Campaigns', value: '1,552', color: 'bg-purple-100 text-purple-900' },
-    { label: 'Ad Group', value: '1,552', color: 'bg-pink-100 text-pink-900' },
-    { label: 'Keywords', value: '1,552', color: 'bg-yellow-100 text-yellow-900' },
-  ];
-
-  const metricsCards = [
-    {
-      title: 'Orders Created',
-      value: '$134,970',
-      subtitle: '$128,451',
-      change: '+12.98%',
-      positive: true,
-      dark: false,
-    },
-    {
-      title: 'Total Sales',
-      value: '$2,145,132.80',
-      subtitle: '$2,141,564.20',
-      change: '+4.98%',
-      positive: true,
-      dark: true,
-    },
-    {
-      title: 'PPC Sales',
-      value: '$890.00',
-      subtitle: '$877.00',
-      change: '+0.17%',
-      positive: true,
-      dark: false,
-    },
-    {
-      title: 'Units Sales',
-      value: '$151,740',
-      subtitle: '$145,869',
-      change: '',
-      positive: null,
-      dark: false,
-    },
-    {
-      title: 'Organic Sales Ra...',
-      value: '100.00%',
-      subtitle: '100.00%',
-      change: '+0.12%',
-      positive: true,
-      dark: false,
-    },
-  ];
-
-  const highestACosCampaigns = [
-    { name: 'B08NY9N3MT', spend: '$30.25', sales: '$149.85', acos: '$149.85', indicator: 'A' },
-    { name: 'Campaign - 3...', spend: '$40.00', sales: '$134.00', acos: '$134.50', indicator: 'A' },
-    { name: 'Research - Ac...', spend: '$43.55', sales: '$129.75', acos: '$125.00', indicator: 'M' },
-    { name: 'B087C75QQJ', spend: '$45.85', sales: '$113.00', acos: '$119.45', indicator: 'M' },
-    { name: 'House Numbe...', spend: '$54.00', sales: '$99.55', acos: '$85.00', indicator: 'A' },
-  ];
+  const navTabs = ['Home', 'ppc', 'year-to-year', 'customize'];
 
   // Manejador de cambios en el formulario
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
@@ -89,7 +31,6 @@ export default function AnalyticsDashboard() {
   // Manejador de envío del formulario
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log('Datos del nuevo schema:', formData);
     // Aquí puedes agregar la lógica para guardar el schema
     // Por ahora solo mostramos los datos en consola y volvemos al dashboard
     alert('Schema creado exitosamente!');
@@ -101,23 +42,6 @@ export default function AnalyticsDashboard() {
       category: '',
       dateRange: ''
     });
-  };
-
-
-  // Render content based on active tab
-  const renderContent = () => {
-    switch (activeTab) {
-      case 'overview':
-        return <DataSchema summaryItems={summaryItems} highestACosCampaigns={highestACosCampaigns} metricsCards={metricsCards}></DataSchema>
-      case 'ppc':
-        return <></>
-      case 'year-to-year':
-        return <></>
-      case 'customize':
-        return <></>
-      default:
-        return <></>
-    }
   };
 
   return (
@@ -165,7 +89,12 @@ export default function AnalyticsDashboard() {
             </div>
 
             {/* Render Dynamic Content */}
-            {renderContent()}
+            {activeTab == "Home" ? 
+            <div className="animate__animated animate__fadeIn">
+              {/* <DataSchema /> */}
+              <></>
+            </div>
+            : ""}
           </>
         )}
       </div>

@@ -692,7 +692,7 @@ const IntegratedDashboard = () => {
   };
 
   return (
-    <div className="min-h-screen from-slate-50 via-blue-50/30 to-indigo-50/40">
+    <>
       {/* Mobile - Horizontal Menu at Top */}
       <aside className="md:hidden fixed left-0 right-0 backdrop-blur-md z-40 py-3">
         <div className="flex items-center justify-center px-4 py-3 overflow-x-auto">
@@ -731,7 +731,7 @@ const IntegratedDashboard = () => {
       </aside>
 
       {/* Desktop - Vertical Sidebar */}
-      <aside className="hidden md:flex fixed left-0 top-0 h-screen w-16 backdrop-blur-md flex-col items-center py-6 z-50">
+      <aside className="md:flex fixed left-0 top-0 h-screen w-16 backdrop-blur-md flex-col items-center py-6 z-50">
         <nav className="flex-1 flex flex-col items-center justify-center space-y-0.5 w-full px-3 animate__animated animate__fadeIn">
           {sidebarMenuItems.map((item, index) => {
             const Icon = item.icon;
@@ -771,13 +771,10 @@ const IntegratedDashboard = () => {
       </aside>
 
       {/* Main Content */}
-      <div className="animate__animated animate__fadeIn">
-        <div className="max-w-7xl mx-auto pt-6 py-6 space-y-6 pt-[80px]">
-          {renderContent({name: `${localStorage.getItem("appSchema")}`})}
-        </div>
+      <div className="px-20 pt-10 animate__animated animate__fadeIn">
+        {renderContent({ name: `${localStorage.getItem("appSchema")}` })}
       </div>
-
-    </div>
+    </>
   );
 };
 

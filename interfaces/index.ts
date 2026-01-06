@@ -36,6 +36,9 @@ export interface ProccesSchema {
     totalCompetencies: number
     totalQuestions: number
     totalScaleOptions: number
+    status: string,
+    current: number,
+    max: number,
     colorScheme: string
     createdAt: string
   }
@@ -50,4 +53,21 @@ export interface ConnectionUser {
   relations: { status: boolean, name: string }[]
   data: any
   accion: any
+}
+
+
+// Types
+export type ColorDealSchemaType = "light" | "lime" | "purple" | "coral" | "cyan" | "indigo" | "amber" | "rose" | "emerald" | "slate";
+
+export interface ColorDealSchema {
+    name: string
+    card: string
+    text: string
+    subtext: string
+    percentage: string
+    iconBg: string
+    iconColor: string
+    dotsfilled: string
+    dotsempty: string
+    shadow: string
 }

@@ -1,24 +1,9 @@
 import { ArrowLeft, Plus, X, GripVertical, Palette, Save, BookCopy, RefreshCcw } from 'lucide-react';
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ProccesSchema } from '@/interfaces';
+import { ProccesSchema, ColorDealSchema as ColorScheme } from '@/interfaces';
+import { colorDealSchema as colorSchemes } from '@/global'
 
-interface ColorScheme {
-    name: string;
-    gradient: string;
-    accentGradient: string;
-    textPrimary: string;
-    textSecondary: string;
-    textAccent: string;
-    border: string;
-    hover: string;
-    shadow: string;
-    bgMain: string;
-    bgCard: string;
-    bgInput: string;
-    bgButton: string;
-    bgButtonSecondary: string;
-}
 
 interface FormData {
     schemaName: string;
@@ -90,229 +75,6 @@ export default function NewSchemaForm({
         type: 'info'
     });
 
-    // Variant Styles (mapeados desde ListSchema)
-    const variantStyles = {
-        purple: {
-            card: "bg-gradient-to-br from-violet-500 via-purple-500 to-fuchsia-500",
-            text: "text-white",
-            subtext: "text-purple-100",
-            accentGradient: "from-violet-500 via-purple-500 to-fuchsia-500",
-            border: "border-purple-200/50"
-        },
-        indigo: {
-            card: "bg-gradient-to-br from-indigo-500 via-blue-600 to-sky-500",
-            text: "text-white",
-            subtext: "text-blue-100",
-            accentGradient: "from-indigo-500 via-blue-600 to-sky-500",
-            border: "border-indigo-200/50"
-        },
-        coral: {
-            card: "bg-gradient-to-br from-orange-400 via-rose-400 to-pink-500",
-            text: "text-white",
-            subtext: "text-orange-100",
-            accentGradient: "from-orange-400 via-rose-400 to-pink-500",
-            border: "border-rose-200/50"
-        },
-        emerald: {
-            card: "bg-gradient-to-br from-emerald-400 via-green-500 to-teal-500",
-            text: "text-white",
-            subtext: "text-emerald-100",
-            accentGradient: "from-emerald-400 via-green-500 to-teal-500",
-            border: "border-emerald-200/50"
-        },
-        amber: {
-            card: "bg-gradient-to-br from-amber-300 via-yellow-400 to-orange-400",
-            text: "text-slate-800",
-            subtext: "text-amber-800",
-            accentGradient: "from-amber-300 via-yellow-400 to-orange-400",
-            border: "border-amber-200/50"
-        },
-        rose: {
-            card: "bg-gradient-to-br from-rose-400 via-pink-500 to-red-500",
-            text: "text-white",
-            subtext: "text-rose-100",
-            accentGradient: "from-rose-400 via-pink-500 to-red-500",
-            border: "border-rose-200/50"
-        },
-        cyan: {
-            card: "bg-gradient-to-br from-cyan-300 via-teal-400 to-emerald-400",
-            text: "text-slate-800",
-            subtext: "text-slate-700",
-            accentGradient: "from-cyan-300 via-teal-400 to-emerald-400",
-            border: "border-cyan-200/50"
-        },
-        slate: {
-            card: "bg-gradient-to-br from-slate-600 via-slate-700 to-zinc-800",
-            text: "text-white",
-            subtext: "text-slate-300",
-            accentGradient: "from-slate-600 via-slate-700 to-zinc-800",
-            border: "border-slate-200/50"
-        },
-        lime: {
-            card: "bg-gradient-to-br from-lime-300 via-lime-400 to-yellow-300",
-            text: "text-slate-800",
-            subtext: "text-slate-700",
-            accentGradient: "from-lime-300 via-lime-400 to-yellow-300",
-            border: "border-lime-200/50"
-        }
-    };
-
-    // Color schemes basados en variantStyles
-    const colorSchemes = {
-        purple: {
-            name: 'purple',
-            gradient: 'from-violet-500 via-purple-500 to-fuchsia-500',
-            cardGradient: 'from-violet-500/10 via-purple-500/10 to-fuchsia-500/10',
-            accentGradient: 'from-violet-500 via-purple-500 to-fuchsia-500',
-            textPrimary: 'text-slate-800',
-            textSecondary: 'text-slate-600',
-            textAccent: 'text-purple-600',
-            border: 'border-purple-200/50',
-            hover: 'hover:border-purple-300',
-            shadow: 'shadow-purple-100/50',
-            bgMain: 'bg-gradient-to-br from-violet-50 via-purple-50 to-fuchsia-50',
-            bgCard: 'bg-white/80',
-            bgInput: 'bg-white/70',
-            bgButton: 'bg-gradient-to-r from-violet-500 via-purple-500 to-fuchsia-500',
-            bgButtonSecondary: 'bg-white/50'
-        },
-        indigo: {
-            name: 'indigo',
-            gradient: 'from-indigo-500 via-blue-600 to-sky-500',
-            cardGradient: 'from-indigo-500/10 via-blue-600/10 to-sky-500/10',
-            accentGradient: 'from-indigo-500 via-blue-600 to-sky-500',
-            textPrimary: 'text-slate-800',
-            textSecondary: 'text-slate-600',
-            textAccent: 'text-indigo-600',
-            border: 'border-indigo-200/50',
-            hover: 'hover:border-indigo-300',
-            shadow: 'shadow-indigo-100/50',
-            bgMain: 'bg-gradient-to-br from-indigo-50 via-blue-50 to-sky-50',
-            bgCard: 'bg-white/80',
-            bgInput: 'bg-white/70',
-            bgButton: 'bg-gradient-to-r from-indigo-500 via-blue-600 to-sky-500',
-            bgButtonSecondary: 'bg-white/50'
-        },
-        coral: {
-            name: 'coral',
-            gradient: 'from-orange-400 via-rose-400 to-pink-500',
-            cardGradient: 'from-orange-400/10 via-rose-400/10 to-pink-500/10',
-            accentGradient: 'from-orange-400 via-rose-400 to-pink-500',
-            textPrimary: 'text-slate-800',
-            textSecondary: 'text-slate-600',
-            textAccent: 'text-rose-600',
-            border: 'border-rose-200/50',
-            hover: 'hover:border-rose-300',
-            shadow: 'shadow-rose-100/50',
-            bgMain: 'bg-gradient-to-br from-orange-50 via-rose-50 to-pink-50',
-            bgCard: 'bg-white/80',
-            bgInput: 'bg-white/70',
-            bgButton: 'bg-gradient-to-r from-orange-400 via-rose-400 to-pink-500',
-            bgButtonSecondary: 'bg-white/50'
-        },
-        emerald: {
-            name: 'emerald',
-            gradient: 'from-emerald-400 via-green-500 to-teal-500',
-            cardGradient: 'from-emerald-400/10 via-green-500/10 to-teal-500/10',
-            accentGradient: 'from-emerald-400 via-green-500 to-teal-500',
-            textPrimary: 'text-slate-800',
-            textSecondary: 'text-slate-600',
-            textAccent: 'text-emerald-600',
-            border: 'border-emerald-200/50',
-            hover: 'hover:border-emerald-300',
-            shadow: 'shadow-emerald-100/50',
-            bgMain: 'bg-gradient-to-br from-emerald-50 via-green-50 to-teal-50',
-            bgCard: 'bg-white/80',
-            bgInput: 'bg-white/70',
-            bgButton: 'bg-gradient-to-r from-emerald-400 via-green-500 to-teal-500',
-            bgButtonSecondary: 'bg-white/50'
-        },
-        amber: {
-            name: 'amber',
-            gradient: 'from-amber-300 via-yellow-400 to-orange-400',
-            cardGradient: 'from-amber-300/10 via-yellow-400/10 to-orange-400/10',
-            accentGradient: 'from-amber-300 via-yellow-400 to-orange-400',
-            textPrimary: 'text-slate-800',
-            textSecondary: 'text-amber-800',
-            textAccent: 'text-amber-600',
-            border: 'border-amber-200/50',
-            hover: 'hover:border-amber-300',
-            shadow: 'shadow-amber-100/50',
-            bgMain: 'bg-gradient-to-br from-amber-50 via-yellow-50 to-orange-50',
-            bgCard: 'bg-white/80',
-            bgInput: 'bg-white/70',
-            bgButton: 'bg-gradient-to-r from-amber-300 via-yellow-400 to-orange-400',
-            bgButtonSecondary: 'bg-white/50'
-        },
-        rose: {
-            name: 'rose',
-            gradient: 'from-rose-400 via-pink-500 to-red-500',
-            cardGradient: 'from-rose-400/10 via-pink-500/10 to-red-500/10',
-            accentGradient: 'from-rose-400 via-pink-500 to-red-500',
-            textPrimary: 'text-slate-800',
-            textSecondary: 'text-slate-600',
-            textAccent: 'text-rose-600',
-            border: 'border-rose-200/50',
-            hover: 'hover:border-rose-300',
-            shadow: 'shadow-rose-100/50',
-            bgMain: 'bg-gradient-to-br from-rose-50 via-pink-50 to-red-50',
-            bgCard: 'bg-white/80',
-            bgInput: 'bg-white/70',
-            bgButton: 'bg-gradient-to-r from-rose-400 via-pink-500 to-red-500',
-            bgButtonSecondary: 'bg-white/50'
-        },
-        cyan: {
-            name: 'cyan',
-            gradient: 'from-cyan-300 via-teal-400 to-emerald-400',
-            cardGradient: 'from-cyan-300/10 via-teal-400/10 to-emerald-400/10',
-            accentGradient: 'from-cyan-300 via-teal-400 to-emerald-400',
-            textPrimary: 'text-slate-800',
-            textSecondary: 'text-slate-700',
-            textAccent: 'text-cyan-600',
-            border: 'border-cyan-200/50',
-            hover: 'hover:border-cyan-300',
-            shadow: 'shadow-cyan-100/50',
-            bgMain: 'bg-gradient-to-br from-cyan-50 via-teal-50 to-emerald-50',
-            bgCard: 'bg-white/80',
-            bgInput: 'bg-white/70',
-            bgButton: 'bg-gradient-to-r from-cyan-300 via-teal-400 to-emerald-400',
-            bgButtonSecondary: 'bg-white/50'
-        },
-        slate: {
-            name: 'slate',
-            gradient: 'from-slate-600 via-slate-700 to-zinc-800',
-            cardGradient: 'from-slate-600/10 via-slate-700/10 to-zinc-800/10',
-            accentGradient: 'from-slate-600 via-slate-700 to-zinc-800',
-            textPrimary: 'text-slate-800',
-            textSecondary: 'text-slate-600',
-            textAccent: 'text-slate-700',
-            border: 'border-slate-200/50',
-            hover: 'hover:border-slate-300',
-            shadow: 'shadow-slate-100/50',
-            bgMain: 'bg-gradient-to-br from-slate-50 via-gray-50 to-zinc-50',
-            bgCard: 'bg-white/80',
-            bgInput: 'bg-white/70',
-            bgButton: 'bg-gradient-to-r from-slate-600 via-slate-700 to-zinc-800',
-            bgButtonSecondary: 'bg-white/50'
-        },
-        lime: {
-            name: 'lime',
-            gradient: 'from-lime-300 via-lime-400 to-yellow-300',
-            cardGradient: 'from-lime-300/10 via-lime-400/10 to-yellow-300/10',
-            accentGradient: 'from-lime-300 via-lime-400 to-yellow-300',
-            textPrimary: 'text-slate-800',
-            textSecondary: 'text-slate-700',
-            textAccent: 'text-lime-600',
-            border: 'border-lime-200/50',
-            hover: 'hover:border-lime-300',
-            shadow: 'shadow-lime-100/50',
-            bgMain: 'bg-gradient-to-br from-lime-50 via-yellow-50 to-green-50',
-            bgCard: 'bg-white/80',
-            bgInput: 'bg-white/70',
-            bgButton: 'bg-gradient-to-r from-lime-300 via-lime-400 to-yellow-300',
-            bgButtonSecondary: 'bg-white/50'
-        }
-    };
 
     const currentColors: ColorScheme = Object.values(colorSchemes)[colorSchemeIndex];
 
@@ -391,6 +153,9 @@ export default function NewSchemaForm({
                     totalCompetencies: schemaData.advancedOptions.length,
                     totalQuestions: Object.values(schemaData.configLabels).flat().length,
                     totalScaleOptions: schemaData.schemaLabels.length,
+                    status: "active",
+                    current: 0,
+                    max: 100,
                     colorScheme: colorSchemes[Object.keys(colorSchemes)[colorSchemeIndex] as keyof typeof colorSchemes].name,
                     createdAt: new Date().toISOString()
                 }
@@ -834,11 +599,11 @@ export default function NewSchemaForm({
             <div className={`pt-4 transition-all duration-500`}>
                 <div className="max-w-6xl mx-auto">
                     {/* Header con glassmorphism */}
-                    <div className={`backdrop-blur-xl rounded-2xl shadow-xl ${currentColors.shadow} border ${currentColors.border} p-6 sm:p-8 mb-6 bg-white `}>
+                    <div className={`backdrop-blur-xl rounded-2xl shadow-xl p-6 sm:p-8 mb-6 ${currentColors.card}`}>
                         <div className="flex items-center justify-between mb-6">
                             <button
                                 onClick={() => setShowNewSchemaForm(false)}
-                                className={`flex items-center gap-2 px-4 py-2 border ${currentColors.border} ${currentColors.textPrimary} rounded-lg font-medium hover:bg-white/50 transition-all duration-300 cursor-pointer hover:scale-105 hover:-translate-x-1 ${currentColors.bgButton} text-white`}
+                                className={`flex items-center gap-2 px-4 py-2 border ${currentColors.iconColor} rounded-lg font-medium hover:bg-slate-600 transition-all duration-300 cursor-pointer hover:scale-105 hover:-translate-x-1 ${currentColors.iconBg}`}
                             >
                                 <ArrowLeft className="w-5 h-5" />
                                 <span>Volver</span>
@@ -852,7 +617,7 @@ export default function NewSchemaForm({
                                         <button
                                             key={index}
                                             onClick={() => setColorSchemeIndex(index)}
-                                            className={`w-10 h-10 sm:w-8 sm:h-8 rounded-full bg-gradient-to-r ${scheme.accentGradient} transition-all duration-300 cursor-pointer transform hover:scale-125 hover:rotate-12 flex-shrink-0 ${colorSchemeIndex === index
+                                            className={`w-10 h-10 sm:w-8 sm:h-8 rounded-full bg-gradient-to-r ${scheme.iconBg} transition-all duration-300 cursor-pointer transform hover:scale-125 hover:rotate-12 flex-shrink-0 ${colorSchemeIndex === index
                                                 ? 'ring-2 ring-offset-2 ring-slate-400 scale-110'
                                                 : 'opacity-50 hover:opacity-100'
                                                 }`}
@@ -874,17 +639,17 @@ export default function NewSchemaForm({
                         `}</style>
                         </div>
 
-                        <h1 className={`text-3xl sm:text-4xl font-bold ${currentColors.textPrimary} mb-2`}>
+                        <h1 className={`text-3xl sm:text-4xl font-bold text-black mb-2`}>
                             {currentStep > 1 && formData.schemaName ? formData.schemaName : 'Crear Nuevo Schema'}
                         </h1>
-                        <p className={`${currentColors.textSecondary}`}>
+                        <p className={`${currentColors.subtext}`}>
                             Paso {currentStep} de {totalSteps}
                         </p>
 
                         {/* Progress Bar */}
                         <div className="mt-6 w-full bg-white/50 rounded-full h-2 overflow-hidden">
                             <motion.div
-                                className={`h-full ${currentColors.bgButton} rounded-full`}
+                                className={`h-full ${currentColors.iconBg} rounded-full`}
                                 initial={{ width: 0 }}
                                 animate={{ width: `${(currentStep / totalSteps) * 100}%` }}
                                 transition={{ duration: 0.3 }}
@@ -894,7 +659,7 @@ export default function NewSchemaForm({
 
                     {/* Form Container */}
                     <form onSubmit={handleNextStep}>
-                        <div className={`${currentColors.bgCard} backdrop-blur-xl rounded-2xl shadow-xl ${currentColors.shadow} border ${currentColors.border} p-6 sm:p-8`}>
+                        <div className={`${currentColors.card} backdrop-blur-xl rounded-2xl shadow-xl p-6 sm:p-8`}>
                             <AnimatePresence mode="wait">
                                 {/* Step 1: Nombre del Schema */}
                                 {currentStep === 1 && (
@@ -905,15 +670,15 @@ export default function NewSchemaForm({
                                         exit={{ opacity: 0, x: -20 }}
                                         transition={{ duration: 0.3 }}
                                     >
-                                        <h2 className={`text-2xl font-bold ${currentColors.textPrimary} mb-2`}>
+                                        <h2 className={`text-2xl font-bold text-black mb-2`}>
                                             Nombre del Schema
                                         </h2>
-                                        <p className={`${currentColors.textSecondary} mb-6`}>
+                                        <p className={`${currentColors.subtext} mb-6`}>
                                             Elige un nombre descriptivo para tu schema
                                         </p>
 
                                         <div>
-                                            <label className={`block ${currentColors.textPrimary} font-medium mb-3`}>
+                                            <label className={`block text-black font-medium mb-3`}>
                                                 Nombre
                                             </label>
                                             <input
@@ -921,7 +686,7 @@ export default function NewSchemaForm({
                                                 name="schemaName"
                                                 value={formData.schemaName || ''}
                                                 onChange={handleInputChange}
-                                                className={`w-full px-4 py-3 bg-white/70 backdrop-blur-sm border ${currentColors.border} ${currentColors.hover} rounded-xl focus:outline-none focus:ring-2 focus:ring-opacity-50 transition-all ${currentColors.textPrimary}`}
+                                                className={`w-full px-4 py-3 bg-white/70 backdrop-blur-sm border rounded-xl focus:outline-none focus:ring-2 focus:ring-opacity-50 transition-all text-black`}
                                                 placeholder="Ej: Evaluación de Satisfacción"
                                                 autoFocus
                                             />
@@ -938,10 +703,10 @@ export default function NewSchemaForm({
                                         exit={{ opacity: 0, x: -20 }}
                                         transition={{ duration: 0.3 }}
                                     >
-                                        <h2 className={`text-2xl font-bold ${currentColors.textPrimary} mb-2`}>
+                                        <h2 className={`text-2xl font-bold text-black mb-2`}>
                                             {formData.schemaName || 'Competencias del Schema'}
                                         </h2>
-                                        <p className={`${currentColors.textSecondary} mb-6`}>
+                                        <p className={`${currentColors.subtext} mb-6`}>
                                             Agrega al menos 3 competencias para organizar tu evaluación
                                         </p>
 
@@ -955,14 +720,14 @@ export default function NewSchemaForm({
                                                     onDragStart={() => handleDragStartOption(index)}
                                                     onDragOver={(e) => handleDragOverOption(e, index)}
                                                     onDragEnd={handleDragEndOption}
-                                                    className={`flex items-center gap-3 p-4 bg-white/60 backdrop-blur-sm border ${currentColors.border} rounded-xl ${currentColors.hover} transition-all cursor-move`}
+                                                    className={`flex items-center gap-3 p-4 bg-white/60 backdrop-blur-sm border border-slate-300 rounded-xl transition-all cursor-move`}
                                                 >
                                                     <GripVertical className="w-5 h-5 text-slate-400 flex-shrink-0" />
                                                     <input
                                                         type="text"
                                                         value={option}
                                                         onChange={(e) => handleAdvancedOptionChange(index, e.target.value)}
-                                                        className={`flex-1 bg-transparent border-none focus:outline-none ${currentColors.textPrimary} font-medium`}
+                                                        className={`flex-1 bg-transparent border-none focus:outline-none text-black font-medium`}
                                                         placeholder={`Competencia ${index + 1}`}
                                                     />
                                                     <button
@@ -978,7 +743,7 @@ export default function NewSchemaForm({
                                             <button
                                                 type="button"
                                                 onClick={handleAddAdvancedOption}
-                                                className={`w-full py-3 border-2 border-dashed ${currentColors.border} ${currentColors.hover} rounded-xl ${currentColors.textAccent} font-medium flex items-center justify-center gap-2 transition-all duration-300 hover:bg-white/30 cursor-pointer hover:scale-105 hover:shadow-md`}
+                                                className={`w-full py-3 border-2 border-dashed border-slate-200 rounded-xl ${currentColors.text} font-medium flex items-center justify-center gap-2 transition-all duration-300 hover:bg-white/30 cursor-pointer hover:scale-105 hover:shadow-md`}
                                             >
                                                 <Plus className="w-5 h-5" />
                                                 Agregar Competencia
@@ -1013,17 +778,17 @@ export default function NewSchemaForm({
                                         exit={{ opacity: 0, x: -20 }}
                                         transition={{ duration: 0.3 }}
                                     >
-                                        <h2 className={`text-2xl font-bold ${currentColors.textPrimary} mb-2`}>
+                                        <h2 className={`text-2xl font-bold text-black mb-2`}>
                                             {formData.schemaName || 'Preguntas'}
                                         </h2>
-                                        <p className={`${currentColors.textSecondary} mb-6`}>
+                                        <p className={`${currentColors.subtext} mb-6`}>
                                             Agrega preguntas para cada competencia
                                         </p>
 
                                         <div className="space-y-6">
                                             {advancedOptions.map((option, optionIndex) => (
-                                                <div key={optionIndex} className={`p-5 bg-white/60 backdrop-blur-sm border ${currentColors.border} rounded-xl`}>
-                                                    <h3 className={`font-semibold ${currentColors.textAccent} mb-4 text-lg`}>
+                                                <div key={optionIndex} className={`p-5 bg-white/60 backdrop-blur-sm border border-slate-300 rounded-xl`}>
+                                                    <h3 className={`font-semibold ${currentColors.text} mb-4 text-lg`}>
                                                         {option}
                                                     </h3>
 
@@ -1031,7 +796,7 @@ export default function NewSchemaForm({
                                                         <input
                                                             type="text"
                                                             placeholder="Nueva pregunta..."
-                                                            className={`flex-1 px-4 py-2.5 bg-white/70 backdrop-blur-sm border ${currentColors.border} rounded-lg focus:outline-none focus:ring-2 focus:ring-opacity-50 transition-all ${currentColors.textPrimary}`}
+                                                            className={`flex-1 px-4 py-2.5 bg-white/70 backdrop-blur-sm border border-slate-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-opacity-50 transition-all`}
                                                             onKeyPress={(e) => {
                                                                 if (e.key === 'Enter') {
                                                                     e.preventDefault();
@@ -1047,7 +812,7 @@ export default function NewSchemaForm({
                                                                 handleAddConfigLabel(option, input.value);
                                                                 input.value = '';
                                                             }}
-                                                            className={`px-4 py-2.5 ${currentColors.bgButton} text-white rounded-lg font-medium hover:shadow-lg transition-all duration-300 cursor-pointer hover:scale-110`}
+                                                            className={`px-4 py-2.5 ${currentColors.iconBg} ${currentColors.iconColor} rounded-lg font-medium hover:shadow-lg transition-all duration-300 cursor-pointer hover:scale-110`}
                                                         >
                                                             <Plus className="w-5 h-5" />
                                                         </button>
@@ -1063,10 +828,10 @@ export default function NewSchemaForm({
                                                                 onDragStart={() => handleDragStartConfig(option, labelIndex)}
                                                                 onDragOver={(e) => handleDragOverConfig(e, option, labelIndex)}
                                                                 onDragEnd={handleDragEndConfig}
-                                                                className="flex items-center gap-3 p-3 bg-white/80 backdrop-blur-sm rounded-lg border border-slate-200 hover:border-slate-300 transition-all cursor-move group"
+                                                                className={`flex items-center gap-3 p-3 backdrop-blur-sm rounded-lg border border-slate-400 hover:border-slate-300 transition-all cursor-move group`}
                                                             >
                                                                 <GripVertical className="w-4 h-4 text-slate-400 opacity-0 group-hover:opacity-100 transition-opacity" />
-                                                                <span className={`flex-1 ${currentColors.textPrimary}`}>{label}</span>
+                                                                <span className={`flex-1 text-black`}>{label}</span>
                                                                 <button
                                                                     type="button"
                                                                     onClick={() => handleRemoveConfigLabel(option, labelIndex)}
@@ -1099,10 +864,10 @@ export default function NewSchemaForm({
                                         exit={{ opacity: 0, x: -20 }}
                                         transition={{ duration: 0.3 }}
                                     >
-                                        <h2 className={`text-2xl font-bold ${currentColors.textPrimary} mb-2`}>
+                                        <h2 className={`text-2xl font-bold text-black mb-2`}>
                                             {formData.schemaName || 'Escala Likert'}
                                         </h2>
-                                        <p className={`${currentColors.textSecondary} mb-6`}>
+                                        <p className={`${currentColors.subtext} mb-6`}>
                                             Define entre 5 y 10 opciones de respuesta (Escala Likert)
                                         </p>
 
@@ -1113,7 +878,7 @@ export default function NewSchemaForm({
                                                     value={currentLabelInput}
                                                     onChange={(e) => setCurrentLabelInput(e.target.value)}
                                                     placeholder="Nueva opción..."
-                                                    className={`flex-1 px-4 py-3 bg-white/70 backdrop-blur-sm border ${currentColors.border} rounded-xl focus:outline-none focus:ring-2 focus:ring-opacity-50 transition-all ${currentColors.textPrimary}`}
+                                                    className={`flex-1 px-4 py-3 text-black bg-white/70 backdrop-blur-sm border border-slate-400 rounded-xl focus:outline-none focus:ring-2 focus:ring-opacity-50 transition-all`}
                                                     onKeyPress={(e) => {
                                                         if (e.key === 'Enter') {
                                                             e.preventDefault();
@@ -1125,7 +890,7 @@ export default function NewSchemaForm({
                                                     type="button"
                                                     onClick={handleAddSchemaLabel}
                                                     disabled={schemaLabels.length >= 10}
-                                                    className={`px-6 py-3 ${currentColors.bgButton} text-white rounded-xl font-medium hover:shadow-lg transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer hover:scale-110`}
+                                                    className={`px-6 py-3 ${currentColors.iconBg} ${currentColors.iconColor} rounded-xl font-medium hover:shadow-lg transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer hover:scale-110`}
                                                 >
                                                     <Plus className="w-5 h-5" />
                                                 </button>
@@ -1141,10 +906,10 @@ export default function NewSchemaForm({
                                                         onDragStart={() => handleDragStart(index)}
                                                         onDragOver={(e) => handleDragOver(e, index)}
                                                         onDragEnd={handleDragEnd}
-                                                        className="flex items-center gap-3 p-4 bg-white/80 backdrop-blur-sm rounded-xl border border-slate-200 hover:border-slate-300 transition-all cursor-move group"
+                                                        className="flex items-center gap-3 p-4 bg-white/80 backdrop-blur-sm rounded-xl border border-slate-400 hover:border-slate-300 transition-all cursor-move group"
                                                     >
                                                         <GripVertical className="w-4 h-4 text-slate-400 opacity-0 group-hover:opacity-100 transition-opacity" />
-                                                        <span className={`flex-1 font-medium ${currentColors.textPrimary}`}>{label}</span>
+                                                        <span className={`flex-1 font-medium text-black`}>{label}</span>
                                                         <button
                                                             type="button"
                                                             onClick={() => handleRemoveSchemaLabel(index)}
@@ -1157,7 +922,7 @@ export default function NewSchemaForm({
                                             </div>
 
                                             <div className="flex items-center justify-between text-sm">
-                                                <span className={currentColors.textSecondary}>
+                                                <span className={currentColors.subtext}>
                                                     {schemaLabels.length} de 10 opciones
                                                 </span>
                                                 {(schemaLabels.length < 5 || schemaLabels.length > 10) && (
@@ -1190,28 +955,28 @@ export default function NewSchemaForm({
                                         exit={{ opacity: 0, x: -20 }}
                                         transition={{ duration: 0.3 }}
                                     >
-                                        <h2 className={`text-2xl font-bold ${currentColors.textPrimary} mb-2`}>
+                                        <h2 className={`text-2xl font-bold text-black mb-2`}>
                                             {formData.schemaName || 'Revisión Final'}
                                         </h2>
-                                        <p className={`${currentColors.textSecondary} mb-6`}>
+                                        <p className={`${currentColors.subtext} mb-6`}>
                                             Verifica que toda la información sea correcta
                                         </p>
 
                                         <div className="space-y-4">
                                             {/* Nombre del Schema */}
                                             <div className="p-5 bg-white/60 backdrop-blur-sm rounded-xl border border-slate-200">
-                                                <span className={`text-sm font-medium ${currentColors.textSecondary}`}>Nombre del Schema</span>
-                                                <p className={`text-xl font-bold ${currentColors.textPrimary} mt-1`}>{formData.schemaName}</p>
+                                                <span className={`text-sm font-medium text-slate-600`}>Nombre del Schema</span>
+                                                <p className={`text-xl font-bold text-black mt-1`}>{formData.schemaName}</p>
                                             </div>
 
                                             {/* Competencias y Preguntas */}
                                             <div className="p-5 bg-white/60 backdrop-blur-sm rounded-xl border border-slate-200">
-                                                <span className={`text-sm font-medium ${currentColors.textSecondary} mb-3 block`}>Competencias y Preguntas</span>
+                                                <span className={`text-sm font-medium ${currentColors.subtext} mb-3 block`}>Competencias y Preguntas</span>
                                                 <div className="space-y-3">
                                                     {advancedOptions.map((option, index) => (
                                                         <div key={index} className="pl-4 border-l-2 border-slate-300">
-                                                            <p className={`font-semibold ${currentColors.textAccent} mb-1`}>{option}</p>
-                                                            <p className={`text-sm ${currentColors.textSecondary}`}>
+                                                            <p className={`font-semibold ${currentColors.text} mb-1`}>{option}</p>
+                                                            <p className={`text-sm ${currentColors.subtext}`}>
                                                                 {configLabels[option]?.length || 0} {configLabels[option]?.length === 1 ? 'pregunta' : 'preguntas'}
                                                             </p>
                                                         </div>
@@ -1221,18 +986,18 @@ export default function NewSchemaForm({
 
                                             {/* Escala Likert */}
                                             <div className="p-5 bg-white/60 backdrop-blur-sm rounded-xl border border-slate-200">
-                                                <span className={`text-sm font-medium ${currentColors.textSecondary} mb-3 block`}>Escala de Respuestas</span>
+                                                <span className={`text-sm font-medium ${currentColors.subtext} mb-3 block`}>Escala de Respuestas</span>
                                                 <div className="flex flex-wrap gap-2">
                                                     {schemaLabels.map((label, index) => (
                                                         <span
                                                             key={index}
-                                                            className={`px-3 py-1.5 bg-gradient-to-r ${currentColors.accentGradient} text-white rounded-lg text-sm font-medium`}
+                                                            className={`px-3 py-1.5 bg-gradient-to-r ${currentColors.iconBg} ${currentColors.iconColor} rounded-lg text-sm font-medium`}
                                                         >
                                                             {label}
                                                         </span>
                                                     ))}
                                                 </div>
-                                                <p className={`text-sm ${currentColors.textSecondary} mt-2`}>
+                                                <p className={`text-sm ${currentColors.subtext} mt-2`}>
                                                     {schemaLabels.length} opciones configuradas
                                                 </p>
                                             </div>
@@ -1249,7 +1014,7 @@ export default function NewSchemaForm({
                                         <button
                                             type="button"
                                             onClick={() => setCurrentStep(currentStep - 1)}
-                                            className={`px-6 py-3 border-2 ${currentColors.border} ${currentColors.textPrimary} rounded-xl font-medium hover:bg-white/50 transition-all duration-300 cursor-pointer hover:scale-105 hover:-translate-x-1`}
+                                            className={`px-6 py-3 border-2 border-slate-300 text-black rounded-xl font-medium hover:bg-white/50 transition-all duration-300 cursor-pointer hover:scale-105 hover:-translate-x-1`}
                                         >
                                             ← Atrás
                                         </button>
@@ -1263,7 +1028,7 @@ export default function NewSchemaForm({
                                             (currentStep === 3 && advancedOptions.some(option => !configLabels[option] || configLabels[option].length === 0)) ||
                                             (currentStep === 4 && (schemaLabels.length < 5 || schemaLabels.length > 10 || new Set(schemaLabels.map(label => label.trim().toLowerCase())).size !== schemaLabels.length))
                                         }
-                                        className={`px-8 py-3 ${currentColors.bgButton} text-white rounded-xl font-medium hover:shadow-lg transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer hover:scale-105 hover:shadow-2xl ${currentStep === 1 ? 'w-full sm:w-auto sm:ml-auto' : 'w-full sm:w-auto'
+                                        className={`px-8 py-3 ${currentColors.iconBg} ${currentColors.iconColor} rounded-xl font-medium hover:shadow-lg transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer hover:scale-105 hover:shadow-2xl ${currentStep === 1 ? 'w-full sm:w-auto sm:ml-auto' : 'w-full sm:w-auto'
                                             }`}
                                     >
                                         {currentStep === 5 ? 'Crear Schema ✓' : 'Continuar →'}
@@ -1278,7 +1043,7 @@ export default function NewSchemaForm({
                                             onClick={handleSaveProgress}
                                             onMouseEnter={() => setHoveredButton('save')}
                                             onMouseLeave={() => setHoveredButton(null)}
-                                            className={`px-4 py-3 border ${currentColors.border} ${currentColors.textPrimary} rounded-lg font-medium hover:bg-white/50 transition-all duration-300 flex items-center justify-center cursor-pointer hover:scale-110 hover:shadow-md`}
+                                            className={`px-4 py-3 border border-slate-200 rounded-lg font-medium hover:bg-white/50 transition-all duration-300 flex items-center justify-center cursor-pointer hover:scale-110 hover:shadow-md`}
                                         >
                                             <Save className="scale-90" />
                                         </button>
@@ -1298,7 +1063,7 @@ export default function NewSchemaForm({
                                             onClick={handleLoadProgress}
                                             onMouseEnter={() => setHoveredButton('load')}
                                             onMouseLeave={() => setHoveredButton(null)}
-                                            className={`px-4 py-3 border ${currentColors.border} ${currentColors.textPrimary} rounded-lg font-medium hover:bg-white/50 transition-all duration-300 flex items-center justify-center cursor-pointer hover:scale-110 hover:shadow-md`}
+                                            className={`px-4 py-3 border border-slate-200 rounded-lg font-medium hover:bg-white/50 transition-all duration-300 flex items-center justify-center cursor-pointer hover:scale-110 hover:shadow-md`}
                                         >
                                             <BookCopy className="scale-90" />
                                         </button>
@@ -1318,7 +1083,7 @@ export default function NewSchemaForm({
                                             onClick={handleNewSchema}
                                             onMouseEnter={() => setHoveredButton('new')}
                                             onMouseLeave={() => setHoveredButton(null)}
-                                            className={`px-4 py-3 ${currentColors.bgButton} text-white rounded-lg font-medium hover:shadow-lg transition-all duration-300 flex items-center justify-center cursor-pointer hover:scale-110 hover:shadow-xl`}
+                                            className={`px-4 py-3 ${currentColors.iconBg} ${currentColors.iconColor} rounded-lg font-medium hover:shadow-lg transition-all duration-300 flex items-center justify-center cursor-pointer hover:scale-110 hover:shadow-xl`}
                                         >
                                             <RefreshCcw className="scale-90" />
                                         </button>
@@ -1345,22 +1110,22 @@ export default function NewSchemaForm({
                         initial={{ opacity: 0, scale: 0.9 }}
                         animate={{ opacity: 1, scale: 1 }}
                         exit={{ opacity: 0, scale: 0.9 }}
-                        className={`${currentColors.bgCard} backdrop-blur-xl rounded-2xl shadow-2xl border ${currentColors.border} max-w-3xl w-full max-h-[80vh] overflow-hidden`}
+                        className={`${currentColors.iconBg} backdrop-blur-xl rounded-2xl shadow-2xl border max-w-3xl w-full max-h-[80vh] overflow-hidden`}
                     >
                         {/* Header del Modal */}
-                        <div className={`p-6 border-b ${currentColors.border}`}>
+                        <div className={`p-6 border-b`}>
                             <div className="flex items-center justify-between">
-                                <h3 className={`text-2xl font-bold ${currentColors.textPrimary}`}>
+                                <h3 className={`text-2xl font-bold ${currentColors.text}`}>
                                     Progresos Guardados
                                 </h3>
                                 <button
                                     onClick={() => setShowSavedProgressModal(false)}
-                                    className={`p-2 rounded-lg ${currentColors.textSecondary} hover:bg-white/50 transition-all duration-300 cursor-pointer hover:scale-110 hover:rotate-90`}
+                                    className={`p-2 rounded-lg ${currentColors.subtext} hover:bg-white/50 transition-all duration-300 cursor-pointer hover:scale-110 hover:rotate-90`}
                                 >
                                     <X className="w-6 h-6" />
                                 </button>
                             </div>
-                            <p className={`${currentColors.textSecondary} mt-2`}>
+                            <p className={`${currentColors.subtext} mt-2`}>
                                 Selecciona un progreso para continuar editándolo
                             </p>
                         </div>
@@ -1369,7 +1134,7 @@ export default function NewSchemaForm({
                         <div className="p-6 overflow-y-auto max-h-[calc(80vh-140px)]">
                             {savedProgresses.length === 0 ? (
                                 <div className="text-center py-12">
-                                    <p className={`${currentColors.textSecondary} text-lg`}>
+                                    <p className={`${currentColors.subtext} text-lg`}>
                                         No hay progresos guardados
                                     </p>
                                 </div>
@@ -1386,15 +1151,15 @@ export default function NewSchemaForm({
                                             <div className="flex items-start justify-between gap-4">
                                                 <div className="flex-1 cursor-pointer" onClick={() => handleSelectProgress(progress)}>
                                                     <div className="flex items-center gap-3 mb-2">
-                                                        <h4 className={`text-lg font-bold ${currentColors.textPrimary}`}>
+                                                        <h4 className={`text-lg font-bold ${currentColors.text}`}>
                                                             {progress.formData.schemaName || 'Sin nombre'}
                                                         </h4>
-                                                        <span className={`px-2 py-1 text-xs font-medium rounded-md ${currentColors.bgButton} text-white`}>
+                                                        <span className={`px-2 py-1 text-xs font-medium rounded-md ${currentColors.iconBg} ${currentColors.text}`}>
                                                             Paso {progress.currentStep}/5
                                                         </span>
                                                     </div>
 
-                                                    <div className={`text-sm ${currentColors.textSecondary} space-y-1`}>
+                                                    <div className={`text-sm ${currentColors.subtext} space-y-1`}>
                                                         <p>
                                                             📅 Guardado: {new Date(progress.savedAt).toLocaleString('es-ES', {
                                                                 day: '2-digit',
@@ -1441,41 +1206,41 @@ export default function NewSchemaForm({
                         initial={{ opacity: 0, scale: 0.9 }}
                         animate={{ opacity: 1, scale: 1 }}
                         exit={{ opacity: 0, scale: 0.9 }}
-                        className={`${currentColors.bgCard} backdrop-blur-xl rounded-2xl shadow-2xl border ${currentColors.border} max-w-md w-full overflow-hidden`}
+                        className={`${currentColors.iconBg} backdrop-blur-xl rounded-2xl shadow-2xl border max-w-md w-full overflow-hidden`}
                     >
                         {/* Header del Modal */}
-                        <div className={`p-6 border-b ${currentColors.border}`}>
+                        <div className={`p-6 border-b`}>
                             <div className="flex items-center gap-3">
                                 {confirmModal.type === 'success' && (
                                     <div className="w-12 h-12 rounded-full bg-gradient-to-r from-emerald-500 to-green-500 flex items-center justify-center flex-shrink-0">
-                                        <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <svg className="w-6 h-6 ${currentColors.text}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                                         </svg>
                                     </div>
                                 )}
                                 {confirmModal.type === 'danger' && (
                                     <div className="w-12 h-12 rounded-full bg-gradient-to-r from-red-500 to-rose-500 flex items-center justify-center flex-shrink-0">
-                                        <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <svg className="w-6 h-6 ${currentColors.text}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
                                         </svg>
                                     </div>
                                 )}
                                 {confirmModal.type === 'warning' && (
                                     <div className="w-12 h-12 rounded-full bg-gradient-to-r from-amber-500 to-orange-500 flex items-center justify-center flex-shrink-0">
-                                        <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <svg className="w-6 h-6 ${currentColors.text}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
                                         </svg>
                                     </div>
                                 )}
                                 {confirmModal.type === 'info' && (
-                                    <div className={`w-12 h-12 rounded-full ${currentColors.bgButton} flex items-center justify-center flex-shrink-0`}>
-                                        <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <div className={`w-12 h-12 rounded-full ${currentColors.iconBg} flex items-center justify-center flex-shrink-0`}>
+                                        <svg className="w-6 h-6 ${currentColors.text}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                                         </svg>
                                     </div>
                                 )}
                                 <div className="flex-1">
-                                    <h3 className={`text-xl font-bold ${currentColors.textPrimary}`}>
+                                    <h3 className={`text-xl font-bold ${currentColors.text}`}>
                                         {confirmModal.title}
                                     </h3>
                                 </div>
@@ -1484,17 +1249,17 @@ export default function NewSchemaForm({
 
                         {/* Contenido del Modal */}
                         <div className="p-6">
-                            <p className={`${currentColors.textSecondary} text-base leading-relaxed`}>
+                            <p className={`${currentColors.subtext} text-base leading-relaxed`}>
                                 {confirmModal.message}
                             </p>
                         </div>
 
                         {/* Footer con botones */}
-                        <div className={`p-6 border-t ${currentColors.border} flex gap-3 ${confirmModal.showCancelButton !== false ? 'justify-end' : 'justify-center'}`}>
+                        <div className={`p-6 border-t flex gap-3 ${confirmModal.showCancelButton !== false ? 'justify-end' : 'justify-center'}`}>
                             {confirmModal.showCancelButton !== false && (
                                 <button
                                     onClick={confirmModal.onCancel}
-                                    className={`px-6 py-2.5 border ${currentColors.border} ${currentColors.textPrimary} rounded-lg font-medium hover:bg-white/50 transition-all duration-300 cursor-pointer hover:scale-105`}
+                                    className={`px-6 py-2.5 border ${currentColors.text} rounded-lg font-medium hover:bg-white/50 transition-all duration-300 cursor-pointer hover:scale-105`}
                                 >
                                     Cancelar
                                 </button>
@@ -1502,12 +1267,12 @@ export default function NewSchemaForm({
                             <button
                                 onClick={confirmModal.onConfirm}
                                 className={`px-6 py-2.5 rounded-lg font-medium transition-all duration-300 cursor-pointer hover:scale-105 hover:shadow-lg ${confirmModal.type === 'success'
-                                    ? 'bg-gradient-to-r from-emerald-500 to-green-500 hover:from-emerald-600 hover:to-green-600 text-white'
+                                    ? 'bg-gradient-to-r from-emerald-500 to-green-500 hover:from-emerald-600 hover:to-green-600 ${currentColors.text}'
                                     : confirmModal.type === 'danger'
-                                        ? 'bg-gradient-to-r from-red-500 to-rose-500 hover:from-red-600 hover:to-rose-600 text-white'
+                                        ? 'bg-gradient-to-r from-red-500 to-rose-500 hover:from-red-600 hover:to-rose-600 ${currentColors.text}'
                                         : confirmModal.type === 'warning'
-                                            ? 'bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white'
-                                            : `${currentColors.bgButton} text-white hover:shadow-lg`
+                                            ? 'bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 ${currentColors.text}'
+                                            : `${currentColors.iconBg} ${currentColors.text} hover:shadow-lg`
                                     }`}
                             >
                                 {confirmModal.type === 'success' ? 'Aceptar' : 'Confirmar'}
@@ -1522,10 +1287,10 @@ export default function NewSchemaForm({
                 <AnimatePresence>
                     {toasts.map((toast) => {
                         const toastStyles = {
-                            success: `bg-gradient-to-r from-emerald-500 to-green-500 text-white`,
-                            error: `bg-gradient-to-r from-red-500 to-rose-500 text-white`,
-                            warning: `bg-gradient-to-r from-amber-500 to-orange-500 text-white`,
-                            info: `${currentColors.bgButton} text-white`
+                            success: `bg-gradient-to-r from-emerald-500 to-green-500 ${currentColors.text}`,
+                            error: `bg-gradient-to-r from-red-500 to-rose-500 ${currentColors.text}`,
+                            warning: `bg-gradient-to-r from-amber-500 to-orange-500 ${currentColors.text}`,
+                            info: `${currentColors.iconBg} ${currentColors.text}`
                         };
 
                         const toastIcons = {

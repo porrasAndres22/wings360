@@ -1,157 +1,252 @@
+'use client';
+
 import React, { useState, useMemo } from 'react';
+import { Search, Plus } from 'lucide-react';
+import NewProjectForm from './ListConnection/Newprojectform';
 
-export default function UserProjectList() {
-  const [searchTerm, setSearchTerm] = useState('');
+interface TeamMember {
+  id: string;
+  avatar: string;
+}
+
+interface Project {
+  id: string;
+  user: {
+    name: string;
+    role: string;
+    avatar: string;
+  };
+  project: string;
+  team: TeamMember[];
+  status: 'Active' | 'Pending' | 'Cancel';
+  budget: string;
+}
+
+const ProjectTable: React.FC = () => {
+  const [searchQuery, setSearchQuery] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 5;
-
-  const users = [
+  const [showNewProjectForm, setShowNewProjectForm] = useState(false);
+  const [projects, setProjects] = useState<Project[]>([
     {
-      id: 1,
-      name: 'Lindsey Curtis',
-      role: 'Web Designer',
+      id: '1',
+      user: {
+        name: 'Lindsey Curtis',
+        role: 'Web Designer',
+        avatar: '👤',
+      },
       project: 'Agency Website',
-      teamSize: 3,
+      team: [
+        { id: '1', avatar: '👤' },
+        { id: '2', avatar: '👤' },
+        { id: '3', avatar: '👤' },
+      ],
       status: 'Active',
       budget: '3.9K',
-      avatar: 'https://i.pravatar.cc/150?img=1'
     },
     {
-      id: 2,
-      name: 'Kaiya George',
-      role: 'Project Manager',
+      id: '2',
+      user: {
+        name: 'Kaiya George',
+        role: 'Project Manager',
+        avatar: '👤',
+      },
       project: 'Technology',
-      teamSize: 2,
+      team: [
+        { id: '1', avatar: '👤' },
+        { id: '2', avatar: '👤' },
+      ],
       status: 'Pending',
       budget: '24.9K',
-      avatar: 'https://i.pravatar.cc/150?img=5'
     },
     {
-      id: 3,
-      name: 'Zain Geidt',
-      role: 'Content Writer',
+      id: '3',
+      user: {
+        name: 'Zain Geidt',
+        role: 'Content Writer',
+        avatar: '👤',
+      },
       project: 'Blog Writing',
-      teamSize: 1,
+      team: [{ id: '1', avatar: '👤' }],
       status: 'Active',
       budget: '12.7K',
-      avatar: 'https://i.pravatar.cc/150?img=9'
     },
     {
-      id: 4,
-      name: 'Abram Schleifer',
-      role: 'Digital Marketer',
+      id: '4',
+      user: {
+        name: 'Abram Schleifer',
+        role: 'Digital Marketer',
+        avatar: '👤',
+      },
       project: 'Social Media',
-      teamSize: 3,
+      team: [
+        { id: '1', avatar: '👤' },
+        { id: '2', avatar: '👤' },
+        { id: '3', avatar: '👤' },
+      ],
       status: 'Cancel',
       budget: '2.8K',
-      avatar: 'https://i.pravatar.cc/150?img=12'
     },
     {
-      id: 5,
-      name: 'Carla George',
-      role: 'Front-end Developer',
+      id: '5',
+      user: {
+        name: 'Carla George',
+        role: 'Front-end Developer',
+        avatar: '👤',
+      },
       project: 'Website',
-      teamSize: 3,
+      team: [
+        { id: '1', avatar: '👤' },
+        { id: '2', avatar: '👤' },
+        { id: '3', avatar: '👤' },
+      ],
       status: 'Active',
       budget: '4.5K',
-      avatar: 'https://i.pravatar.cc/150?img=20'
     },
     {
-      id: 6,
-      name: 'Marcus Johnson',
-      role: 'Backend Developer',
+      id: '6',
+      user: {
+        name: 'Marcus Rivera',
+        role: 'UX Designer',
+        avatar: '👤',
+      },
+      project: 'Mobile App',
+      team: [
+        { id: '1', avatar: '👤' },
+        { id: '2', avatar: '👤' },
+      ],
+      status: 'Active',
+      budget: '18.2K',
+    },
+    {
+      id: '7',
+      user: {
+        name: 'Sofia Chen',
+        role: 'Backend Developer',
+        avatar: '👤',
+      },
       project: 'API Development',
-      teamSize: 4,
-      status: 'Active',
-      budget: '8.2K',
-      avatar: 'https://i.pravatar.cc/150?img=33'
-    },
-    {
-      id: 7,
-      name: 'Sofia Martinez',
-      role: 'UX Researcher',
-      project: 'User Testing',
-      teamSize: 2,
+      team: [
+        { id: '1', avatar: '👤' },
+        { id: '2', avatar: '👤' },
+        { id: '3', avatar: '👤' },
+      ],
       status: 'Pending',
-      budget: '5.1K',
-      avatar: 'https://i.pravatar.cc/150?img=44'
+      budget: '32.5K',
     },
     {
-      id: 8,
-      name: 'David Chen',
-      role: 'DevOps Engineer',
-      project: 'Infrastructure',
-      teamSize: 3,
+      id: '8',
+      user: {
+        name: 'James Wilson',
+        role: 'DevOps Engineer',
+        avatar: '👤',
+      },
+      project: 'Cloud Migration',
+      team: [
+        { id: '1', avatar: '👤' },
+      ],
       status: 'Active',
-      budget: '15.3K',
-      avatar: 'https://i.pravatar.cc/150?img=52'
+      budget: '45.0K',
     },
     {
-      id: 9,
-      name: 'Emma Wilson',
-      role: 'Data Analyst',
-      project: 'Analytics Dashboard',
-      teamSize: 2,
+      id: '9',
+      user: {
+        name: 'Emma Thompson',
+        role: 'Product Manager',
+        avatar: '👤',
+      },
+      project: 'E-commerce Platform',
+      team: [
+        { id: '1', avatar: '👤' },
+        { id: '2', avatar: '👤' },
+        { id: '3', avatar: '👤' },
+      ],
       status: 'Active',
-      budget: '7.8K',
-      avatar: 'https://i.pravatar.cc/150?img=47'
+      budget: '67.8K',
     },
     {
-      id: 10,
-      name: 'James Rodriguez',
-      role: 'Mobile Developer',
-      project: 'iOS App',
-      teamSize: 4,
-      status: 'Pending',
-      budget: '18.5K',
-      avatar: 'https://i.pravatar.cc/150?img=59'
-    },
-    {
-      id: 11,
-      name: 'Olivia Brown',
-      role: 'Product Designer',
-      project: 'Design System',
-      teamSize: 3,
-      status: 'Active',
-      budget: '9.4K',
-      avatar: 'https://i.pravatar.cc/150?img=23'
-    },
-    {
-      id: 12,
-      name: 'Michael Lee',
-      role: 'QA Engineer',
-      project: 'Testing Suite',
-      teamSize: 2,
+      id: '10',
+      user: {
+        name: 'Oliver Martinez',
+        role: 'SEO Specialist',
+        avatar: '👤',
+      },
+      project: 'SEO Optimization',
+      team: [
+        { id: '1', avatar: '👤' },
+        { id: '2', avatar: '👤' },
+      ],
       status: 'Cancel',
-      budget: '4.2K',
-      avatar: 'https://i.pravatar.cc/150?img=61'
-    }
-  ];
+      budget: '5.3K',
+    },
+    {
+      id: '11',
+      user: {
+        name: 'Isabella Garcia',
+        role: 'Graphic Designer',
+        avatar: '👤',
+      },
+      project: 'Brand Identity',
+      team: [
+        { id: '1', avatar: '👤' },
+        { id: '2', avatar: '👤' },
+      ],
+      status: 'Pending',
+      budget: '8.9K',
+    },
+    {
+      id: '12',
+      user: {
+        name: 'Noah Anderson',
+        role: 'Data Analyst',
+        avatar: '👤',
+      },
+      project: 'Analytics Dashboard',
+      team: [
+        { id: '1', avatar: '👤' },
+        { id: '2', avatar: '👤' },
+        { id: '3', avatar: '👤' },
+      ],
+      status: 'Active',
+      budget: '28.4K',
+    },
+  ]);
+  
+  const itemsPerPage = 5;
 
-  const filteredUsers = useMemo(() => {
-    return users.filter(user =>
-      user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      user.role.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      user.project.toLowerCase().includes(searchTerm.toLowerCase())
+  // Filter projects based on search query
+  const filteredProjects = useMemo(() => {
+    if (!searchQuery.trim()) return projects;
+    
+    const query = searchQuery.toLowerCase();
+    return projects.filter(
+      (project) =>
+        project.user.name.toLowerCase().includes(query) ||
+        project.user.role.toLowerCase().includes(query) ||
+        project.project.toLowerCase().includes(query) ||
+        project.status.toLowerCase().includes(query)
     );
-  }, [searchTerm]);
+  }, [searchQuery, projects]);
 
-  // Reset to page 1 when search changes
-  React.useEffect(() => {
-    setCurrentPage(1);
-  }, [searchTerm]);
-
-  // Pagination calculations
-  const totalPages = Math.ceil(filteredUsers.length / itemsPerPage);
+  // Calculate pagination
+  const totalPages = Math.ceil(filteredProjects.length / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
-  const currentUsers = filteredUsers.slice(startIndex, endIndex);
+  const currentProjects = filteredProjects.slice(startIndex, endIndex);
 
-  // Generate page numbers to display
+  // Reset to page 1 when search query changes
+  React.useEffect(() => {
+    setCurrentPage(1);
+  }, [searchQuery]);
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
   const getPageNumbers = () => {
-    const pages: (number | string)[] = [];
+    const pages = [];
     const maxVisiblePages = 5;
-
+    
     if (totalPages <= maxVisiblePages) {
       for (let i = 1; i <= totalPages; i++) {
         pages.push(i);
@@ -179,7 +274,12 @@ export default function UserProjectList() {
         pages.push(totalPages);
       }
     }
+    
     return pages;
+  };
+
+  const handleNewProject = (newProject: Project) => {
+    setProjects([...projects, newProject]);
   };
 
   const getStatusColor = (status: string) => {
@@ -195,226 +295,257 @@ export default function UserProjectList() {
     }
   };
 
-  const TeamAvatars = ({ count }: { count: number }) => (
-    <div className="flex -space-x-1.5">
-      {[...Array(count)].map((_, i) => (
-        <div
-          key={i}
-          className="w-6 h-6 rounded-full bg-gradient-to-br from-purple-400 to-pink-400 border-2 border-white"
-        >
-          <img
-            src={`https://i.pravatar.cc/24?img=${i + 30}`}
-            alt="Team member"
-            className="w-full h-full rounded-full object-cover"
-          />
-        </div>
-      ))}
-    </div>
-  );
+  // If form is shown, render only the form
+  if (showNewProjectForm) {
+    return (
+      <NewProjectForm
+        onClose={() => setShowNewProjectForm(false)}
+        onSubmit={handleNewProject}
+      />
+    );
+  }
 
+  // Otherwise, render the table
   return (
-    <div className="min-h-screen from-slate-50 to-slate-100 animate__animated animate__fadeIn">
-      <div className="max-w-6xl mx-auto">
-        {/* Top Bar with Search and Add Button */}
-        <div className="mb-4 flex flex-col sm:flex-row gap-3 sm:items-center sm:justify-between">
-          <div className="flex flex-col sm:flex-row gap-2 sm:gap-3">
-            {/* Create Project Button */}
-            <button
-              className="cursor-pointer flex items-center justify-center gap-2 px-5 py-2.5 bg-purple-600 hover:bg-purple-700 text-white rounded-lg shadow-sm hover:shadow-md transition-all duration-200 font-medium text-sm group"
-            >
-              <svg
-                className="w-5 h-5 group-hover:rotate-90 transition-transform duration-200"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
-              </svg>
-              <span>Nueva Conexión</span>
-            </button>
-          </div>
+    <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-purple-50 p-4 sm:p-6 lg:p-8">
+      <div className="max-w-7xl mx-auto">
+        {/* Header */}
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
+          <button 
+            onClick={() => setShowNewProjectForm(true)}
+            className="inline-flex items-center gap-2 bg-gradient-to-r from-purple-600 to-indigo-600 text-white px-6 py-3 rounded-xl font-medium shadow-lg shadow-purple-500/30 hover:shadow-xl hover:shadow-purple-500/40 transition-all duration-300 hover:scale-105"
+          >
+            <Plus size={20} />
+            Nueva Conexión
+          </button>
 
-          {/* Search Input */}
-          <div className="relative sm:max-w-xs w-full sm:w-auto">
-            <svg
-              className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-              />
-            </svg>
+          <div className="relative w-full sm:w-auto sm:min-w-[300px]">
+            <Search
+              className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
+              size={20}
+            />
             <input
               type="text"
               placeholder="Buscar usuarios..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full pl-9 pr-4 py-2 text-sm bg-white border border-slate-300 rounded-lg text-slate-900 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all shadow-sm"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="w-full pl-10 pr-4 py-2.5 bg-white border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent shadow-sm"
             />
           </div>
         </div>
 
-        <div className="bg-white rounded-xl shadow-sm overflow-hidden">
-          {/* Header */}
-          <div className="hidden lg:grid lg:grid-cols-5 gap-4 px-5 py-3 bg-slate-50 border-b border-slate-200 text-xs font-medium text-slate-600">
-            <div>Usuario</div>
-            <div>Proyecto</div>
-            <div>Equipo</div>
-            <div>Estado</div>
-            <div>Presupuesto</div>
+        {/* Table Container */}
+        <div className="bg-white rounded-2xl shadow-xl overflow-hidden border border-gray-100">
+          {/* Desktop Table */}
+          <div className="hidden lg:block overflow-x-auto">
+            <table className="w-full">
+              <thead>
+                <tr className="bg-gradient-to-r from-gray-50 to-gray-100 border-b border-gray-200">
+                  <th className="text-left py-4 px-6 text-sm font-semibold text-gray-700">
+                    Usuario
+                  </th>
+                  <th className="text-left py-4 px-6 text-sm font-semibold text-gray-700">
+                    Proyecto
+                  </th>
+                  <th className="text-left py-4 px-6 text-sm font-semibold text-gray-700">
+                    Equipo
+                  </th>
+                  <th className="text-left py-4 px-6 text-sm font-semibold text-gray-700">
+                    Estado
+                  </th>
+                  <th className="text-left py-4 px-6 text-sm font-semibold text-gray-700">
+                    Presupuesto
+                  </th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-gray-100">
+                {currentProjects.map((project, index) => (
+                  <tr
+                    key={project.id}
+                    className="hover:bg-gradient-to-r hover:from-purple-50/50 hover:to-indigo-50/50 transition-all duration-200"
+                    style={{ animationDelay: `${index * 50}ms` }}
+                  >
+                    <td className="py-4 px-6">
+                      <div className="flex items-center gap-3">
+                        <div className="w-10 h-10 rounded-full bg-gradient-to-br from-purple-400 to-indigo-500 flex items-center justify-center text-white font-medium shadow-md">
+                          {project.user.avatar}
+                        </div>
+                        <div>
+                          <div className="font-medium text-gray-900">
+                            {project.user.name}
+                          </div>
+                          <div className="text-sm text-gray-500">
+                            {project.user.role}
+                          </div>
+                        </div>
+                      </div>
+                    </td>
+                    <td className="py-4 px-6">
+                      <span className="text-gray-700 font-medium">
+                        {project.project}
+                      </span>
+                    </td>
+                    <td className="py-4 px-6">
+                      <div className="flex -space-x-2">
+                        {project.team.map((member, idx) => (
+                          <div
+                            key={member.id}
+                            className="w-8 h-8 rounded-full bg-gradient-to-br from-pink-400 to-purple-500 border-2 border-white flex items-center justify-center text-white text-xs shadow-md hover:scale-110 transition-transform duration-200"
+                            style={{ zIndex: project.team.length - idx }}
+                          >
+                            {member.avatar}
+                          </div>
+                        ))}
+                      </div>
+                    </td>
+                    <td className="py-4 px-6">
+                      <span
+                        className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${getStatusColor(
+                          project.status
+                        )}`}
+                      >
+                        {project.status}
+                      </span>
+                    </td>
+                    <td className="py-4 px-6">
+                      <span className="text-gray-900 font-semibold">
+                        {project.budget}
+                      </span>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           </div>
 
-          {/* User List */}
-          <div className="divide-y divide-slate-100">
-            {currentUsers.length > 0 ? (
-              currentUsers.map((user) => (
-                <div
-                  key={user.id}
-                  className="px-4 sm:px-5 py-3.5 hover:bg-slate-50 transition-colors duration-150"
-                >
-                  {/* Desktop Layout */}
-                  <div className="hidden lg:grid lg:grid-cols-5 gap-4 items-center">
-                    {/* User Info */}
-                    <div className="flex items-center gap-2.5">
-                      <img
-                        src={user.avatar}
-                        alt={user.name}
-                        className="w-9 h-9 rounded-full object-cover ring-2 ring-slate-100"
-                      />
-                      <div>
-                        <h3 className="font-semibold text-slate-900 text-sm">{user.name}</h3>
-                        <p className="text-xs text-slate-500">{user.role}</p>
-                      </div>
-                    </div>
-
-                    {/* Project Name */}
-                    <div className="text-slate-700 text-sm">{user.project}</div>
-
-                    {/* Team */}
-                    <div>
-                      <TeamAvatars count={user.teamSize} />
-                    </div>
-
-                    {/* Status */}
-                    <div>
-                      <span className={`inline-flex px-2.5 py-1 rounded-full text-xs font-medium ${getStatusColor(user.status)}`}>
-                        {user.status}
-                      </span>
-                    </div>
-
-                    {/* Budget */}
-                    <div className="text-slate-900 font-semibold text-sm">{user.budget}</div>
+          {/* Mobile & Tablet Cards */}
+          <div className="lg:hidden divide-y divide-gray-100">
+            {currentProjects.map((project, index) => (
+              <div
+                key={project.id}
+                className="p-4 hover:bg-gradient-to-r hover:from-purple-50/50 hover:to-indigo-50/50 transition-all duration-200"
+                style={{ animationDelay: `${index * 50}ms` }}
+              >
+                {/* User Info */}
+                <div className="flex items-center gap-3 mb-3">
+                  <div className="w-12 h-12 rounded-full bg-gradient-to-br from-purple-400 to-indigo-500 flex items-center justify-center text-white font-medium shadow-md">
+                    {project.user.avatar}
                   </div>
-
-                  {/* Mobile/Tablet Layout */}
-                  <div className="lg:hidden space-y-3">
-                    {/* User Info */}
-                    <div className="flex items-center gap-2.5">
-                      <img
-                        src={user.avatar}
-                        alt={user.name}
-                        className="w-9 h-9 rounded-full object-cover ring-2 ring-slate-100"
-                      />
-                      <div className="flex-1">
-                        <h3 className="font-semibold text-slate-900 text-sm">{user.name}</h3>
-                        <p className="text-xs text-slate-500">{user.role}</p>
-                      </div>
-                      <span className={`inline-flex px-2.5 py-0.5 rounded-full text-xs font-medium ${getStatusColor(user.status)}`}>
-                        {user.status}
-                      </span>
+                  <div className="flex-1">
+                    <div className="font-medium text-gray-900">
+                      {project.user.name}
                     </div>
-
-                    {/* Project & Team */}
-                    <div className="flex items-center justify-between text-xs">
-                      <div>
-                        <p className="text-slate-500 mb-0.5">Proyecto</p>
-                        <p className="text-slate-700 font-medium">{user.project}</p>
-                      </div>
-                      <div>
-                        <p className="text-slate-500 mb-0.5">Equipo</p>
-                        <TeamAvatars count={user.teamSize} />
-                      </div>
-                      <div className="text-right">
-                        <p className="text-slate-500 mb-0.5">Presupuesto</p>
-                        <p className="text-slate-900 font-semibold">{user.budget}</p>
-                      </div>
+                    <div className="text-sm text-gray-500">
+                      {project.user.role}
                     </div>
                   </div>
+                  <span
+                    className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${getStatusColor(
+                      project.status
+                    )}`}
+                  >
+                    {project.status}
+                  </span>
                 </div>
-              ))
-            ) : (
-              <div className="px-5 py-12 text-center">
-                <svg
-                  className="mx-auto h-12 w-12 text-slate-300"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-                  />
-                </svg>
-                <p className="mt-2 text-sm text-slate-500">No se encontraron usuarios.</p>
-              </div>
-            )}
-          </div>
 
-          {/* Pagination */}
-          {filteredUsers.length > 0 && (
-            <div className="px-5 py-4 border-t border-slate-200">
-              <div className="flex items-center justify-center gap-2">
-                {/* Previous button */}
-                <button
-                  onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
-                  disabled={currentPage === 1}
-                  className="px-4 py-2 bg-white border border-slate-200 rounded-lg text-sm text-slate-600 hover:bg-slate-50 hover:border-slate-300 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-white disabled:hover:border-slate-200 transition-all font-medium"
-                >
-                  Previous
-                </button>
-
-                {/* Page numbers */}
-                <div className="flex items-center gap-2">
-                  {getPageNumbers().map((page, index) => (
-                    <React.Fragment key={index}>
-                      {page === '...' ? (
-                        <span className="px-2 py-2 text-slate-400 text-sm">...</span>
-                      ) : (
-                        <button
-                          onClick={() => setCurrentPage(page as number)}
-                          className={`min-w-[40px] h-10 px-3 rounded-lg text-sm font-medium transition-all ${
-                            currentPage === page
-                              ? 'bg-blue-600 text-white'
-                              : 'bg-white border border-slate-200 text-slate-700 hover:bg-slate-50 hover:border-slate-300'
-                          }`}
+                {/* Project Details */}
+                <div className="grid grid-cols-2 gap-3 mt-3 pt-3 border-t border-gray-100">
+                  <div>
+                    <div className="text-xs text-gray-500 mb-1">Proyecto</div>
+                    <div className="text-sm font-medium text-gray-700">
+                      {project.project}
+                    </div>
+                  </div>
+                  <div>
+                    <div className="text-xs text-gray-500 mb-1">
+                      Presupuesto
+                    </div>
+                    <div className="text-sm font-semibold text-gray-900">
+                      {project.budget}
+                    </div>
+                  </div>
+                  <div className="col-span-2">
+                    <div className="text-xs text-gray-500 mb-2">Equipo</div>
+                    <div className="flex -space-x-2">
+                      {project.team.map((member, idx) => (
+                        <div
+                          key={member.id}
+                          className="w-8 h-8 rounded-full bg-gradient-to-br from-pink-400 to-purple-500 border-2 border-white flex items-center justify-center text-white text-xs shadow-md"
+                          style={{ zIndex: project.team.length - idx }}
                         >
-                          {page}
-                        </button>
-                      )}
-                    </React.Fragment>
-                  ))}
+                          {member.avatar}
+                        </div>
+                      ))}
+                    </div>
+                  </div>
                 </div>
-
-                {/* Next button */}
-                <button
-                  onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
-                  disabled={currentPage === totalPages}
-                  className="px-4 py-2 bg-white border border-slate-200 rounded-lg text-sm text-slate-600 hover:bg-slate-50 hover:border-slate-300 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-white disabled:hover:border-slate-200 transition-all font-medium"
-                >
-                  Next
-                </button>
               </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Pagination */}
+        <div className="flex flex-col sm:flex-row justify-between items-center gap-4 mt-6">
+          {/* Results info */}
+          <div className="text-sm text-gray-600">
+            Mostrando{' '}
+            <span className="font-medium text-gray-900">
+              {startIndex + 1}
+            </span>{' '}
+            a{' '}
+            <span className="font-medium text-gray-900">
+              {Math.min(endIndex, filteredProjects.length)}
+            </span>{' '}
+            de{' '}
+            <span className="font-medium text-gray-900">
+              {filteredProjects.length}
+            </span>{' '}
+            resultados
+          </div>
+
+          {/* Pagination controls */}
+          <div className="flex items-center gap-2">
+            <button
+              onClick={() => handlePageChange(currentPage - 1)}
+              disabled={currentPage === 1}
+              className="px-4 py-2 text-gray-700 hover:text-gray-900 disabled:text-gray-400 disabled:cursor-not-allowed transition-colors font-medium"
+            >
+              Previous
+            </button>
+
+            <div className="flex items-center gap-1">
+              {getPageNumbers().map((page, index) => (
+                <React.Fragment key={index}>
+                  {page === '...' ? (
+                    <span className="px-3 py-2 text-gray-500">...</span>
+                  ) : (
+                    <button
+                      onClick={() => handlePageChange(page as number)}
+                      className={`px-4 py-2 rounded-lg font-medium transition-all ${
+                        currentPage === page
+                          ? 'bg-blue-600 text-white shadow-md hover:shadow-lg'
+                          : 'text-gray-700 hover:bg-gray-100'
+                      }`}
+                    >
+                      {page}
+                    </button>
+                  )}
+                </React.Fragment>
+              ))}
             </div>
-          )}
+
+            <button
+              onClick={() => handlePageChange(currentPage + 1)}
+              disabled={currentPage === totalPages}
+              className="px-4 py-2 text-gray-700 hover:text-gray-900 disabled:text-gray-400 disabled:cursor-not-allowed transition-colors font-medium"
+            >
+              Next
+            </button>
+          </div>
         </div>
       </div>
     </div>
   );
-}
+};
+
+export default ProjectTable;

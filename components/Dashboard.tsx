@@ -19,12 +19,11 @@ export default ({ user, permission }: { user: any, permission: { superAdmin: boo
         }
     }, [data]);
 
+
     return (
         <div className="mt-[72px] pb-8">
             {
-
-
-                data == "" ?
+                data == "" || data == "#" ?
                     <>
                         {
                             !localStorage.getItem("appSchema") ?
@@ -35,23 +34,23 @@ export default ({ user, permission }: { user: any, permission: { superAdmin: boo
 
                     </>
                     : data == "#a90a81a258e5ab81db32d3a05b349b9f6df4e207" ?
-                        <>
+                        <div className="animate__animated animate__fadeIn">
                             {permission.superAdmin || permission.admin ?
                                 <UserList></UserList>
                                 : <></>}
-                        </>
+                        </div>
                         : data == "#56acaf1d4b8590cbfac2aaafec411795f31c5bab" ?
-                            <>
+                            <div className="animate__animated animate__fadeIn">
                                 {permission.superAdmin || permission.admin ?
                                     <AdminSchema />
                                     : <></>}
-                            </>
+                            </div>
                             : data == "#cd2f1a458488e011a2fc1719ebe20437c52dc3e5" ?
-                                <>
+                                <div className="animate__animated animate__fadeIn">
                                     {permission.superAdmin || permission.admin ?
                                         <AdminConnection />
                                         : <></>}
-                                </>
+                                </div>
 
                                 : data == "#3cc1d5a427a45820b04fe30f78a972b784952460" ?
                                     <>

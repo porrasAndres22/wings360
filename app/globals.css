@@ -1,28 +1,17 @@
 @import "tailwindcss";
 
 :root {
-  --background-purple: linear-gradient(95deg, rgba(230, 233, 255, 1) 23%, rgba(236, 244, 255, 1) 52%, rgba(216, 240, 255, 1) 82%);
+  --background-purple: linear-gradient(to right, #E5E9FF, #E9F3FF, #D0ECFF);
   --background-blue: linear-gradient(90deg, rgba(0, 137, 244, 1) 0%, rgba(114, 101, 255, 1) 50%);
   --text: white;
   --text-0: black;
-  --text-1: #005091;
-  --text-2: #001769;
-  --text-3: #004A4D;
-  --text-10: #9DD5F5;
-  --text-20: #9FB3ED;
-  --text-30: #85CAD6;
   --foreground: #171717;
 }
 
 @theme inline {
   --color-theme-text: var(--text);
   --color-theme-text-0: var(--text-0);
-  --color-theme-text-1: var(--text-1);
-  --color-theme-text-2: var(--text-2);
-  --color-theme-text-3: var(--text-3);
-  --color-theme-text-10: var(--text-10);
-  --color-theme-text-20: var(--text-20);
-  --color-theme-text-30: var(--text-30);
+
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
